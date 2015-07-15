@@ -1,0 +1,8 @@
+name = Communications Stack Private Messaging
+description = Provides an Private Messaging Comstack & Message type.
+core = 7.x
+package = Communications Stack
+php = 5.3
+
+dependencies[] = comstack
+dependencies[] = comstack_ui

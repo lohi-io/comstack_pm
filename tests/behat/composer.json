@@ -1,0 +1,11 @@
+{
+  "require": {
+    "drupal/drupal-extension": "~3.0",
+    "guzzlehttp/guzzle": "4.*",
+    "league/fractal": "0.7.*",
+    "phpunit/phpunit": "3.7.*"
+  },
+  "config": {
+    "bin-dir": "bin/"
+  }
+}

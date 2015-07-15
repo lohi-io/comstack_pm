@@ -1,0 +1,8 @@
+name = Communications Stack Private Messaging REST API
+description = Provides a REST API to interface with Comstack Private Messaging.
+core = 7.x
+package = Communications Stack
+php = 5.3
+
+dependencies[] = comstack_pm
+dependencies[] = restful

@@ -1,0 +1,268 @@
+<?php
+/**
+ * @file
+ * Provides installation details for Communications Stack Private Messaging.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function comstack_private_messaging_schema() {
+  $schema = array();
+
+  $schema['comstack_conversation'] = array(
+    'description' => 'The base table for conversations sent via the Communications Stack.',
+    'fields' => array(
+      'conversation_id' => array(
+        'description' => 'The primary identifier for this conversation.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The {comstack_message}.type of this conversation.',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'entity_type' => array(
+        'description' => 'The entity type that started the conversation.',
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'entity_id' => array(
+        'description' => 'The ID of the entity which started the conversation.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'container' => array(
+        'description' => 'The machine name of the container e.g. Folder this conversation lives in.',
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'started' => array(
+        'description' => 'The Unix timestamp when the message was started.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'updated' => array(
+        'description' => 'The Unix timestamp when the message was last updated.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'title' => array(
+        'description' => 'The title, subject or name of the conversation.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'messages_count' => array(
+        'description' => 'Number of messages in this conversation.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'pinned' => array(
+        'description' => 'Boolean indicating whether this conversation is pinned.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'boolean' => TRUE,
+      ),
+      'archived' => array(
+        'description' => 'Boolean indicating whether this conversation has been archives.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'boolean' => TRUE,
+      ),
+      'deleted' => array(
+        'description' => 'Boolean indicating whether this conversation is marked as deleted.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'boolean' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'type' => array('type'),
+      'entity_type' => array('entity_type'),
+      'entity_id' => array('entity_id'),
+      'started' => array('started'),
+      'updated' => array('updated'),
+      'messages_count' => array('messages_count'),
+      'pinned' => array('pinned'),
+      'deleted' => array('deleted'),
+    ),
+    'foreign keys' => array(
+      'type' => array(
+        'table' => 'comstack_message_type',
+        'columns' => array('type' => 'type'),
+      ),
+    ),
+    'primary key' => array('conversation_id'),
+  );
+
+  $schema['comstack_conversation_entity'] = array(
+    'description' => 'Linkage between a conversation and the recipients/participants read state. Simplest example would be user entity.',
+    'fields' => array(
+      'ceid' => array(
+        'description' => 'The primary identifier for this record.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'conversation_id' => array(
+        'description' => 'The ID of the conversation the entity (typically user) is a part of.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'entity_type' => array(
+        'description' => 'The type of entity which is part of the conversation.',
+        'type' => 'varchar',
+        'length' => '128',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'entity_id' => array(
+        'description' => 'The ID of the entity which is part of the conversation.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'unread_count' => array(
+        'description' => 'Number of messages in this conversation which are unread.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'delivered' => array(
+        'description' => 'Boolean indicating whether the most recent message(s) have been delivered this conversation participant.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'boolean' => TRUE,
+      ),
+      'muted' => array(
+        'description' => 'Boolean indicating whether updates in this conversation should alert the destination entity.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'boolean' => TRUE,
+      ),
+      'forwarded' => array(
+        'description' => 'Boolean indicating whether this conversation has been forwarded by the participant entity.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'boolean' => TRUE,
+      ),
+      'starred' => array(
+        'description' => 'Boolean indicating whether this conversation has been starred by the participant entity.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'boolean' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'conversation_id' => array('conversation_id'),
+      'entity_type' => array('entity_type'),
+      'entity_id' => array('entity_id'),
+      'unread_count' => array('unread_count'),
+    ),
+    'foreign keys' => array(
+      'conversation' => array(
+        'table' => 'comstack_conversation',
+        'columns' => array('conversation_id' => 'conversation_id'),
+      ),
+    ),
+    'primary key' => array('ceid'),
+  );
+
+  $schema['comstack_conversation_message'] = array(
+    'description' => 'Storage for when a message type requires that a conversation keeps separate histories for each participant. This stores the link between the conversation version and message.',
+    'fields' => array(
+      'ccmid' => array(
+        'description' => 'The primary identifier for this record.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'conversation_id' => array(
+        'description' => 'The ID of the conversation the entity (typically user) is a part of.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'mid' => array(
+        'description' => 'The ID of the message that has been read.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'deleted' => array(
+        'description' => 'Boolean indicating whether this conversation is marked as deleted.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'boolean' => TRUE,
+      ),
+    ),
+    'indexes' => array(
+      'conversation_id' => array('conversation_id'),
+      'mid' => array('mid'),
+    ),
+    'foreign keys' => array(
+      'conversation' => array(
+        'table' => 'comstack_conversation',
+        'columns' => array('conversation_id' => 'conversation_id'),
+      ),
+      'message' => array(
+        'table' => 'message',
+        'columns' => array('mid' => 'mid'),
+      ),
+    ),
+    'primary key' => array('ccmid'),
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function comstack_pm_install() {
+
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function comstack_pm_uninstall() {
+
+}

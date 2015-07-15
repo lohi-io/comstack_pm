@@ -1,0 +1,20 @@
+<?php
+/**
+ * @file
+ * Provides installation details for Communications Stack Private Messaging
+ * REST API.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function comstack_pm_rest_api_install() {
+
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function comstack_pm_rest_api_uninstall() {
+
+}
