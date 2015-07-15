@@ -75,7 +75,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
      */
     public function iRequest($httpMethod, $resource)
     {
-        $this->resource = $resource;
+        $this->resource = $this->locatePath($resource);
 
         $method = strtolower($httpMethod);
 
