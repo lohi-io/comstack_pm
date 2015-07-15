@@ -2,7 +2,8 @@ default:
   suites:
     default:
       contexts:
-        - FeatureContext
+        - FeatureContext:
+          base_url: http://127.0.0.1:8888
         - Drupal\DrupalExtension\Context\DrupalContext
         - Drupal\DrupalExtension\Context\MinkContext
         - Drupal\DrupalExtension\Context\MessageContext
@@ -17,4 +18,5 @@ default:
       api_driver: "drupal"
       # We set the following via the travis install script, finding and replacing.
       drupal:
-        drupal_root: "/home/travis/build/drupal/drupal"
+        drupal_root: "/var/www/harmony/6"
+        #drupal_root: "/home/travis/build/drupal/drupal"

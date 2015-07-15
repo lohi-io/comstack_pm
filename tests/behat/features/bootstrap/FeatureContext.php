@@ -52,12 +52,10 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
      *
      * @param array $parameters context parameters (set them up through behat.yml)
      */
-    public function __construct()
+    public function __construct($parameters = array())
     {
-        $parameters = array();
         $config = isset($parameters['guzzle']) && is_array($parameters['guzzle']) ? $parameters['guzzle'] : [];
-
-        $config['base_url'] = $this->locatePath('/');
+        $config['base_url'] = $parameters['base_url'];
 
         $this->client = new Client($config);
     }
@@ -75,7 +73,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
      */
     public function iRequest($httpMethod, $resource)
     {
-        $this->resource = $this->locatePath($resource);
+        $this->resource = $resource;
 
         $method = strtolower($httpMethod);
 
