@@ -3,5 +3,5 @@ Feature: Homepage GET Request
   As a user
   I want to make a GET request of the homepage
   Scenario: Anonymous access
-    When I request "GET /"
-    Then I get a 200 response
+    When I request "GET /node"
+    Then I get a "200" response
