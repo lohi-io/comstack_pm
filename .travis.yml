@@ -76,6 +76,9 @@ before_script:
   # Jump back into the install.
   - cd drupal/drupal
 
+  # Get the dev release of comstack.
+  - drush dl comstack-7.x-1.x
+
   # Enable comstack and default permissions module.
   - drush en -y comstack comstack_default_permissions comstack_pm restful comstack_pm_rest_api
 
