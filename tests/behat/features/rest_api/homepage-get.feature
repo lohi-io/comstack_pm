@@ -4,4 +4,4 @@ Feature: Homepage GET Request
   I want to make a GET request of the homepage
   Scenario: Anonymous access
     When I request "GET /node"
-    Then I get a "200" response
+    Then The REST API returns a 200 response

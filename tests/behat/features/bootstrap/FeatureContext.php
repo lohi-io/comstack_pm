@@ -1,5 +1,8 @@
 <?php
 
+// A merging of Drupal Extension aaand this:
+// https://alfrednutile.info/posts/103
+
 use Drupal\DrupalExtension\Context\RawDrupalContext;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\Gherkin\Node\PyStringNode;
@@ -107,9 +110,9 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Then /^I get a "([^"]*)" response$/
+     * @Then /^The REST API returns a ([0-9]{3}) response$/
      */
-    public function iGetAResponse($statusCode)
+    public function theRESTAPIReturnsAResponse($statusCode)
     {
         $response = $this->getResponse();
         $contentType = $response->getHeader('Content-Type');
@@ -487,5 +490,14 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
         }
 
         return $array;
+    }
+
+    /**
+     * @Given /^data has (\d+) items/
+     */
+    public function dataHasItems($arg)
+    {
+        $results = $this->getResponsePayload();
+        assertCount($arg, $results->data);
     }
 }
