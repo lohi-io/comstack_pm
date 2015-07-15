@@ -5,4 +5,3 @@ package = Communications Stack
 php = 5.3
 
 dependencies[] = comstack
-dependencies[] = comstack_ui
