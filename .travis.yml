@@ -80,7 +80,8 @@ before_script:
   - drush dl comstack-7.x-1.x
 
   # Enable comstack and default permissions module.
-  - drush en -y comstack comstack_default_permissions comstack_pm restful comstack_pm_rest_api
+  - drush en -y comstack comstack_default_permissions comstack_pm restful
+  - drush en -y restful_token_auth comstack_pm_rest_api
 
   # Setup files.
   - sudo chmod -R 777 sites/all
@@ -104,8 +105,6 @@ before_script:
   - until netstat -an 2>/dev/null | grep '8888.*LISTEN'; do true; done
   - cd sites/all/modules/comstack_pm
   - cd tests/behat
-  - LS_VAR=`ls -alhC`
-  - echo $LS_VAR
 
 script:
   # Run the Behat tests.
