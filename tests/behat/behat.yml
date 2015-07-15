@@ -18,5 +18,4 @@ default:
       api_driver: "drupal"
       # We set the following via the travis install script, finding and replacing.
       drupal:
-        drupal_root: "/var/www/harmony/6"
-        #drupal_root: "/home/travis/build/drupal/drupal"
+        drupal_root: "/home/travis/build/drupal/drupal"
