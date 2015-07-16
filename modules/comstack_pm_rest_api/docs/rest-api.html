@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Comstack Private Messaging API</title>
 
-    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="//getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    
+
     <style type="text/css">
       .copy h1,
       .copy h2,
@@ -24,7 +24,7 @@
         padding-bottom: 10px;
         border-bottom: 1px solid #eee;
       }
-      
+
       .resource-request {
         margin: 20px 0;
         font-size: 16px;
@@ -32,7 +32,7 @@
         font-weight: bold;
         border-radius: 5px;
       }
-      
+
       .resource-verb {
         display: inline-block;
         margin-right: 15px;
@@ -41,7 +41,7 @@
         border-top-left-radius: 5px;
         border-bottom-left-radius: 5px;
       }
-      
+
       .resource-verb.get {
         background-color: #14892c;
       }
@@ -49,34 +49,34 @@
       .resource-verb.post {
         background-color: #ADAB26;
       }
-      
+
       .resource-verb.put {
         background-color: #4b0082;
       }
-      
+
       .resource-verb.delete {
         background-color: #d04437;
       }
-      
+
       .show-details {
         float: right;
       }
-      
+
       .resource-request .show-details {
         margin-right: 20px;
         line-height: 42px;
       }
-      
+
       .response-details {
         margin-bottom: 50px;
       }
-      
+
       .response-details h4 {
         margin-top: 0;
         border-bottom: 0;
         padding-bottom: 0;
       }
-      
+
       .response-details blockquote {
         font-size: 14px;
       }
@@ -87,7 +87,7 @@
         font-size: 12px;
         line-height: 22px;
       }
-      
+
       table.request-body td:last-child {
         text-align: center;
         color: #6F6F6F;
@@ -109,11 +109,11 @@
 
       <div class="copy">
         <h3>Hi! Here's some basic stuff</h3>
-  
+
         <p>The purpose of this document is to lay out clearly how the Comstack Private Messaging API can be interacted with so resources can be consumed, created and deleted.</p>
-        
+
         <p>I've flat out copied things I like from the following sources:</p>
-        
+
         <ul>
           <li><a href="https://github.com/WhiteHouse/api-standards">https://github.com/WhiteHouse/api-standards</a></li>
           <li><a href="https://github.com/RESTful-Drupal/restful/blob/7.x-1.x/docs/api_url.md">https://github.com/RESTful-Drupal/restful/blob/7.x-1.x/docs/api_url.md</a></li>
@@ -152,7 +152,7 @@
 
 
         <h4>HTTP Methods</h4>
-        
+
         <p>Use HTTP verbs to operate on the collections and elements.</p>
         <p>
           <strong><code>GET</code></strong> - Used to access data, this API will not allow modification to happen over <code>GET</code>.<br>
@@ -160,13 +160,13 @@
           <strong><code>PUT</code></strong> - Update a resource or perform an action.<br>
           <strong><code>DELETE</code></strong> - Delete resources or undo an action.
         </p>
-        
-        
+
+
         <h4>Error Handling</h4>
-        
+
         <p>If an error occurs when operating the REST endpoint via URL, A valid JSON object with <code>code</code>, <code>message</code> and <code>description</code> would be returned.</p>
         <p>Here's an example...</p>
-        
+
         <pre>{
   'status' => 400,
   'title' => 'The sort wrong_key is not allowed for this path.',
@@ -175,7 +175,7 @@
 }</pre>
 
         <h4>Response codes</h4>
-        
+
         <p>When returning a response a HTTP code will always be used (duh). These have been clubbed together from various sources.</p>
         <ul>
           <li><a href="https://docs.atlassian.com/atlassian-confluence/REST/latest">https://docs.atlassian.com/atlassian-confluence/REST/latest</a></li>
@@ -183,18 +183,18 @@
         </ul>
 
         <h4>Rate limiting</h4>
-        
+
         <p><a href="http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#rate-limiting">Rate limiting</a> won't be considered for this API at this time but should be thought of at some point to prevent abuse.</p>
- 
- 
+
+
         <h4>Result sets</h4>
- 
+
         <p>List sets are always returned in a <code>data</code> property. Data items will always have <code>type</code> and <code>id</code> properties.</p>
 
 
         <h4>Filtering result sets</h4>
- 
- 
+
+
         <h4>Paging result sets</h4>
 
         <p>Pagination works in the same way as it does with Facebooks OpenGraph API which implements Cursor paging.</p>
@@ -202,22 +202,22 @@
           <li><a href="https://developers.facebook.com/docs/graph-api/using-graph-api/v2.4#paging">https://developers.facebook.com/docs/graph-api/using-graph-api/v2.4#paging</a></li>
           <li><a href="http://www.sitepoint.com/paginating-real-time-data-cursor-based-pagination/">http://www.sitepoint.com/paginating-real-time-data-cursor-based-pagination/</a></li>
         </ul>
- 
+
         <h4>@todo</h4>
-        
+
         <ul>
           <li>HAL for models.</li>
           <li>Figure out paging for message lists.</li>
           <li>Define list filtering and sorting.</li>
           <li>Friend list endpoints.</li>
         </ul>
-        
- 
+
+
         <a name="endpoints"></a>
         <h3>Endpoints</h3>
- 
+
         <h4 class="text-primary">/conversations</h4>
- 
+
         <div class="resource-request">
           <span class="resource-verb get">GET</span> /cs-pm-api/v1/conversations
           <span class="show-details"><a href="#resource-conversations-get" data-toggle="collapse">Show details</a></span>
@@ -230,9 +230,9 @@
             <p><strong>Default limit:</strong> 25.</p>
             <p><strong>Default sort:</strong> Updated <code>DESC</code>.</p>
           </blockquote>
-          
+
           <h4>Responses</h4>
-          
+
           <table class="table table-striped responses">
             <thead>
               <tr>
@@ -330,7 +330,7 @@
               </tr>
             </tbody>
           </table>
-          
+
         </div>
 
 
@@ -343,9 +343,9 @@
           <blockquote>
             <p>Create a new conversation.</p>
           </blockquote>
-          
+
           <h4>Request body</h4>
-          
+
           <table class="table table-striped request-body">
             <thead>
               <tr>
@@ -370,7 +370,7 @@
               </tr>
             </tbody>
           </table>
-          
+
           <h4>Responses</h4>
 
           <table class="table table-striped responses">
@@ -401,7 +401,7 @@
             </tbody>
           </table>
         </div>
- 
+
          <h4 class="text-primary">/conversations/search</h4>
         <div class="resource-request">
           <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/search
@@ -411,9 +411,9 @@
           <blockquote>
             <p>Search all conversations.</p>
           </blockquote>
-          
+
           <h4>Request body</h4>
-          
+
           <table class="table table-striped request-body">
             <thead>
               <tr>
@@ -432,7 +432,7 @@
               </tr>
             </tbody>
           </table>
-          
+
           <h4>Responses</h4>
 
           <table class="table table-striped responses">
@@ -485,10 +485,10 @@
             </tbody>
           </table>
         </div>
- 
- 
+
+
         <h4 class="text-primary">/conversations/{conversation_id}</h4>
- 
+
         <div class="resource-request">
           <span class="resource-verb get">GET</span> /cs-pm-api/v1/conversations/{conversation_id}
           <span class="show-details"><a href="#resource-conversations-specific-get" data-toggle="collapse">Show details</a></span>
@@ -499,7 +499,7 @@
             <p>Get a specific conversation.</p>
             <p><strong>Requires:</strong> Authenticated user session.</p>
           </blockquote>
-          
+
           <h4>Responses</h4>
            <table class="table table-striped responses">
             <thead>
@@ -538,7 +538,7 @@
             <p>Delete a specific conversation.</p>
             <p><strong>Requires:</strong> Authenticated user session.</p>
           </blockquote>
-          
+
           <h4>Responses</h4>
            <table class="table table-striped responses">
             <thead>
@@ -574,9 +574,9 @@
             <p>Post a reply to a conversation.</p>
             <p><strong>Requires:</strong> Authenticated user session.</p>
           </blockquote>
-          
+
           <h4>Request body</h4>
-          
+
           <table class="table table-striped request-body">
             <thead>
               <tr>
@@ -595,7 +595,7 @@
               </tr>
             </tbody>
           </table>
-          
+
           <h4>Responses</h4>
 
           <table class="table table-striped responses">
@@ -634,7 +634,7 @@
 
 
         <h4 class="text-primary">/conversations/{conversation_id}/messages</h4>
- 
+
         <div class="resource-request">
           <span class="resource-verb get">GET</span> /cs-pm-api/v1/conversations/{conversation_id}/messages
           <span class="show-details"><a href="#resource-conversations-specific-messages-get" data-toggle="collapse">Show details</a></span>
@@ -723,7 +723,7 @@
           </blockquote>
 
           <h4>Request body</h4>
-          
+
           <table class="table table-striped request-body">
             <thead>
               <tr>
@@ -849,7 +849,7 @@
             <p><strong>Requires:</strong> Authenticated user session.</p>
           </blockquote>
           <h4>Request body</h4>
-          
+
           <table class="table table-striped request-body">
             <thead>
               <tr>
@@ -906,7 +906,7 @@
             <p><strong>Requires:</strong> Authenticated user session.</p>
           </blockquote>
           <h4>Request body</h4>
-          
+
           <table class="table table-striped request-body">
             <thead>
               <tr>
@@ -1200,9 +1200,9 @@
           <blockquote>
             <p>Report a conversation.</p>
           </blockquote>
-          
+
           <h4>Request body</h4>
-          
+
           <table class="table table-striped request-body">
             <thead>
               <tr>
@@ -1233,7 +1233,7 @@
               </tr>
             </tbody>
           </table>
-          
+
           <h4>Responses</h4>
 
           <table class="table table-striped responses">
@@ -1274,9 +1274,9 @@
           <blockquote>
             <p>Search within a conversation.</p>
           </blockquote>
-          
+
           <h4>Request body</h4>
-          
+
           <table class="table table-striped request-body">
             <thead>
               <tr>
@@ -1295,7 +1295,7 @@
               </tr>
             </tbody>
           </table>
-          
+
           <h4>Responses</h4>
 
           <table class="table table-striped responses">
@@ -1363,9 +1363,9 @@
             <p><strong>Default limit:</strong> none.</p>
             <p><strong>Default sort:</strong> name <code>ASC</code>.</p>
           </blockquote>
-          
+
           <h4>Responses</h4>
-          
+
           <table class="table table-striped responses">
             <thead>
               <tr>
@@ -1403,7 +1403,7 @@
               </tr>
             </tbody>
           </table>
-          
+
         </div>
 
         <h4 class="text-primary">/messages/{message_id}</h4>
@@ -1456,7 +1456,7 @@
             <p><strong>Requires:</strong> Authenticated user session.</p>
           </blockquote>
           <h4>Request body</h4>
-          
+
           <table class="table table-striped request-body">
             <thead>
               <tr>
@@ -1917,9 +1917,9 @@
 
       </div>
     </div>
-    
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//getbootstrap.com/dist/js/bootstrap.min.js"></script>
   </body>
 </html>
