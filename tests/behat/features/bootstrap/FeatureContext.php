@@ -86,7 +86,8 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
                 case 'POST':
                     $this->response = $this
                         ->client
-                        ->$method($resource, null, $this->requestPayload);
+                        ->$method($resource, null, array('body' => $this->requestPayload));
+                        //'content-type' => 'application/json'
                     break;
 
                 default:

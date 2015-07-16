@@ -133,10 +133,26 @@
         <a name="steps"></a>
         <h3>Behat steps</h3>
 
+        <h4 class="text-primary">&quot;Given I have the payload&hellip;&quot;</h4>
+
+        <p>Send data to an endpoint on a <code>POST</code> or <code>PUT</code> request.</p>
+        <p>When constructing your JSON data object you'll start and end things with three double quotes as per the following <code>POST</code> example.
+
+<pre>Given I have the payload:
+"""
+{
+  "recipients": [123],
+  "text": "Blah blah"
+}
+"""
+When I request "POST /cs-pm-api/v1/conversations"
+Then The REST API returns a 201 response
+</pre>
+
 
         <h4 class="text-primary">&quot;When I request&hellip;&quot;</h4>
 
-        <p>Kick off a REST request, the first part of step is the HTTP method (<code>GET, POST, PUT, DELETE</code>) followed by the path starting with a <code>/</code>.</p>
+        <p>Kick off a REST request, the first part of step is the HTTP method (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>) followed by the path starting with a <code>/</code>.</p>
 
         <pre>When I request "GET /cs-pm-api/v1/conversations"</pre>
 
@@ -154,6 +170,176 @@
 
         <pre>Then The REST API returns a 200 response
 and The response data has 5 items</pre>
+
+
+        <h4 class="text-primary">&quot;Given scope into the&hellip;&quot;</h4>
+
+        <p>Change "scope" into a property, this affects any steps which are noted as <strong>uses scope</strong>.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations"
+Then The REST API returns a 200 response
+and scope into the "data" property</pre>
+
+        <h4 class="text-primary">&quot;Given scope into the first&hellip;&quot;</h4>
+
+        <p>Change "scope" into the first property of a name, this affects any steps which are noted as <strong>uses scope</strong>.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations"
+Then The REST API returns a 200 response
+and scope into the first "data" property</pre>
+
+        <h4 class="text-primary">&quot;The property exists&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a property exists within the current scope.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the id property exists</pre>
+
+        <h4 class="text-primary">&quot;The properties exist&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a list of properties exist within the current scope.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+  and the properties exist:
+    """
+    id
+    participants
+    historical_participants
+    started_by
+    last_updated_by
+    started
+    updated
+    messages_count
+    unread_count
+    """</pre>
+
+        <h4 class="text-primary">&quot;The property equals&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a property within the current scope has a specified value.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the id property exists
+and the id property equals 1</pre>
+
+        <h4 class="text-primary">&quot;The property is an array&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a property within the current scope is an array.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the participants property exists
+and the participant property is an array</pre>
+
+        <h4 class="text-primary">&quot;The property is an empty array&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a property within the current scope is an empty array.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the participants property exists
+and the participant property is an empty array</pre>
+
+        <h4 class="text-primary">&quot;The property is an object&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a property within the current scope is an object.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the started_by property exists
+and the started_by property is an object</pre>
+
+        <h4 class="text-primary">&quot;The property is an integer&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a property within the current scope is an integer.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the id property exists
+and the id property is an integer</pre>
+
+        <h4 class="text-primary">&quot;The property is an integer equalling&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a property within the current scope is an integer.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the messages_count property exists
+and the messages_count property is an integer equalling "1"</pre>
+
+        <h4 class="text-primary">&quot;The property is a string&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a property within the current scope is a string.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the title property exists
+and the title property is a string</pre>
+
+        <h4 class="text-primary">&quot;The property is a string equalling&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a property within the current scope is a string and that it matches a value.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the title property exists
+and the title property is a string equalling "hi"</pre>
+
+          <h4 class="text-primary">&quot;The property is a boolean&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a property within the current scope is a boolean.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the pinned property exists
+and the pinned property is a boolean</pre>
+
+          <h4 class="text-primary">&quot;The property is a boolean equalling&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Check that a property within the current scope is a boolean.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the pinned property exists
+and the pinned property is a boolean equalling "true"</pre>
+
+          <h4 class="text-primary">&quot;Reset scope&hellip;&quot;</h4>
+
+        <p><strong>Uses scope</strong></p>
+        <p>Reset the scope to the root of the response body.</p>
+
+<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+Then The REST API returns a 200 response
+and scope into the "data" property
+and the pinned property exists
+and I reset scope</pre>
+
 
       </div>
     </div>
