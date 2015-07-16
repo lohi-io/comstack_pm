@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Comstack Private Messaging REST API - Behat</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+      /* Space out content a bit */
+      body {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      /* Everything but the jumbotron gets side spacing for mobile first views */
+      .header,
+      .marketing,
+      .footer {
+        padding-right: 15px;
+        padding-left: 15px;
+      }
+
+      /* Custom page header */
+      .header {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      /* Make the masthead heading the same height as the navigation */
+      .header h3 {
+        margin-top: 0;
+        margin-bottom: 0;
+        line-height: 40px;
+      }
+
+      /* Custom page footer */
+      .footer {
+        padding-top: 19px;
+        color: #777;
+        border-top: 1px solid #e5e5e5;
+      }
+
+      /* Customize container */
+      @media (min-width: 768px) {
+        .container {
+          max-width: 730px;
+        }
+      }
+      .container-narrow > hr {
+        margin: 30px 0;
+      }
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+        text-align: center;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      .jumbotron .btn {
+        padding: 14px 24px;
+        font-size: 21px;
+      }
+
+      /* Supporting marketing content */
+      .marketing {
+        margin: 40px 0;
+      }
+      .marketing p + h4 {
+        margin-top: 28px;
+      }
+
+      /* Responsive: Portrait tablets and up */
+      @media screen and (min-width: 768px) {
+        /* Remove the padding we set earlier */
+        .header,
+        .marketing,
+        .footer {
+          padding-right: 0;
+          padding-left: 0;
+        }
+        /* Space out the masthead */
+        .header {
+          margin-bottom: 30px;
+        }
+        /* Remove the bottom border on the jumbotron for visual effect */
+        .jumbotron {
+          border-bottom: 0;
+        }
+      }
+    </style>
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+      .copy h1,
+      .copy h2,
+      .copy h3,
+      .copy h4 {
+        margin-top: 40px;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">Travis CI</a></li>
+            <li role="presentation"><a href="#steps">Behat Steps</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Comstack PM REST API - Behat</h3>
+      </div>
+
+      <div class="copy">
+        <h3>Travis CI</h3>
+
+        <p>This module (<a href="https://www.drupal.org/project/comstack_pm">Comstack Private Message</a>) is integrated with Travis CI which runs Behat tests each time a commit is pushed to the Github mirror repo. This also runs tests for the REST API submodule. In order to effectively test the REST API custom steps have been defined to facilitate this. Here are some links!</p>
+
+        <ul>
+          <li><a href="https://travis-ci.org/lohi-io/comstack_pm">https://travis-ci.org/lohi-io/comstack_pm</a></li>
+          <li><a href="https://github.com/lohi-io/comstack_pm">Comstack PM Github mirror</a></li>
+          <li><a href="https://alfrednutile.info/posts/103">Source of our custom commands</a> (though we've slightly tweaked them)</li>
+          <li><a href="https://github.com/philsturgeon/build-apis-you-wont-hate/tree/master/chapter12/app/tests/behat">Source of the source</a>, Build APIs you won't hate</li>
+        </ul>
+
+        <a name="steps"></a>
+        <h3>Behat steps</h3>
+
+
+        <h4 class="text-primary">&quot;When I request&hellip;&quot;</h4>
+
+        <p>Kick off a REST request, the first part of step is the HTTP method (<code>GET, POST, PUT, DELETE</code>) followed by the path starting with a <code>/</code>.</p>
+
+        <pre>When I request "GET /cs-pm-api/v1/conversations"</pre>
+
+        <h4 class="text-primary">&quot;Then The REST API returns&hellip;&quot;</h4>
+
+        <p>Checks the HTTP status code returned from the endpoint, this step should not be confused with the standard Behat <code>Then I should get a "200" HTTP response</code>.</p>
+
+        <pre>Then The REST API returns a 200 response</pre>
+
+        <h4 class="text-primary">&quot;Then The response data has X items&hellip;&quot;</h4>
+
+        <p>Check that the request has responded with a number of results in the <code>data</code> property in the response body.</p>
+
+        <pre>Then The response data has 5 items</pre>
+
+        <pre>Then The REST API returns a 200 response
+and The response data has 5 items</pre>
+
+      </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </body>
+</html>

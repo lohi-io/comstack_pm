@@ -493,9 +493,9 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     }
 
     /**
-     * @Given /^data has (\d+) items/
+     * @Given /^The response data has (\d+) items/
      */
-    public function dataHasItems($arg)
+    public function theResponseDataHasItems($arg)
     {
         $results = $this->getResponsePayload();
         assertCount($arg, $results->data);
