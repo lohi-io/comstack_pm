@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Comstack Private Messaging API</title>
+
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <style type="text/css">
+      .copy h1,
+      .copy h2,
+      .copy h3,
+      .copy h4 {
+        margin-top: 40px;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+      }
+      
+      .resource-request {
+        margin: 20px 0;
+        font-size: 16px;
+        background-color: #f5f5f5;
+        font-weight: bold;
+        border-radius: 5px;
+      }
+      
+      .resource-verb {
+        display: inline-block;
+        margin-right: 15px;
+        padding: 10px 20px;
+        color: white;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+      
+      .resource-verb.get {
+        background-color: #14892c;
+      }
+
+      .resource-verb.post {
+        background-color: #ADAB26;
+      }
+      
+      .resource-verb.put {
+        background-color: #4b0082;
+      }
+      
+      .resource-verb.delete {
+        background-color: #d04437;
+      }
+      
+      .show-details {
+        float: right;
+      }
+      
+      .resource-request .show-details {
+        margin-right: 20px;
+        line-height: 42px;
+      }
+      
+      .response-details {
+        margin-bottom: 50px;
+      }
+      
+      .response-details h4 {
+        margin-top: 0;
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+      
+      .response-details blockquote {
+        font-size: 14px;
+      }
+
+      table.request-body td:first-child,
+      table.model-body td:first-child {
+        font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+        font-size: 12px;
+        line-height: 22px;
+      }
+      
+      table.request-body td:last-child {
+        text-align: center;
+        color: #6F6F6F;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">The basics</a></li>
+            <li role="presentation"><a href="#endpoints">Endpoints</a></li>
+            <li role="presentation"><a href="#models">Models</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Comstack PM API</h3>
+      </div>
+
+      <div class="copy">
+        <h3>Hi! Here's some basic stuff</h3>
+  
+        <p>The purpose of this document is to lay out clearly how the Comstack Private Messaging API can be interacted with so resources can be consumed, created and deleted.</p>
+        
+        <p>I've flat out copied things I like from the following sources:</p>
+        
+        <ul>
+          <li><a href="https://github.com/WhiteHouse/api-standards">https://github.com/WhiteHouse/api-standards</a></li>
+          <li><a href="https://github.com/RESTful-Drupal/restful/blob/7.x-1.x/docs/api_url.md">https://github.com/RESTful-Drupal/restful/blob/7.x-1.x/docs/api_url.md</a></li>
+          <li><a href="https://www.hipchat.com/docs/apiv2">https://www.hipchat.com/docs/apiv2</a></li>
+        </ul>
+
+
+        <h4>Assumptions</h4>
+
+        <ul>
+          <li>Users will always be authenticated when accessing the API as if not there wouldn't be much point... Any non authenticated requests should be rejected with a <code>403</code> response.</li>
+          <li>All responses will be <code>application/json</code>.</li>
+        </ul>
+
+
+        <h4>Guidelines</h4>
+
+        <ul>
+          <li>A URL identifies a resource.</li>
+          <li>URLs should include nouns, not verbs.</li>
+          <li>Use plural nouns only for consistency (no singular nouns).</li>
+          <li>You shouldn't need to go deeper than resource/identifier/resource.</li>
+          <li>Put the version number at the base of your URL, for example <a href="http://example.com/v1/path/to/resource">http://example.com/v1/path/to/resource</a>.</li>
+          <li>URL v. header:
+          <ul>
+          <li>If it changes the logic you write to handle the response, put it in the URL.</li>
+          <li>If it doesn’t change the logic for each response, like OAuth info, put it in the header.</li>
+          </ul></li>
+          <li>Specify optional fields in a comma separated list.</li>
+        </ul>
+
+
+        <h4>Base path</h4>
+
+        <p>The API will live at <code>/cs-pm-api/v1</code> on the installed site.</p>
+
+
+        <h4>HTTP Methods</h4>
+        
+        <p>Use HTTP verbs to operate on the collections and elements.</p>
+        <p>
+          <strong><code>GET</code></strong> - Used to access data, this API will not allow modification to happen over <code>GET</code>.<br>
+          <strong><code>POST</code></strong> - Create a resource.<br>
+          <strong><code>PUT</code></strong> - Update a resource or perform an action.<br>
+          <strong><code>DELETE</code></strong> - Delete resources or undo an action.
+        </p>
+        
+        
+        <h4>Error Handling</h4>
+        
+        <p>If an error occurs when operating the REST endpoint via URL, A valid JSON object with <code>code</code>, <code>message</code> and <code>description</code> would be returned.</p>
+        <p>Here's an example...</p>
+        
+        <pre>{
+  'status' => 400,
+  'title' => 'The sort wrong_key is not allowed for this path.',
+  'detail' => 'Bad Request.',
+  'type' => 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1'
+}</pre>
+
+        <h4>Response codes</h4>
+        
+        <p>When returning a response a HTTP code will always be used (duh). These have been clubbed together from various sources.</p>
+        <ul>
+          <li><a href="https://docs.atlassian.com/atlassian-confluence/REST/latest">https://docs.atlassian.com/atlassian-confluence/REST/latest</a></li>
+          <li><a href="https://dev.twitter.com/overview/api/response-codes">https://dev.twitter.com/overview/api/response-codes</a></li>
+        </ul>
+
+        <h4>Rate limiting</h4>
+        
+        <p><a href="http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api#rate-limiting">Rate limiting</a> won't be considered for this API at this time but should be thought of at some point to prevent abuse.</p>
+ 
+ 
+        <h4>Result sets</h4>
+ 
+        <p>List sets are always returned in a <code>data</code> property. Data items will always have <code>type</code> and <code>id</code> properties.</p>
+
+
+        <h4>Filtering result sets</h4>
+ 
+ 
+        <h4>Paging result sets</h4>
+
+        <p>Pagination works in the same way as it does with Facebooks OpenGraph API which implements Cursor paging.</p>
+        <ul>
+          <li><a href="https://developers.facebook.com/docs/graph-api/using-graph-api/v2.4#paging">https://developers.facebook.com/docs/graph-api/using-graph-api/v2.4#paging</a></li>
+          <li><a href="http://www.sitepoint.com/paginating-real-time-data-cursor-based-pagination/">http://www.sitepoint.com/paginating-real-time-data-cursor-based-pagination/</a></li>
+        </ul>
+ 
+        <h4>@todo</h4>
+        
+        <ul>
+          <li>HAL for models.</li>
+          <li>Figure out paging for message lists.</li>
+          <li>Define list filtering and sorting.</li>
+          <li>Friend list endpoints.</li>
+        </ul>
+        
+ 
+        <a name="endpoints"></a>
+        <h3>Endpoints</h3>
+ 
+        <h4 class="text-primary">/conversations</h4>
+ 
+        <div class="resource-request">
+          <span class="resource-verb get">GET</span> /cs-pm-api/v1/conversations
+          <span class="show-details"><a href="#resource-conversations-get" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-get" class="collapse response-details">
+          <blockquote>
+            <p>List a users conversations.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+            <p><strong>Default limit:</strong> 25.</p>
+            <p><strong>Default sort:</strong> Updated <code>DESC</code>.</p>
+          </blockquote>
+          
+          <h4>Responses</h4>
+          
+          <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>Valid response.</td>
+                <td>
+<h5>Body</h5>
+<pre>{
+  'data': [
+    {
+      'type': 'conversation',
+      'id': 1,
+      'participants': [
+        {
+          'type': 'user',
+          'id': 1,
+          'name': 'username',
+          'avatars': [
+            '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+            '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+          ],
+          'contact_frequency': 0
+        },
+        {
+          'type': 'user',
+          'id': 2,
+          'name': 'username2',
+          'avatars': [
+            '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av2.jpg?itok=123',
+            '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av2.jpg?itok=123'
+          ],
+          'contact_frequency': 0
+        },
+      ],
+      'historical_participants': [
+        {
+          // Same as 'participants' property.
+        }
+      ],
+      'started_by': {
+        'type': 'user',
+        'id': 1,
+        'name': 'username',
+        'avatars': [
+          '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+          '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+        ],
+        'contact_frequency': 0
+      }
+      'last_updated_by': {
+        'type': 'user',
+        'id': 1,
+        'name': 'username',
+        'avatars': [
+          '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+          '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+        ],
+        'contact_frequency': 0
+      }
+      'started': '2015-01-15T12:24:47+0000',
+      'updated': '2015-01-15T12:24:47+0000',
+      'container': '',
+      'title': '',
+      'messages_count': 1,
+      'unread_count': 0,
+      'pinned: false,
+      'archived': false,
+      'muted': false,
+      'starred': false,
+      'forwarded': false
+    },
+    ...
+  ],
+  'paging': {
+    'cursors': {
+      'before': 26,
+      'after': 50
+    },
+    'previous': 'https://example.com/cs-pm-api/v1/conversations?before=26',
+    'next': 'https://example.com/cs-pm-api/v1/conversations?after=50',
+  }
+}</pre>
+                </td>
+              </tr>
+              <tr>
+                <td><code>204</code></td>
+                <td colspan="2">No content (no conversations exist for this user).</td>
+              </tr>
+            </tbody>
+          </table>
+          
+        </div>
+
+
+        <div class="resource-request">
+          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations
+          <span class="show-details"><a href="#resource-conversations-post" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-post" class="collapse response-details">
+          <blockquote>
+            <p>Create a new conversation.</p>
+          </blockquote>
+          
+          <h4>Request body</h4>
+          
+          <table class="table table-striped request-body">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Required?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>recipients</td>
+                <td><code>Array</code></td>
+                <td>An array of user ids who will be participants in the conversation not including the author.</td>
+                <td><span class="glyphicon glyphicon-ok"></span></td>
+              </tr>
+              <tr>
+                <td>text</td>
+                <td><code>String</code></td>
+                <td>The text of the initial message in the conversation. Empty strings are invalid.</td>
+                <td><span class="glyphicon glyphicon-ok"></span></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h4>Responses</h4>
+
+          <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>201</code></td>
+                <td>Content created.</td>
+                <td>
+<h5>Headers</h5>
+<pre>Location: /conversations/{conversation_id}</pre>
+<h5>Body</h5>
+<pre>{
+  // See conversation model.
+}</pre>
+                </td>
+              </tr>
+              <tr>
+                <td><code>400</code></td>
+                <td colspan="2">Validation issue or otherwise, see issue text.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+ 
+         <h4 class="text-primary">/conversations/search</h4>
+        <div class="resource-request">
+          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/search
+          <span class="show-details"><a href="#resource-conversations-search-post" data-toggle="collapse">Show details</a></span>
+        </div>
+         <div id="resource-conversations-search-post" class="collapse response-details">
+          <blockquote>
+            <p>Search all conversations.</p>
+          </blockquote>
+          
+          <h4>Request body</h4>
+          
+          <table class="table table-striped request-body">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Required?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>query</td>
+                <td><code>String</code></td>
+                <td>The search query.</td>
+                <td><span class="glyphicon glyphicon-ok"></span></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h4>Responses</h4>
+
+          <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>Content found.</td>
+                <td>
+<pre>{
+  'data': [
+    {
+      'type': 'conversation_search_result',
+      'conversation': {
+        // See the conversation model.
+      },
+      'message': {
+        // See the message model.
+      },
+      'relevance': 1.0,
+      'page': 'https://example.com/cs-pm-api/v1/conversations/1/messages?before=124'
+    }
+    ...
+  ],
+  'paging': {
+    'cursors': {
+      'before': 26,
+      'after': 50
+    },
+    'previous': 'https://example.com/cs-pm-api/v1/conversations/search?before=26',
+    'next': 'https://example.com/cs-pm-api/v1/conversations/search?after=50',
+  }
+}</pre>
+                </td>
+              </tr>
+              <tr>
+                <td><code>204</code></td>
+                <td colspan="2">No results were found with that search query.</td>
+              </tr>
+              <tr>
+                <td><code>400</code></td>
+                <td colspan="2">Validation issue.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+ 
+ 
+        <h4 class="text-primary">/conversations/{conversation_id}</h4>
+ 
+        <div class="resource-request">
+          <span class="resource-verb get">GET</span> /cs-pm-api/v1/conversations/{conversation_id}
+          <span class="show-details"><a href="#resource-conversations-specific-get" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-get" class="collapse response-details">
+          <blockquote>
+            <p>Get a specific conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+          
+          <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>Content found.</td>
+                <td>
+<h5>Body</h5>
+<pre>{
+  // See conversation model.
+}</pre>
+                </td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Content not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="resource-request">
+          <span class="resource-verb delete">DELETE</span> /cs-pm-api/v1/conversations/{conversation_id}
+          <span class="show-details"><a href="#resource-conversations-specific-delete" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-delete" class="collapse response-details">
+          <blockquote>
+            <p>Delete a specific conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+          
+          <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>Content deleted.</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Content not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 class="text-primary">/conversations/{conversation_id}/reply</h4>
+        <div class="resource-request">
+          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/reply
+          <span class="show-details"><a href="#resource-conversations-specific-reply-post" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-reply-post" class="collapse response-details">
+          <blockquote>
+            <p>Post a reply to a conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+          
+          <h4>Request body</h4>
+          
+          <table class="table table-striped request-body">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Required?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>text</td>
+                <td><code>String</code></td>
+                <td>The text of the reply message to the conversation. Empty strings are invalid.</td>
+                <td><span class="glyphicon glyphicon-ok"></span></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h4>Responses</h4>
+
+          <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>201</code></td>
+                <td>Content created.</td>
+                <td>
+<h5>Headers</h5>
+<pre>Location: /conversations/{conversation_id}/message/{message_id}</pre>
+<h5>Body</h5>
+<pre>{
+  // See message model.
+}</pre>
+                </td>
+              </tr>
+              <tr>
+                <td><code>400</code></td>
+                <td colspan="2">Validation issue, text is missing.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+
+        <h4 class="text-primary">/conversations/{conversation_id}/messages</h4>
+ 
+        <div class="resource-request">
+          <span class="resource-verb get">GET</span> /cs-pm-api/v1/conversations/{conversation_id}/messages
+          <span class="show-details"><a href="#resource-conversations-specific-messages-get" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-messages-get" class="collapse response-details">
+          <blockquote>
+            <p>Get messages that belong to a conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+            <p><strong>Default limit:</strong> 25.</p>
+            <p><strong>Default sort:</strong> sent <code>DESC</code>.</p>
+          </blockquote>
+
+          <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>An array of messages.</td>
+                <td>
+<pre>{
+  'data': [
+    {
+      'type': 'message',
+      'id': 1,
+      'message_type': 'comstack_pm',
+      'conversation_id': 1,
+      'sender': {
+        'type': 'user',
+        'id': 1,
+        'name': 'username',
+        'avatars': [
+          '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+          '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+        ]
+      },
+      'sent': '2015-01-15T12:24:47+0000',
+      'updated': '2015-01-15T12:24:47+0000',
+      'text': 'Blah blah...',
+      'weight': 0,
+      'edits': 0
+    },
+    ...
+  ],
+  'paging': {
+    'cursors': {
+      'before': 26,
+      'after': 50
+    },
+    'previous': 'https://example.com/cs-pm-api/v1/conversations?before=26',
+    'next': 'https://example.com/cs-pm-api/v1/conversations?after=50',
+  }
+}</pre>
+                </td>
+              </tr>
+              <tr>
+                <td><code>204</code></td>
+                <td colspan="2">No content (no messages in conversation).</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 class="text-primary">/conversations/{conversation_id}/messages/delete</h4>
+
+        <div class="resource-request">
+          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/messages/delete
+          <span class="show-details"><a href="#resource-conversations-specific-messages-delete-post" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-messages-delete-post" class="collapse response-details">
+          <blockquote>
+            <p>Delete messages that belong to a conversation. This endpoint doesn't conform to REST but there you go.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+
+          <h4>Request body</h4>
+          
+          <table class="table table-striped request-body">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Required?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ids</td>
+                <td><code>Array</code></td>
+                <td>An array of message ids to be deleted from the conversation.</td>
+                <td><span class="glyphicon glyphicon-ok"></span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>Messages deleted.</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td><code>400</code></td>
+                <td colspan="2">Validation issue, most likely that <code>ids</code> array is missing.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Content not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 class="text-primary">/conversations/{conversation_id}/mark-as-read</h4>
+        <div class="resource-request">
+          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/mark-as-read <span class="show-details"><a href="#resource-conversations-specific-mark-put" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-mark-put" class="collapse response-details">
+          <blockquote>
+            <p>Mark a conversation as read, no unread messages within.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>Conversation has been marked as read.</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Content not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 class="text-primary">/conversations/{conversation_id}/leave</h4>
+        <div class="resource-request">
+          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/leave <span class="show-details"><a href="#resource-conversations-specific-leave" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-leave" class="collapse response-details">
+          <blockquote>
+            <p>Remove the authenticated user from the specified conversation, technically remove the user from the <code>participants</code> property array.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The user was removed from the conversation.</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 class="text-primary">/conversations/{conversation_id}/invite</h4>
+        <div class="resource-request">
+          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/invite <span class="show-details"><a href="#resource-conversations-specific-invite-post" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-invite-post" class="collapse response-details">
+          <blockquote>
+            <p>Invite a user to the conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+          <h4>Request body</h4>
+          
+          <table class="table table-striped request-body">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Required?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ids</td>
+                <td><code>Array</code></td>
+                <td>An array of user ids to be invited to the conversation.</td>
+                <td><span class="glyphicon glyphicon-ok"></span></td>
+              </tr>
+            </tbody>
+          </table>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The user has been invited.</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td><code>400</code></td>
+                <td colspan="2">Either the <code>ids</code> were missing or some user ids were invalid. Invalid user ids would be any ids not found in the available users response <code>/cs-pm-api/v1/users/available-users</code>.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 class="text-primary">/conversations/{conversation_id}/title</h4>
+        <div class="resource-request">
+          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/title <span class="show-details"><a href="#resource-conversations-specific-title-post" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-title-post" class="collapse response-details">
+          <blockquote>
+            <p>Set the title of a conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+          <h4>Request body</h4>
+          
+          <table class="table table-striped request-body">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Required?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>text</td>
+                <td><code>String</code></td>
+                <td>Empty strings are accepted.</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The title has been set.</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 class="text-primary">/conversations/{conversation_id}/mute</h4>
+        <div class="resource-request">
+          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/mute <span class="show-details"><a href="#resource-conversations-specific-mute-put" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-mute-put" class="collapse response-details">
+          <blockquote>
+            <p>Mute notifications that result from this conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The conversation has been muted.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td>Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="resource-request">
+          <span class="resource-verb delete">DELETE</span> /cs-pm-api/v1/conversations/{conversation_id}/mute <span class="show-details"><a href="#resource-conversations-specific-mute-delete" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-mute-delete" class="collapse response-details">
+          <blockquote>
+            <p>Unmute this conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The conversation has been unmuted.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td>Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 class="text-primary">/conversations/{conversation_id}/archive</h4>
+        <div class="resource-request">
+          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/archive <span class="show-details"><a href="#resource-conversations-specific-archive-put" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-archive-put" class="collapse response-details">
+          <blockquote>
+            <p>Archive this conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The conversation has been archived.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td>Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="resource-request">
+          <span class="resource-verb delete">DELETE</span> /cs-pm-api/v1/conversations/{conversation_id}/archive <span class="show-details"><a href="#resource-conversations-specific-archive-delete" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-archive-delete" class="collapse response-details">
+          <blockquote>
+            <p>Unarchive this conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The conversation has been unarchived.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td>Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 class="text-primary">/conversations/{conversation_id}/pin</h4>
+        <div class="resource-request">
+          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/pin <span class="show-details"><a href="#resource-conversations-specific-pin-put" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-pin-put" class="collapse response-details">
+          <blockquote>
+            <p>Pin this conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The conversation has been pinned.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td>Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="resource-request">
+          <span class="resource-verb delete">DELETE</span> /cs-pm-api/v1/conversations/{conversation_id}/pin <span class="show-details"><a href="#resource-conversations-specific-pin-delete" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-pin-delete" class="collapse response-details">
+          <blockquote>
+            <p>Unpin this conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The conversation has been unpinned.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td>Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <h4 class="text-primary">/conversations/{conversation_id}/star</h4>
+        <div class="resource-request">
+          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/star <span class="show-details"><a href="#resource-conversations-specific-star-put" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-star-put" class="collapse response-details">
+          <blockquote>
+            <p>Star this conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The conversation has been starred.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td>Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="resource-request">
+          <span class="resource-verb delete">DELETE</span> /cs-pm-api/v1/conversations/{conversation_id}/star <span class="show-details"><a href="#resource-conversations-specific-star-delete" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-star-delete" class="collapse response-details">
+          <blockquote>
+            <p>Unstar this conversation.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The conversation has been unstarred.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td>Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 class="text-primary">/conversations/{conversation_id}/report</h4>
+
+        <div class="resource-request">
+          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/report
+          <span class="show-details"><a href="#resource-conversations-specific-post" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-post" class="collapse response-details">
+          <blockquote>
+            <p>Report a conversation.</p>
+          </blockquote>
+          
+          <h4>Request body</h4>
+          
+          <table class="table table-striped request-body">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Required?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>reasons</td>
+                <td><code>Array</code></td>
+                <td>An array of machine name strings that represent the reasons for the report.</td>
+                <td><span class="glyphicon glyphicon-ok"></span></td>
+              </tr>
+              <tr>
+                <td>other_reason</td>
+                <td><code>String</code></td>
+                <td>The "other" reason text value.</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>posts</td>
+                <td><code>Array</code></td>
+                <td>An array of post ids relevant to the report.</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h4>Responses</h4>
+
+          <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>201</code></td>
+                <td>Content created.</td>
+                <td>
+                  No response
+                </td>
+              </tr>
+              <tr>
+                <td><code>400</code></td>
+                <td colspan="2">Validation issue or otherwise, see issue text.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 class="text-primary">/conversations/{conversation_id}/search</h4>
+        <div class="resource-request">
+          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/search
+          <span class="show-details"><a href="#resource-conversations-specific-search-post" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-search-post" class="collapse response-details">
+          <blockquote>
+            <p>Search within a conversation.</p>
+          </blockquote>
+          
+          <h4>Request body</h4>
+          
+          <table class="table table-striped request-body">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Required?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>query</td>
+                <td><code>String</code></td>
+                <td>The search query.</td>
+                <td><span class="glyphicon glyphicon-ok"></span></td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <h4>Responses</h4>
+
+          <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>Content found.</td>
+                <td>
+<pre>{
+  'data': [
+    {
+      'type': 'message_search_result',
+      'message': {
+        // See the message model.
+      },
+      'relevance': 1.0,
+      'page': 'https://example.com/cs-pm-api/v1/conversations/1/messages?before=124'
+    }
+    ...
+  ],
+  'paging': {
+    'cursors': {
+      'before': 26,
+      'after': 50
+    },
+    'previous': 'https://example.com/cs-pm-api/v1/conversations/1/search?before=26',
+    'next': 'https://example.com/cs-pm-api/v1/conversations/1/search?after=50',
+  }
+}</pre>
+                </td>
+              </tr>
+              <tr>
+                <td><code>204</code></td>
+                <td colspan="2">No results were found with that search query.</td>
+              </tr>
+              <tr>
+                <td><code>400</code></td>
+                <td colspan="2">Validation issue.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Conversation not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 class="text-primary">/users/available-users</h4>
+        <div class="resource-request">
+          <span class="resource-verb get">GET</span> /cs-pm-api/v1/users/available-users
+          <span class="show-details"><a href="#resource-users-available-users-get" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-users-available-users-get" class="collapse response-details">
+          <blockquote>
+            <p>List the available users to start conversations with.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+            <p><strong>Default limit:</strong> none.</p>
+            <p><strong>Default sort:</strong> name <code>ASC</code>.</p>
+          </blockquote>
+          
+          <h4>Responses</h4>
+          
+          <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>Valid response.</td>
+                <td>
+<h5>Body</h5>
+<pre>{
+  'data': [
+    {
+      'type': 'user',
+      'id': 1,
+      'name': 'username',
+      'avatars': [
+        '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+        '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+      ],
+      'contact_frequency': 0
+    },
+    ...
+  ]
+}</pre>
+                </td>
+              </tr>
+              <tr>
+                <td><code>204</code></td>
+                <td colspan="2">No content (no available users).</td>
+              </tr>
+            </tbody>
+          </table>
+          
+        </div>
+
+        <h4 class="text-primary">/messages/{message_id}</h4>
+
+        <div class="resource-request">
+          <span class="resource-verb get">GET</span> /cs-pm-api/v1/messages/{message_id} <span class="show-details"><a href="#resource-messages-specific-get" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-messages-specific-get" class="collapse response-details">
+          <blockquote>
+            <p>Get a message.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The message has been found.</td>
+                <td>
+<pre>{
+  'data': {
+    // See the message model.
+  }
+}</pre>
+                </td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Message not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="resource-request">
+          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/messages/{message_id} <span class="show-details"><a href="#resource-message-specific-put" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-message-specific-put" class="collapse response-details">
+          <blockquote>
+            <p>Update the message text.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+          <h4>Request body</h4>
+          
+          <table class="table table-striped request-body">
+            <thead>
+              <tr>
+                <th>Property</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Required?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>text</td>
+                <td><code>String</code></td>
+                <td>The text of the message to set. Empty strings are invalid.</td>
+                <td><span class="glyphicon glyphicon-ok"></span></td>
+              </tr>
+            </tbody>
+          </table>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>The conversation has been updated.</td>
+                <td>
+<pre>{
+  'data': {
+    // See the message model.
+  }
+}</pre>
+                </td>
+              </tr>
+              <tr>
+                <td><code>400</td>
+                <td colspan="2">Invalid request.</td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Message not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
+
+        <a name="models"></a>
+        <h3>Models</h3>
+
+        <h4 class="text-primary">Conversation <span class="show-details"><a href="#models-conversation" data-toggle="collapse">Show details</a></span></h4>
+<div id="models-conversation" class="collapse">
+<h5>Structure</h5>
+<table class="table table-striped model-body">
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>type</td>
+      <td><code>String</code></td>
+      <td>The type of entity that this is for convenience, <code>conversation</code>.</td>
+    </tr>
+    <tr>
+      <td>id</td>
+      <td><code>Integer</code></td>
+      <td>ID of the current record.</td>
+    </tr>
+    <tr>
+      <td>participants</td>
+      <td><code>Array</code></td>
+      <td>An array of user objects that are currently involved in the conversation.</td>
+    </tr>
+    <tr>
+      <td>historical_participants</td>
+      <td><code>Array</code></td>
+      <td>An array of user objects that are have been involved in the conversation, this will include anyone who has left the conversation.</td>
+    </tr>
+    <tr>
+      <td>started_by</td>
+      <td><code>Object</code></td>
+      <td>A user object of the user who initiated the conversation.</td>
+    </tr>
+    <tr>
+      <td>last_updated_by</td>
+      <td><code>Object</code></td>
+      <td>A user object of the user who last posted a reply in the conversation.</td>
+    </tr>
+    <tr>
+      <td>started</td>
+      <td><code>String</code></td>
+      <td>An <code>ISO 8601</code> date and time including timezone of when the conversation was started.</td>
+    </tr>
+    <tr>
+      <td>updated</td>
+      <td><code>String</code></td>
+      <td>An <code>ISO 8601</code> date and time including timezone of when the conversation was last updated/replied to.</td>
+    </tr>
+    <tr>
+      <td>container</td>
+      <td><code>String</code></td>
+      <td>The machine name of the container that this conversation has been placed in.</td>
+    </tr>
+    <tr>
+      <td>title</td>
+      <td><code>String</code></td>
+      <td>The title or name of the conversation if it has one.</td>
+    </tr>
+    <tr>
+      <td>messages_count</td>
+      <td><code>Integer</code></td>
+      <td>The number of messages in the conversation.</td>
+    </tr>
+    <tr>
+      <td>unread_count</td>
+      <td><code>Integer</code></td>
+      <td>The number of messages in the conversation that haven't been read by the current user.</td>
+    </tr>
+    <tr>
+      <td>pinned</td>
+      <td><code>Boolean</code></td>
+      <td>Whether or not the conversation has been pinned to the top of listings.</td>
+    </tr>
+    <tr>
+      <td>archived</td>
+      <td><code>Boolean</code></td>
+      <td>Whether or not the conversation has been archived by the current user.</td>
+    </tr>
+    <tr>
+      <td>muted</td>
+      <td><code>Boolean</code></td>
+      <td>Whether or not the conversation has been muted by the current user, if true the user will not receive notifications about new messages in this conversation.</td>
+    </tr>
+    <tr>
+      <td>starred</td>
+      <td><code>Boolean</code></td>
+      <td>Whether or not the conversation has been starred by the current user.</td>
+    </tr>
+    <tr>
+      <td>forwarded</td>
+      <td><code>Boolean</code></td>
+      <td>Whether or not the conversation has been forwarded to another user by the current user.</td>
+    </tr>
+  </tbody>
+</table>
+<h5>Example</h5>
+<pre>
+{
+  'type': 'conversation',
+  'id': 1,
+  'participants': [
+    {
+      'type': 'user',
+      'id': 1,
+      'name': 'username',
+      'avatars': [
+        '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+        '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+      ],
+      'contact_frequency': 0
+    },
+    {
+      'type': 'user',
+      'id': 2,
+      'name': 'username2',
+      'avatars': [
+        '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av2.jpg?itok=123',
+        '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av2.jpg?itok=123'
+      ],
+      'contact_frequency': 0
+    },
+  ],
+  'historical_participants': [
+    {
+      // Same as 'participants' property.
+    }
+  ],
+  'started_by': {
+    'type': 'user',
+    'id': 1,
+    'name': 'username',
+    'avatars': [
+      '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+      '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+    ],
+    'contact_frequency': 0
+  }
+  'last_updated_by': {
+    'type': 'user',
+    'id': 1,
+    'name': 'username',
+    'avatars': [
+      '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+      '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+    ],
+    'contact_frequency': 0
+  }
+  'started': '2015-01-15T12:24:47+0000',
+  'updated': '2015-01-15T12:24:47+0000',
+  'container': '',
+  'title': '',
+  'messages_count': 1,
+  'unread_count': 0,
+  'pinned: false,
+  'archived': false,
+  'muted': false,
+  'forwarded': false
+}</pre>
+</div>
+
+        <h4 class="text-primary">Message <span class="show-details"><a href="#models-message" data-toggle="collapse">Show details</a></span></h4>
+<div id="models-message" class="collapse">
+<h5>Structure</h5>
+<table class="table table-striped model-body">
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>type</td>
+      <td><code>String</code></td>
+      <td>The type of entity that this is for convenience, <code>message</code>.</td>
+    </tr>
+    <tr>
+      <td>id</td>
+      <td><code>Integer</code></td>
+      <td>ID of the current record.</td>
+    </tr>
+    <tr>
+      <td>message_type</td>
+      <td><code>String</code></td>
+      <td>The machine name of the message type, this will more often than not be <code>comstack_pm</code> but could include other types e.g. <code>comstack_pm_event</code>.</td>
+    </tr>
+    <tr>
+      <td>conversation_id</td>
+      <td><code>Integer</code></td>
+      <td>The ID of the conversation that this message belongs to.</td>
+    </tr>
+    <tr>
+      <td>sender</td>
+      <td><code>Object</code></td>
+      <td>The user object of the user who sent this message.</td>
+    </tr>
+    <tr>
+      <td>sent</td>
+      <td><code>String</code></td>
+      <td>An <code>ISO 8601</code> date and time including timezone of when this message was sent.</td>
+    </tr>
+    <tr>
+      <td>updated</td>
+      <td><code>String</code></td>
+      <td>An <code>ISO 8601</code> date and time including timezone of when this message was updated.</td>
+    </tr>
+    <tr>
+      <td>text</td>
+      <td><code>String</code></td>
+      <td>The message text.</td>
+    </tr>
+    <tr>
+      <td>weight</td>
+      <td><code>Integer</code></td>
+      <td>Weight of the current message to allow different message types to be ordered in the same list together. Defaults to <code>0</code>.</td>
+    </tr>
+    <tr>
+      <td>edits</td>
+      <td><code>Integer</code></td>
+      <td>The number of times this message has been edited.</td>
+    </tr>
+  </tbody>
+</table>
+<h5>Example</h5>
+<pre>{
+  'type': 'message',
+  'id': 1,
+  'message_type': 'comstack_pm',
+  'conversation_id': 1,
+  'sender': {
+    'type': 'user',
+    'id': 1,
+    'name': 'username',
+    'avatars': [
+      '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+      '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+    ]
+  },
+  'sent': '2015-01-15T12:24:47+0000',
+  'updated': '2015-01-15T12:24:47+0000',
+  'text': 'Blah blah...',
+  'weight': 0,
+  'edits': 0
+}</pre>
+</div>
+
+        <h4 class="text-primary">User <span class="show-details"><a href="#models-user" data-toggle="collapse">Show details</a></span></h4>
+<div id="models-user" class="collapse">
+<h5>Structure</h5>
+<table class="table table-striped model-body">
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>type</td>
+      <td><code>String</code></td>
+      <td>The type of entity that this is for convenience, <code>user</code>.</td>
+    </tr>
+    <tr>
+      <td>id</td>
+      <td><code>Integer</code></td>
+      <td>ID of the current record.</td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td><code>String</code></td>
+      <td>This users username.</td>
+    </tr>
+    <tr>
+      <td>avatars</td>
+      <td><code>Array</code></td>
+      <td>An array of avatar URLs for this user of varying sizes.</td>
+    </tr>
+    <tr>
+      <td>contact_frequency</td>
+      <td><code>Integer</code></td>
+      <td>The number of times this user has been contacted by the current user.</td>
+    </tr>
+  </tbody>
+</table>
+<h5>Example</h5>
+<pre>{
+  'type': 'user',
+  'id': 1,
+  'name': 'username',
+  'avatars': [
+    '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+    '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+  ],
+  'contact_frequency': 0
+}</pre>
+</div>
+
+        <h4 class="text-primary">Conversation search result <span class="show-details"><a href="#models-conversation-search-result" data-toggle="collapse">Show details</a></span></h4>
+<div id="models-conversation-search-result" class="collapse">
+<h5>Structure</h5>
+<table class="table table-striped model-body">
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>type</td>
+      <td><code>String</code></td>
+      <td>The type of entity that this is for convenience, <code>conversation_search_result</code>.</td>
+    </tr>
+    <tr>
+      <td>conversation</td>
+      <td><code>Object</code></td>
+      <td>The conversation object.</td>
+    </tr>
+    <tr>
+      <td>message</td>
+      <td><code>Object</code></td>
+      <td>The message object.</td>
+    </tr>
+    <tr>
+      <td>relevance</td>
+      <td><code>Float</code></td>
+      <td>The relevance of this search result used for sorting.</td>
+    </tr>
+    <tr>
+      <td>page</td>
+      <td><code>String</code></td>
+      <td>The URL to link to for this result.</td>
+    </tr>
+  </tbody>
+</table>
+<h5>Example</h5>
+<pre>{
+  'type': 'conversation_search_result',
+  'conversation': {
+    // See the conversation model.
+  },
+  'message': {
+    // See the message model.
+  },
+  'relevance': 1.0,
+  'page': 'https://example.com/cs-pm-api/v1/conversations/1/messages?before=124'
+}</pre>
+</div>
+
+        <h4 class="text-primary">Within conversation search result <span class="show-details"><a href="#models-message-search-result" data-toggle="collapse">Show details</a></span></h4>
+<div id="models-message-search-result" class="collapse">
+<h5>Structure</h5>
+<table class="table table-striped model-body">
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>type</td>
+      <td><code>String</code></td>
+      <td>The type of entity that this is for convenience, <code>message_search_result</code>.</td>
+    </tr>
+    <tr>
+      <td>message</td>
+      <td><code>Object</code></td>
+      <td>The message object.</td>
+    </tr>
+    <tr>
+      <td>relevance</td>
+      <td><code>Float</code></td>
+      <td>The relevance of this search result used for sorting.</td>
+    </tr>
+    <tr>
+      <td>page</td>
+      <td><code>String</code></td>
+      <td>The URL to link to for this result.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5>Example</h5>
+<pre>{
+  'type': 'message_search_result',
+  'message': {
+    // See the message model.
+  },
+  'relevance': 1.0,
+  'page': 'https://example.com/cs-pm-api/v1/conversations/1/messages?before=124'
+}</pre>
+</div>
+
+      </div>
+    </div>
+    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>
