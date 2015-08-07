@@ -7,7 +7,7 @@ Feature: Homepage GET Request
     When I request "GET /cs-pm-api/v1/conversations" 
     Then I should get a "200" HTTP response 
     
-    #204	No content (no conversations exist for this user).
+    #204 No content (no conversations exist for this user).
     
   Scenario: Create a new conversation.
     Given I have the payload:
