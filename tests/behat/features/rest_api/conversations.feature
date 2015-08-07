@@ -7,6 +7,24 @@ Feature: Homepage GET Request
     When I request "GET /cs-pm-api/v1/conversations" 
     Then I should get a "200" HTTP response 
     
-  Scenario: Anonymous user access   
-    When I request "GET /cs-pm-api/v1/conversations" 
-    Then I should get a "204" HTTP response 
+  Scenario: Create a new conversation.
+    Given I have the payload:
+    """
+    {
+    "recipients": "1988",
+    "text": "Sample text"
+    }
+    """
+    When I request "POST /cs-pm-api/v1/conversations"
+    Then The REST API returns a 201 response
+
+  Scenario: Validation issue or otherwise, see issue text.
+    Given I have the payload:
+    """
+    {
+    "recipients": "text",
+    "text": "       "
+    }
+    """
+    When I request "POST /cs-pm-api/v1/conversations"
+    Then The REST API returns a 400 response
