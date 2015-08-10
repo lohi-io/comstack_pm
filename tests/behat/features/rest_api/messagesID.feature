@@ -16,7 +16,6 @@ Feature: GET a message and Update the message text, as Authenticated user.
     text
     weight
     edits
-    
     """
 
  Scenario: Verify The message not found response when user enter wrong message ID.
@@ -39,7 +38,6 @@ Feature: GET a message and Update the message text, as Authenticated user.
     text
     weight
     edits
-    
     """
  Scenario: Verify The Authenticated user getting invalid response when update text with Empty strings..
    When I request "PUT  /cs-pm-api/v1/messages/{message_id}"
