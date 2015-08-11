@@ -1,4 +1,4 @@
-Feature: GET messages that belong to a conversation., as Authenticated user.
+Feature: GET messages that belong to a conversation, as Authenticated user.
 
  Scenario: To verify the "200" response.
    #When I request "GET  /cs-pm-api/v1/conversations/{conversation_id}/messages"
