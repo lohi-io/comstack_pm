@@ -1,4 +1,4 @@
-Feature: GET a specific conversation using ID, and DELETE a specific conversation.
+Feature: Test the endpoint for specific conversations with the available HTTP methods - GET and DELETE.
 
  Scenario: Authenticated user session.
    When I request "GET /cs-pm-api/v1/conversations/1"
