@@ -1,8 +1,8 @@
 Feature: List the available users to start conversations with, as Authenticated user.
 
- Scenario: To verify the "200" response.
+ Scenario: The available users list successfully displayed.
    When I request "GET  /cs-pm-api/v1/users/available-users"
-   Then I should get a 200 HTTP response
+   Then The REST API returns a 200 response
    And scope into the "data" property
    And the properties exist:
     """
@@ -12,6 +12,6 @@ Feature: List the available users to start conversations with, as Authenticated 
     avatars
     """
     
- Scenario: No content (no available users) then the user should get a 204 HTTP response
+ Scenario: No content (no available users)
    When I request "GET  /cs-pm-api/v1/users/available-users"
-   Then I should get a 204 HTTP response
+   Then The REST API returns a 204 response
