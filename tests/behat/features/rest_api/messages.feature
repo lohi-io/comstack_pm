@@ -1,9 +1,8 @@
 Feature: GET messages that belong to a conversation, as Authenticated user.
 
- Scenario: To verify the "200" response.
-   #When I request "GET  /cs-pm-api/v1/conversations/{conversation_id}/messages"
+ Scenario: The messages in the conversation successfully displayed.
    When I request "GET  /cs-pm-api/v1/conversations/1/messages"
-   Then I should get a 200 HTTP response
+   Then The REST API returns a 200 response
    And scope into the "data" property
    And the properties exist:
     """
@@ -20,12 +19,10 @@ Feature: GET messages that belong to a conversation, as Authenticated user.
     edits
     """
     
- Scenario: No content (no messages in conversation). To verify the "204" response.
-   #When I request "GET  /cs-pm-api/v1/conversations/{conversation_id}/messages"
-   When I request "GET  /cs-pm-api/v1/conversations/test/messages"
-   Then I should get a 204 HTTP response
+ Scenario: When there in no messsages in the conversation, the user should get No content response.
+   When I request "GET  /cs-pm-api/v1/conversations/1/messages"
+   Then The REST API returns a 204 response
    
- Scenario: Conversation not found.. To verify the "404" response.
-   #When I request "GET  /cs-pm-api/v1/conversations/{conversation_id}/messages"
-   When I request "GET  /cs-pm-api/v1/conversations/00/messages"
-   Then I should get a 404 HTTP response
+ Scenario: Attempt to get the message from the conversation which doesn't exist.
+   When I request "GET  /cs-pm-api/v1/conversations/9999/messages"
+   Then The REST API returns a 404 response
