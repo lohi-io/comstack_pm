@@ -884,6 +884,40 @@
             </tbody>
           </table>
         </div>
+        <div class="resource-request">
+          <span class="resource-verb delete">DELETE</span> /api/v1/cs-pm/conversations/{conversation_id}/mark-as-read <span class="show-details"><a href="#resource-conversations-specific-mark-delete" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-conversations-specific-mark-delete" class="collapse response-details">
+          <blockquote>
+            <p>Mark a conversation as unread.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+           <h4>Responses</h4>
+           <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>Conversation has been marked as unread.</td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td><code>404</code></td>
+                <td colspan="2">Content not found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
         <h4 class="text-primary">/conversations/{conversation_id}/leave</h4>
         <div class="resource-request">
           <span class="resource-verb put">PUT</span> /api/v1/cs-pm/conversations/{conversation_id}/leave <span class="show-details"><a href="#resource-conversations-specific-leave" data-toggle="collapse">Show details</a></span>
