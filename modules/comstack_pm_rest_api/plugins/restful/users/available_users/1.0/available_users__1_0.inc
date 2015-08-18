@@ -31,7 +31,16 @@ $plugin = array(
       ),
     ),
   ),*/
-  // Allow autocomplete on this endpoint.
+  // What query string elements to allow.
+  /*'url_params' => array(
+    // Filter.
+    'filter' => TRUE,
+    // Range.
+    'range' => TRUE,
+    // Allow the sort field to be changed via the URL.
+    'sort' => TRUE,
+  ),*/
+  // Autocomplete settings for this endpoint.
   'autocomplete' => array(
     'enable' => FALSE,
     // You can define a default operator for the autocomplete, can be the

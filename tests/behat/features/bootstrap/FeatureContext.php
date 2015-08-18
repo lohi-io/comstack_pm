@@ -50,6 +50,11 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     protected $scope;
 
     /**
+     * The access token.
+     */
+    protected $accessToken;
+
+    /**
      * Initializes context.
      * Every scenario gets it's own context object.
      *
@@ -77,6 +82,11 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     public function iRequest($httpMethod, $resource)
     {
         $this->resource = trim($resource);
+
+        // Modify the resource to have the access token attached if one exists.
+        if ($this->accessToken) {
+            $resource .= strpos($resource, '?') !== FALSE ? '&access_token=' . $this->accessToken : '?access_token=' . $this->accessToken;
+        }
 
         $method = strtolower($httpMethod);
 
@@ -124,6 +134,21 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
             $bodyOutput = 'The REST API responded with ' . $this->getResponse()->getStatusCode() . ' and the incorrect content type of "' . $contentType . '" where we always expect JSON.';
         }
         assertSame((int) $statusCode, (int) $this->getResponse()->getStatusCode(), $bodyOutput);
+    }
+
+    /**
+     * @Given /^I have an access token$/
+     */
+    public function iHaveAnAccessToken()
+    {
+        $response = $this->client->get('/api/session/token')->getResponse();
+        if ($response->getHeader('Content-Type') === 'application/json') {
+            $json = json_decode($response->getBody(TRUE), TRUE);
+
+            if (isset($json['X-CSRF-Token'])) {
+                $this->accessToken = $json['X-CSRF-Token'];
+            }
+        }
     }
 
     /**
