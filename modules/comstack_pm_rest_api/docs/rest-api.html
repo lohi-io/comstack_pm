@@ -299,7 +299,7 @@
         <h4 class="text-primary">/conversations</h4>
 
         <div class="resource-request">
-          <span class="resource-verb get">GET</span> /cs-pm-api/v1/conversations
+          <span class="resource-verb get">GET</span> /api/v1/cs-pm/conversations
           <span class="show-details"><a href="#resource-conversations-get" data-toggle="collapse">Show details</a></span>
         </div>
 
@@ -398,8 +398,8 @@
       'before': 26,
       'after': 50
     },
-    'previous': 'https://example.com/cs-pm-api/v1/conversations?before=26',
-    'next': 'https://example.com/cs-pm-api/v1/conversations?after=50',
+    'previous': 'https://example.com/api/v1/cs-pm/conversations?before=26',
+    'next': 'https://example.com/api/v1/cs-pm/conversations?after=50',
   }
 }</pre>
                 </td>
@@ -415,7 +415,7 @@
 
 
         <div class="resource-request">
-          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations
+          <span class="resource-verb post">POST</span> /api/v1/cs-pm/conversations
           <span class="show-details"><a href="#resource-conversations-post" data-toggle="collapse">Show details</a></span>
         </div>
 
@@ -484,7 +484,7 @@
 
          <h4 class="text-primary">/conversations/search</h4>
         <div class="resource-request">
-          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/search
+          <span class="resource-verb post">POST</span> /api/v1/cs-pm/conversations/search
           <span class="show-details"><a href="#resource-conversations-search-post" data-toggle="collapse">Show details</a></span>
         </div>
          <div id="resource-conversations-search-post" class="collapse response-details">
@@ -539,7 +539,7 @@
         // See the message model.
       },
       'relevance': 1.0,
-      'page': 'https://example.com/cs-pm-api/v1/conversations/1/messages?before=124'
+      'page': 'https://example.com/api/v1/cs-pm/conversations/1/messages?before=124'
     }
     ...
   ],
@@ -548,8 +548,8 @@
       'before': 26,
       'after': 50
     },
-    'previous': 'https://example.com/cs-pm-api/v1/conversations/search?before=26',
-    'next': 'https://example.com/cs-pm-api/v1/conversations/search?after=50',
+    'previous': 'https://example.com/api/v1/cs-pm/conversations/search?before=26',
+    'next': 'https://example.com/api/v1/cs-pm/conversations/search?after=50',
   }
 }</pre>
                 </td>
@@ -570,7 +570,7 @@
         <h4 class="text-primary">/conversations/{conversation_id}</h4>
 
         <div class="resource-request">
-          <span class="resource-verb get">GET</span> /cs-pm-api/v1/conversations/{conversation_id}
+          <span class="resource-verb get">GET</span> /api/v1/cs-pm/conversations/{conversation_id}
           <span class="show-details"><a href="#resource-conversations-specific-get" data-toggle="collapse">Show details</a></span>
         </div>
 
@@ -609,7 +609,7 @@
         </div>
 
         <div class="resource-request">
-          <span class="resource-verb delete">DELETE</span> /cs-pm-api/v1/conversations/{conversation_id}
+          <span class="resource-verb delete">DELETE</span> /api/v1/cs-pm/conversations/{conversation_id}
           <span class="show-details"><a href="#resource-conversations-specific-delete" data-toggle="collapse">Show details</a></span>
         </div>
 
@@ -645,7 +645,7 @@
 
         <h4 class="text-primary">/conversations/{conversation_id}/reply</h4>
         <div class="resource-request">
-          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/reply
+          <span class="resource-verb post">POST</span> /api/v1/cs-pm/conversations/{conversation_id}/reply
           <span class="show-details"><a href="#resource-conversations-specific-reply-post" data-toggle="collapse">Show details</a></span>
         </div>
 
@@ -716,7 +716,7 @@
         <h4 class="text-primary">/conversations/{conversation_id}/messages</h4>
 
         <div class="resource-request">
-          <span class="resource-verb get">GET</span> /cs-pm-api/v1/conversations/{conversation_id}/messages
+          <span class="resource-verb get">GET</span> /api/v1/cs-pm/conversations/{conversation_id}/messages
           <span class="show-details"><a href="#resource-conversations-specific-messages-get" data-toggle="collapse">Show details</a></span>
         </div>
 
@@ -771,8 +771,8 @@
       'before': 26,
       'after': 50
     },
-    'previous': 'https://example.com/cs-pm-api/v1/conversations?before=26',
-    'next': 'https://example.com/cs-pm-api/v1/conversations?after=50',
+    'previous': 'https://example.com/api/v1/cs-pm/conversations?before=26',
+    'next': 'https://example.com/api/v1/cs-pm/conversations?after=50',
   }
 }</pre>
                 </td>
@@ -792,7 +792,7 @@
         <h4 class="text-primary">/conversations/{conversation_id}/messages/delete</h4>
 
         <div class="resource-request">
-          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/messages/delete
+          <span class="resource-verb post">POST</span> /api/v1/cs-pm/conversations/{conversation_id}/messages/delete
           <span class="show-details"><a href="#resource-conversations-specific-messages-delete-post" data-toggle="collapse">Show details</a></span>
         </div>
 
@@ -853,7 +853,7 @@
 
         <h4 class="text-primary">/conversations/{conversation_id}/mark-as-read</h4>
         <div class="resource-request">
-          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/mark-as-read <span class="show-details"><a href="#resource-conversations-specific-mark-put" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb put">PUT</span> /api/v1/cs-pm/conversations/{conversation_id}/mark-as-read <span class="show-details"><a href="#resource-conversations-specific-mark-put" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-mark-put" class="collapse response-details">
@@ -886,7 +886,7 @@
         </div>
         <h4 class="text-primary">/conversations/{conversation_id}/leave</h4>
         <div class="resource-request">
-          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/leave <span class="show-details"><a href="#resource-conversations-specific-leave" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb put">PUT</span> /api/v1/cs-pm/conversations/{conversation_id}/leave <span class="show-details"><a href="#resource-conversations-specific-leave" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-leave" class="collapse response-details">
@@ -920,7 +920,7 @@
 
         <h4 class="text-primary">/conversations/{conversation_id}/invite</h4>
         <div class="resource-request">
-          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/invite <span class="show-details"><a href="#resource-conversations-specific-invite-post" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb post">POST</span> /api/v1/cs-pm/conversations/{conversation_id}/invite <span class="show-details"><a href="#resource-conversations-specific-invite-post" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-invite-post" class="collapse response-details">
@@ -966,7 +966,7 @@
               </tr>
               <tr>
                 <td><code>400</code></td>
-                <td colspan="2">Either the <code>ids</code> were missing or some user ids were invalid. Invalid user ids would be any ids not found in the available users response <code>/cs-pm-api/v1/users/available-users</code>.</td>
+                <td colspan="2">Either the <code>ids</code> were missing or some user ids were invalid. Invalid user ids would be any ids not found in the available users response <code>/api/v1/cs-pm/users/available-users</code>.</td>
               </tr>
               <tr>
                 <td><code>404</code></td>
@@ -977,7 +977,7 @@
         </div>
         <h4 class="text-primary">/conversations/{conversation_id}/title</h4>
         <div class="resource-request">
-          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/title <span class="show-details"><a href="#resource-conversations-specific-title-post" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb post">POST</span> /api/v1/cs-pm/conversations/{conversation_id}/title <span class="show-details"><a href="#resource-conversations-specific-title-post" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-title-post" class="collapse response-details">
@@ -1030,7 +1030,7 @@
         </div>
         <h4 class="text-primary">/conversations/{conversation_id}/mute</h4>
         <div class="resource-request">
-          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/mute <span class="show-details"><a href="#resource-conversations-specific-mute-put" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb put">PUT</span> /api/v1/cs-pm/conversations/{conversation_id}/mute <span class="show-details"><a href="#resource-conversations-specific-mute-put" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-mute-put" class="collapse response-details">
@@ -1060,7 +1060,7 @@
         </div>
 
         <div class="resource-request">
-          <span class="resource-verb delete">DELETE</span> /cs-pm-api/v1/conversations/{conversation_id}/mute <span class="show-details"><a href="#resource-conversations-specific-mute-delete" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb delete">DELETE</span> /api/v1/cs-pm/conversations/{conversation_id}/mute <span class="show-details"><a href="#resource-conversations-specific-mute-delete" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-mute-delete" class="collapse response-details">
@@ -1090,7 +1090,7 @@
         </div>
         <h4 class="text-primary">/conversations/{conversation_id}/archive</h4>
         <div class="resource-request">
-          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/archive <span class="show-details"><a href="#resource-conversations-specific-archive-put" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb put">PUT</span> /api/v1/cs-pm/conversations/{conversation_id}/archive <span class="show-details"><a href="#resource-conversations-specific-archive-put" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-archive-put" class="collapse response-details">
@@ -1120,7 +1120,7 @@
         </div>
 
         <div class="resource-request">
-          <span class="resource-verb delete">DELETE</span> /cs-pm-api/v1/conversations/{conversation_id}/archive <span class="show-details"><a href="#resource-conversations-specific-archive-delete" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb delete">DELETE</span> /api/v1/cs-pm/conversations/{conversation_id}/archive <span class="show-details"><a href="#resource-conversations-specific-archive-delete" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-archive-delete" class="collapse response-details">
@@ -1150,7 +1150,7 @@
         </div>
         <h4 class="text-primary">/conversations/{conversation_id}/pin</h4>
         <div class="resource-request">
-          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/pin <span class="show-details"><a href="#resource-conversations-specific-pin-put" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb put">PUT</span> /api/v1/cs-pm/conversations/{conversation_id}/pin <span class="show-details"><a href="#resource-conversations-specific-pin-put" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-pin-put" class="collapse response-details">
@@ -1180,7 +1180,7 @@
         </div>
 
         <div class="resource-request">
-          <span class="resource-verb delete">DELETE</span> /cs-pm-api/v1/conversations/{conversation_id}/pin <span class="show-details"><a href="#resource-conversations-specific-pin-delete" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb delete">DELETE</span> /api/v1/cs-pm/conversations/{conversation_id}/pin <span class="show-details"><a href="#resource-conversations-specific-pin-delete" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-pin-delete" class="collapse response-details">
@@ -1210,7 +1210,7 @@
         </div>
         <h4 class="text-primary">/conversations/{conversation_id}/star</h4>
         <div class="resource-request">
-          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/conversations/{conversation_id}/star <span class="show-details"><a href="#resource-conversations-specific-star-put" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb put">PUT</span> /api/v1/cs-pm/conversations/{conversation_id}/star <span class="show-details"><a href="#resource-conversations-specific-star-put" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-star-put" class="collapse response-details">
@@ -1240,7 +1240,7 @@
         </div>
 
         <div class="resource-request">
-          <span class="resource-verb delete">DELETE</span> /cs-pm-api/v1/conversations/{conversation_id}/star <span class="show-details"><a href="#resource-conversations-specific-star-delete" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb delete">DELETE</span> /api/v1/cs-pm/conversations/{conversation_id}/star <span class="show-details"><a href="#resource-conversations-specific-star-delete" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-conversations-specific-star-delete" class="collapse response-details">
@@ -1272,7 +1272,7 @@
         <h4 class="text-primary">/conversations/{conversation_id}/report</h4>
 
         <div class="resource-request">
-          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/report
+          <span class="resource-verb post">POST</span> /api/v1/cs-pm/conversations/{conversation_id}/report
           <span class="show-details"><a href="#resource-conversations-specific-post" data-toggle="collapse">Show details</a></span>
         </div>
 
@@ -1346,7 +1346,7 @@
 
         <h4 class="text-primary">/conversations/{conversation_id}/search</h4>
         <div class="resource-request">
-          <span class="resource-verb post">POST</span> /cs-pm-api/v1/conversations/{conversation_id}/search
+          <span class="resource-verb post">POST</span> /api/v1/cs-pm/conversations/{conversation_id}/search
           <span class="show-details"><a href="#resource-conversations-specific-search-post" data-toggle="collapse">Show details</a></span>
         </div>
 
@@ -1399,7 +1399,7 @@
         // See the message model.
       },
       'relevance': 1.0,
-      'page': 'https://example.com/cs-pm-api/v1/conversations/1/messages?before=124'
+      'page': 'https://example.com/api/v1/cs-pm/conversations/1/messages?before=124'
     }
     ...
   ],
@@ -1408,8 +1408,8 @@
       'before': 26,
       'after': 50
     },
-    'previous': 'https://example.com/cs-pm-api/v1/conversations/1/search?before=26',
-    'next': 'https://example.com/cs-pm-api/v1/conversations/1/search?after=50',
+    'previous': 'https://example.com/api/v1/cs-pm/conversations/1/search?before=26',
+    'next': 'https://example.com/api/v1/cs-pm/conversations/1/search?after=50',
   }
 }</pre>
                 </td>
@@ -1432,7 +1432,7 @@
 
         <h4 class="text-primary">/users/available-users</h4>
         <div class="resource-request">
-          <span class="resource-verb get">GET</span> /cs-pm-api/v1/users/available-users
+          <span class="resource-verb get">GET</span> /api/v1/cs-pm/users/available-users
           <span class="show-details"><a href="#resource-users-available-users-get" data-toggle="collapse">Show details</a></span>
         </div>
 
@@ -1489,7 +1489,7 @@
         <h4 class="text-primary">/messages/{message_id}</h4>
 
         <div class="resource-request">
-          <span class="resource-verb get">GET</span> /cs-pm-api/v1/messages/{message_id} <span class="show-details"><a href="#resource-messages-specific-get" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb get">GET</span> /api/v1/cs-pm/messages/{message_id} <span class="show-details"><a href="#resource-messages-specific-get" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-messages-specific-get" class="collapse response-details">
@@ -1527,7 +1527,7 @@
         </div>
 
         <div class="resource-request">
-          <span class="resource-verb put">PUT</span> /cs-pm-api/v1/messages/{message_id} <span class="show-details"><a href="#resource-message-specific-put" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb put">PUT</span> /api/v1/cs-pm/messages/{message_id} <span class="show-details"><a href="#resource-message-specific-put" data-toggle="collapse">Show details</a></span>
         </div>
 
         <div id="resource-message-specific-put" class="collapse response-details">
@@ -1945,7 +1945,7 @@
     // See the message model.
   },
   'relevance': 1.0,
-  'page': 'https://example.com/cs-pm-api/v1/conversations/1/messages?before=124'
+  'page': 'https://example.com/api/v1/cs-pm/conversations/1/messages?before=124'
 }</pre>
 </div>
 
@@ -1991,7 +1991,7 @@
     // See the message model.
   },
   'relevance': 1.0,
-  'page': 'https://example.com/cs-pm-api/v1/conversations/1/messages?before=124'
+  'page': 'https://example.com/api/v1/cs-pm/conversations/1/messages?before=124'
 }</pre>
 </div>
 

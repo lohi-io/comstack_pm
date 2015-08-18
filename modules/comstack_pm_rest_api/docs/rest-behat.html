@@ -124,10 +124,12 @@
         <p>This module (<a href="https://www.drupal.org/project/comstack_pm">Comstack Private Message</a>) is integrated with Travis CI which runs Behat tests each time a commit is pushed to the Github mirror repo. This also runs tests for the REST API submodule. In order to effectively test the REST API custom steps have been defined to facilitate this. Here are some links!</p>
 
         <ul>
-          <li><a href="https://travis-ci.org/lohi-io/comstack_pm">https://travis-ci.org/lohi-io/comstack_pm</a></li>
+          <li><a href="https://rawgit.com/lohi-io/comstack_pm/7.x-1.x/modules/comstack_pm_rest_api/docs/rest-api.html">Comstack Private Messaging REST API documentation</a></li>
+          <li><a href="https://travis-ci.org/lohi-io/comstack_pm">https://travis-ci.org/lohi-io/comstack_pm</a> - CI</li>
           <li><a href="https://github.com/lohi-io/comstack_pm">Comstack PM Github mirror</a></li>
           <li><a href="https://alfrednutile.info/posts/103">Source of our custom commands</a> (though we've slightly tweaked them)</li>
           <li><a href="https://github.com/philsturgeon/build-apis-you-wont-hate/tree/master/chapter12/app/tests/behat">Source of the source</a>, Build APIs you won't hate</li>
+          <li><a href="https://github.com/lohi-io/comstack_pm/tree/7.x-1.x/tests/behat/features/rest_api">The tests that implement these custom steps</a></li>
         </ul>
 
         <a name="steps"></a>
@@ -145,7 +147,7 @@
   "text": "Blah blah"
 }
 """
-When I request "POST /cs-pm-api/v1/conversations"
+When I request "POST /api/v1/cs-pm/conversations"
 Then The REST API returns a 201 response
 </pre>
 
@@ -154,7 +156,7 @@ Then The REST API returns a 201 response
 
         <p>Kick off a REST request, the first part of step is the HTTP method (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>) followed by the path starting with a <code>/</code>.</p>
 
-        <pre>When I request "GET /cs-pm-api/v1/conversations"</pre>
+        <pre>When I request "GET /api/v1/cs-pm/conversations"</pre>
 
         <h4 class="text-primary">&quot;Then The REST API returns&hellip;&quot;</h4>
 
@@ -176,7 +178,7 @@ and The response data has 5 items</pre>
 
         <p>Change "scope" into a property, this affects any steps which are noted as <strong>uses scope</strong>.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations"
+<pre>When I request "GET /api/v1/cs-pm/conversations"
 Then The REST API returns a 200 response
 and scope into the "data" property</pre>
 
@@ -184,7 +186,7 @@ and scope into the "data" property</pre>
 
         <p>Change "scope" into the first property of a name, this affects any steps which are noted as <strong>uses scope</strong>.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations"
+<pre>When I request "GET /api/v1/cs-pm/conversations"
 Then The REST API returns a 200 response
 and scope into the first "data" property</pre>
 
@@ -193,7 +195,7 @@ and scope into the first "data" property</pre>
         <p><strong>Uses scope</strong></p>
         <p>Check that a property exists within the current scope.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "id" property exists</pre>
@@ -203,7 +205,7 @@ and the "id" property exists</pre>
         <p><strong>Uses scope</strong></p>
         <p>Check that a list of properties exist within the current scope.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
   and the properties exist:
@@ -224,7 +226,7 @@ and scope into the "data" property
         <p><strong>Uses scope</strong></p>
         <p>Check that a property within the current scope has a specified value.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "id" property exists
@@ -235,7 +237,7 @@ and the "id" property equals 1</pre>
         <p><strong>Uses scope</strong></p>
         <p>Check that a property within the current scope is an array.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "participants" property exists
@@ -246,7 +248,7 @@ and the "participants" property is an array</pre>
         <p><strong>Uses scope</strong></p>
         <p>Check that a property within the current scope is an empty array.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "participants" property exists
@@ -257,7 +259,7 @@ and the "participants" property is an empty array</pre>
         <p><strong>Uses scope</strong></p>
         <p>Check that a property within the current scope is an object.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "started_by" property exists
@@ -268,7 +270,7 @@ and the "started_by" property is an object</pre>
         <p><strong>Uses scope</strong></p>
         <p>Check that a property within the current scope is an integer.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "id" property exists
@@ -279,7 +281,7 @@ and the "id" property is an integer</pre>
         <p><strong>Uses scope</strong></p>
         <p>Check that a property within the current scope is an integer.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "messages_count" property exists
@@ -290,7 +292,7 @@ and the "messages_count" property is an integer equalling "1"</pre>
         <p><strong>Uses scope</strong></p>
         <p>Check that a property within the current scope is a string.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "title" property exists
@@ -301,7 +303,7 @@ and the "title" property is a string</pre>
         <p><strong>Uses scope</strong></p>
         <p>Check that a property within the current scope is a string and that it matches a value.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "title" property exists
@@ -312,7 +314,7 @@ and the "title" property is a string equalling "hi"</pre>
         <p><strong>Uses scope</strong></p>
         <p>Check that a property within the current scope is a boolean.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "pinned" property exists
@@ -323,7 +325,7 @@ and the "pinned" property is a boolean</pre>
         <p><strong>Uses scope</strong></p>
         <p>Check that a property within the current scope is a boolean.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "pinned" property exists
@@ -334,7 +336,7 @@ and the "pinned" property is a boolean equalling "true"</pre>
         <p><strong>Uses scope</strong></p>
         <p>Reset the scope to the root of the response body.</p>
 
-<pre>When I request "GET /cs-pm-api/v1/conversations/1"
+<pre>When I request "GET /api/v1/cs-pm/conversations/1"
 Then The REST API returns a 200 response
 and scope into the "data" property
 and the "pinned" property exists
