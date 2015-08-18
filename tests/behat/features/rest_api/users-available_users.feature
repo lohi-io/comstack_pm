@@ -1,5 +1,6 @@
 Feature: List the available users to start conversations with, as Authenticated user.
 
+  @api
   Scenario: The available users list successfully displayed.
     Given I am logged in as a user with the authenticated role
     When I request "GET  /api/v1/cs-pm/users/available-users"
@@ -13,6 +14,7 @@ Feature: List the available users to start conversations with, as Authenticated 
     avatars
     """
 
+  @api
   Scenario: No content (no available users)
     Given I am logged in as a user with the authenticated role
     When I request "GET  /api/v1/cs-pm/users/available-users"
