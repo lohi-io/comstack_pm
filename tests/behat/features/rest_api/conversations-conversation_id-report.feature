@@ -9,7 +9,7 @@ Feature: Report a conversation as Authenticated user.
     "posts": [1, 2, 3],
     }
     """
-   When I request "POST  /api/v1/cs-pm/conversations/1/report"
+   When I request "POST /api/v1/cs-pm/conversations/1/report"
    Then The REST API returns a 201 response
 
  Scenario: When user not selected any option, Validation issue
