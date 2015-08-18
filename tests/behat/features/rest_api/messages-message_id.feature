@@ -1,7 +1,7 @@
 Feature: GET a message and Update the message text, as Authenticated user.
 
  Scenario: The user successfully found the message.
-   When I request "GET  /cs-pm-api/v1/messages/1"
+   When I request "GET  /api/v1/cs-pm/messages/1"
    Then The REST API returns a 200 response
    And scope into the "data" property
    And the properties exist:
@@ -19,9 +19,9 @@ Feature: GET a message and Update the message text, as Authenticated user.
     """
 
  Scenario: Message wasn't found.
-   When I request "GET  /cs-pm-api/v1/messages/999999"
+   When I request "GET  /api/v1/cs-pm/messages/999999"
    Then The REST API returns a 404 response
-   
+
  Scenario: The user successfully updated the message text.
    Given I have the payload:
     """
@@ -29,13 +29,13 @@ Feature: GET a message and Update the message text, as Authenticated user.
      "text": "Sample text"
     }
     """
-   When I request "PUT  /cs-pm-api/v1/messages/1"
+   When I request "PUT  /api/v1/cs-pm/messages/1"
    Then The REST API returns a 200 response
-   
+
  Scenario: Invalid request.
-   When I request "PUT  /cs-pm-api/v1/messages/1"
+   When I request "PUT  /api/v1/cs-pm/messages/1"
    Then The REST API returns a 400 response
-   
+
  Scenario: Looking into the message which doesn't exist
-   When I request "PUT  /cs-pm-api/v1/messages/99999"
+   When I request "PUT  /api/v1/cs-pm/messages/99999"
    Then The REST API returns a 404 response
