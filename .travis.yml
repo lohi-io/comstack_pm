@@ -90,6 +90,9 @@ before_script:
   # Generate some test users.
   - drush generate-users 50
 
+  # Clear all the caches!
+  - drush cc all
+
   # Time for Behat stuffs.
   # Setup display for Selenium.
   - export DISPLAY=:99.0
