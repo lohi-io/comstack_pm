@@ -76,7 +76,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
      */
     public function iRequest($httpMethod, $resource)
     {
-        $this->resource = $resource;
+        $this->resource = trim($resource);
 
         $method = strtolower($httpMethod);
 
@@ -121,7 +121,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
         if ($contentType === 'application/json') {
             $bodyOutput = $response->getBody();
         } else {
-            $bodyOutput = 'Output is '.$contentType.', which is not JSON and is therefore scary. Run the request manually.';
+            $bodyOutput = "Output is $contentType, which is not JSON and is therefore scary. Run the request manually.\nThe response body was: " . $response->getBody();
         }
         assertSame((int) $statusCode, (int) $this->getResponse()->getStatusCode(), $bodyOutput);
     }
