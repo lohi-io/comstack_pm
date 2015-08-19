@@ -142,6 +142,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     public function iHaveAnAccessToken()
     {
         $this->visitPath('/api/session/token');
+        print_r($this->getSession()->getPage()->getText());exit;
         if ($this->getSession()->getStatusCode() === 200) {
             $page_content = $this->getSession()->getPage()->getText();
             $json = json_decode($page_content, TRUE);
