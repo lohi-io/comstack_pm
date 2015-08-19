@@ -144,9 +144,8 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
         $this->visitPath('/api/session/token');
         if ($this->getSession()->getStatusCode() == 200) {
             $page_content = $this->getSession()->getDriver()->getContent();
-            var_dump($page_content->getContents());exit;
-            $json = json_decode($page_content, TRUE);
-
+            $json = json_decode($page_content->getContents(), TRUE);
+print_r($json);exit;
             if (isset($json['X-CSRF-Token'])) {
                 $this->accessToken = $json['X-CSRF-Token'];
             }
