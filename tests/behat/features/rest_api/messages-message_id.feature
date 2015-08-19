@@ -48,6 +48,9 @@ Feature: GET a message and Update the message text, as Authenticated user.
     When I request "PUT /api/v1/cs-pm/messages/1"
     Then The REST API returns a 400 response
 
+ @api
  Scenario: Looking into the message which doesn't exist
-   When I request "PUT /api/v1/cs-pm/messages/99999"
-   Then The REST API returns a 404 response
+    Given I am logged in as a user with the authenticated role
+    And I have an access token
+    When I request "PUT /api/v1/cs-pm/messages/99999"
+    Then The REST API returns a 404 response
