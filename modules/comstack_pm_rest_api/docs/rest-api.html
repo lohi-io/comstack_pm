@@ -269,10 +269,47 @@
 
         <h4>Result sets</h4>
 
-        <p>List sets are always returned in a <code>data</code> property. Data items will always have <code>type</code> and <code>id</code> properties.</p>
+        <p>Providing a response provides a body, list sets are always returned with a <code>data</code> property. Data items will always have <code>type</code> and <code>id</code> properties.</p>
+        <p>Along with a <code>data</code> property there will also be <code>count</code> and if enough results paging.</p>
 
 
         <h4>Filtering result sets</h4>
+
+        <p>You can filter a result set on an endpoint by a property that belongs to the model being listed.<p>
+        <p>This follows the same format as laid out by the <a href="https://github.com/RESTful-Drupal/restful/blob/7.x-1.x/docs/api_url.md#applying-a-query-filter">RESTful Drupal module</a>.</p>
+
+        <h5>Examples</h5>
+
+        <p>Reducing a result set by a single field, in this case where the user models property <code>name</code> has the value <code>alli</code>.</p>
+        <pre>/api/v1/cs-pm/users/available-users?filter[name]=alli</pre>
+
+        <p>Reducing a result set by a field and specifying the operator.</p>
+        <p>Valid operators are <code>&quot;=&quot;</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&quot;&lt;=&quot;</code>, <code>&quot;&gt;=&quot;</code>, <code>&quot;&lt;&gt;&quot;</code>, <code>&quot;!=&quot;</code>, <code>BETWEEN</code>, <code>CONTAINS</code> (default), <code>IN</code>, <code>LIKE</code>, <code>NOT IN</code>, <code>STARTS_WITH</code>. Yes, the text is uppercase shouty, note that certain operators are wrapped in quote marks.</p>
+        <pre>/api/v1/cs-pm/users/available-users?filter[name][value]=a&amp;filter[name][operator]=STARTS_WITH</pre>
+
+        <p>You can do multiple fields, multiple filters on a single field, lots!</p>
+
+
+        <h4>Sorting result sets</h4>
+
+        <p>As with filtering you can also sort on any data model property, do this by adding <code>sort</code> to the request query string.</p>
+        <p>The default direction for a sort is <code>Ascending</code>, if you prepend the property name with a minus <code>-</code> it will change the sort to <code>Descending</code>.
+        <p>Example time!</p>
+        <pre>/api/v1/cs-pm/users/available-users?sort=id</pre>
+        <pre>/api/v1/cs-pm/users/available-users?sort=-id</pre>
+
+        <p>You can sort on multiple fields by separating things with a comma in the single <code>sort</code> query string parameter. Unlike with filtering you only ever set one <code>sort</code> param.</p>
+
+        <pre>/api/v1/cs-pm/users/available-users?sort=id,name</pre>
+        <pre>/api/v1/cs-pm/users/available-users?sort=-contact_frequency,name</pre>
+
+
+        <h4>Only requesting certain properties</code>
+
+        <p>If for whatever reason you want to grab some data, and only have it return certain fields, for example "Give me all the users the current user can contact, but only give me their ID and name (username)".</p>
+        <p>You would do this by adding <code>fields</code> to the query string. Specify multiple fields by separating them with a comma.</p>
+        <pre>/api/v1/cs-pm/users/available-users?fields=id</pre>
+        <pre>/api/v1/cs-pm/users/available-users?fields=id,name</pre>
 
 
         <h4>Paging result sets</h4>
@@ -288,7 +325,6 @@
         <ul>
           <li>HAL for models.</li>
           <li>Figure out paging for message lists.</li>
-          <li>Define list filtering and sorting.</li>
           <li>Friend list endpoints.</li>
         </ul>
 
