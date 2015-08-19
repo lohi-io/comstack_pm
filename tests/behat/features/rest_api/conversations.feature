@@ -1,6 +1,9 @@
 Feature: List a users conversations and Create a new conversation.
 
+  @api
   Scenario: Valid response.
+    Given I am logged in as a user with the authenticated role
+    And I have an access token
     When I request "GET /api/v1/cs-pm/conversations"
     Then The REST API returns a 200 response
     And scope into the "data" property
@@ -20,7 +23,10 @@ Feature: List a users conversations and Create a new conversation.
 
     #204 No content (no conversations exist for this user).
 
+  @api
   Scenario: Content successfully created.
+    Given I am logged in as a user with the authenticated role
+    And I have an access token
     Given I have the payload:
     """
     {
@@ -31,6 +37,9 @@ Feature: List a users conversations and Create a new conversation.
     When I request "POST /api/v1/cs-pm/conversations"
     Then The REST API returns a 201 response
 
+  @api
   Scenario: Start a new conversation without a text.
+    Given I am logged in as a user with the authenticated role
+    And I have an access token
     When I request "POST /api/v1/cs-pm/conversations"
     Then The REST API returns a 400 response
