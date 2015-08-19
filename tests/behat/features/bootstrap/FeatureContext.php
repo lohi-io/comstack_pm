@@ -142,8 +142,9 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     public function iHaveAnAccessToken()
     {
         $this->visitPath('/api/session/token');
-        if ($this->getStatusCode() === 200) {
-            $page_content = $this->getPage()->getText();
+        print_r($this->getSession()->getStatusCode());exit;
+        if ($this->getSession()->getStatusCode() === 200) {
+            $page_content = $this->getSession()->getPage()->getText();
             $json = json_decode($page_content, TRUE);
 
             if (isset($json['X-CSRF-Token'])) {
