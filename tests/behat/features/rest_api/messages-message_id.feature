@@ -32,7 +32,7 @@ Feature: GET a message and Update the message text, as Authenticated user.
   Scenario: The user successfully updated the message text.
     Given I am logged in as a user with the authenticated role
     And I have an access token
-    Given I have the payload:
+    And I have the payload:
     """
     {
       "text": "Sample text"
@@ -45,6 +45,12 @@ Feature: GET a message and Update the message text, as Authenticated user.
   Scenario: Invalid request.
     Given I am logged in as a user with the authenticated role
     And I have an access token
+    And I have the payload:
+    """
+    {
+      "text": "Sample text"
+    }
+    """
     When I request "PUT /api/v1/cs-pm/messages/1"
     Then The REST API returns a 400 response
 
@@ -52,5 +58,11 @@ Feature: GET a message and Update the message text, as Authenticated user.
   Scenario: Looking into the message which doesn't exist
     Given I am logged in as a user with the authenticated role
     And I have an access token
+    And I have the payload:
+    """
+    {
+      "text": "Sample text"
+    }
+    """
     When I request "PUT /api/v1/cs-pm/messages/99999"
     Then The REST API returns a 404 response
