@@ -4,12 +4,12 @@ Feature: Add a reply to a conversation, as Authenticated user.
   Scenario: Valid content is posted and successfully saved.
     Given I am logged in as a user with the authenticated role
     And I have an access token
-     Given I have the payload:
-     """
-     {
-       "text": "Blah blah"
-     }
-     """
+    And I have the payload:
+    """
+    {
+      "text": "Blah blah"
+    }
+    """
     When I request "POST /api/v1/cs-pm/conversations/1/reply"
     Then The REST API returns a 201 response
   
@@ -24,5 +24,11 @@ Feature: Add a reply to a conversation, as Authenticated user.
   Scenario: Attempt to add a reply to a conversation that doesn't exist.
     Given I am logged in as a user with the authenticated role
     And I have an access token
+    And I have the payload:
+    """
+    {
+      "text": "Blah blah"
+    }
+    """
     When I request "POST /api/v1/cs-pm/conversations/999999/reply"
     Then The REST API returns a 404 response
