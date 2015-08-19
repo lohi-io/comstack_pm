@@ -16,7 +16,8 @@ Feature: List the available users to start conversations with, as Authenticated 
     """
 
   @api
-  Scenario: No content (no available users)
+  Scenario: No content (no available users).
     Given I am logged in as a user with the authenticated role
+    And I have an access token
     When I request "GET /api/v1/cs-pm/users/available-users"
     Then The REST API returns a 204 response
