@@ -51,8 +51,18 @@ class ComstackPMAvailableUsersResource__1_0 extends \RestfulEntityBaseUser {
     $id_field = $public_fields['id'];
     unset($public_fields['id']);
 
-    $public_fields['type'] = array(
+    /**
+     * We want to simply output a string, if we want to do this then we could
+     * do it as following with a static callback method within this class.
+     */
+    /*$public_fields['type'] = array(
       'callback' => 'static::getResourceType',
+    );*/
+    /**
+     * Simplest way is to use a method in an ancestor class.
+     */
+    $public_fields['type'] = array(
+      'callback' => array('\RestfulManager::echoMessage', array('user')),
     );
 
     $public_fields['id'] = $id_field;
@@ -80,7 +90,7 @@ class ComstackPMAvailableUsersResource__1_0 extends \RestfulEntityBaseUser {
     // @todo this should be a count of the number of time the current user has
     // contacted the user in question.
     $public_fields['contact_frequency'] = array(
-      'callback' => 'static::getContactFrequency',
+      'callback' => array('\RestfulManager::echoMessage', array(0)),
     );
 
     // Remove default properties we don't want, yeah self. Discoverable
@@ -114,33 +124,6 @@ class ComstackPMAvailableUsersResource__1_0 extends \RestfulEntityBaseUser {
     $query->addTag('comstack_recipients');
 
     return $query->count();
-  }
-
-  /**
-   * Get the "type" value, just a static string.
-   *
-   * @param \EntityMetadataWrapper $wrapper
-   *   The wrapped entity.
-   *
-   * @return string
-   *   The type name of this data.
-   */
-  public static function getResourceType(\EntityMetadataWrapper $wrapper) {
-    return 'user';
-  }
-
-  /**
-   * Get the contact frequency between the current user and the user in this
-   * row.
-   *
-   * @param \EntityMetadataWrapper $wrapper
-   *   The wrapped entity.
-   *
-   * @return integer
-   *   The type name of this data.
-   */
-  public static function getContactFrequency(\EntityMetadataWrapper $wrapper) {
-    return 0;
   }
 
   /**
