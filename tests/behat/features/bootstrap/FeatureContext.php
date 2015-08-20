@@ -108,7 +108,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
             }
 
 
-                    if ($this->response->getStatusCode() == 401) {
+                    if ($this->resource == '/api/v1/cs-pm/users/available-users') {
                         print_r($this->response->getBody());
                         print_r($resource);
                         exit;
