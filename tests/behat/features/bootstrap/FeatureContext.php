@@ -97,7 +97,6 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
                     $this->response = $this
                         ->client
                         ->$method($resource, null, array('body' => $this->requestPayload));
-                        //'content-type' => 'application/json'
                     break;
 
                 default:
@@ -152,8 +151,6 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
                 $this->accessToken = $json['access_token'];
             }
         }
-        print_r($json);
-        var_dump($this->accessToken);exit;
     }
 
     /**
