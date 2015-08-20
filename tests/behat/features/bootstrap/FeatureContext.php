@@ -152,6 +152,8 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
                 $this->accessToken = $json['access_token'];
             }
         }
+        print_r($json);
+        print_r($this->accessToken);exit;
     }
 
     /**
