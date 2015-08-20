@@ -134,13 +134,6 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
             $bodyOutput = $response->getBody();
         } else {
             $bodyOutput = 'The REST API responded with ' . $this->getResponse()->getStatusCode() . ' and the incorrect content type of "' . $contentType . '" where we always expect JSON.';
-
-            if ($this->getResponse()->getStatusCode() == '401') {
-                print_r($this->resource);
-                print_r($response->getBody());
-                print_r($response);
-                exit;
-            }
         }
         assertSame((int) $statusCode, (int) $this->getResponse()->getStatusCode(), $bodyOutput);
     }
@@ -150,13 +143,13 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
      */
     public function iHaveAnAccessToken()
     {
-        $this->visitPath('/api/session/token');
+        $this->visitPath('/api/login-token');
         if ($this->getSession()->getStatusCode() == 200) {
             $page_content = $this->getSession()->getDriver()->getContent();
             $json = json_decode($page_content->getContents(), TRUE);
 
-            if (isset($json['X-CSRF-Token'])) {
-                $this->accessToken = $json['X-CSRF-Token'];
+            if (isset($json['access_token'])) {
+                $this->accessToken = $json['access_token'];
             }
         }
     }
