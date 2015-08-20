@@ -33,6 +33,15 @@ class ComstackPMAvailableUsersResource__1_0 extends \RestfulEntityBaseUser {
   }
 
   /**
+   * Overrides \RestfulEntityBaseUser::getList().
+   *
+   * Remove the access check instated by RestfulEntityBaseUser.
+   */
+  public function getList() {
+    return RestfulEntityBase::getList();
+  }
+
+  /**
    * Overrides \RestfulEntityBase::publicFieldsInfo().
    */
   public function publicFieldsInfo() {
