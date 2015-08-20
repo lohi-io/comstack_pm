@@ -82,7 +82,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     public function iRequest($httpMethod, $resource)
     {
         $this->resource = trim($resource);
-
+var_dump($resource);
         // Modify the resource to have the access token attached if one exists.
         if ($this->accessToken) {
             print $this->accessToken . "\n";
