@@ -87,7 +87,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
         if ($this->accessToken) {
             print $this->accessToken . "\n";
             $resource .= strpos($resource, '?') !== FALSE ? '&access_token=' . $this->accessToken : '?access_token=' . $this->accessToken;
-            print $resource;exit;
+            var_dump($resource);exit;
         }
 
         $method = strtolower($httpMethod);
