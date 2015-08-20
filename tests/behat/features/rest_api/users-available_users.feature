@@ -12,9 +12,9 @@ Feature: List the available users to start conversations with, as Authenticated 
     type
     id
     name
-    avatars
     """
-
+    # We don't test for the "avatars" property as this can be false if the user
+    # doesn't have one.
   @api
   Scenario: No content (no available users).
     Given I am logged in as a user with the authenticated role
