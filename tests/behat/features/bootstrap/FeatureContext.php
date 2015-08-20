@@ -105,12 +105,15 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
                         ->client
                         ->$method($resource);
 
-                    if ($this->theRESTAPIReturnsAResponse(401)) {
-                        print_r($this->getResponse()->getBody());
+            }
+
+
+                    if ($this->response->getStatusCode() == 401) {
+                        print_r($this->response->getBody());
                         print_r($resource);
                         exit;
                     }
-            }
+
         } catch (BadResponseException $e) {
 
             $response = $e->getResponse();
