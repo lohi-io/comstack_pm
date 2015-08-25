@@ -5,3 +5,5 @@ package = Communications Stack
 php = 5.3
 
 dependencies[] = comstack
+
+files[] = includes/ComstackConversation.php

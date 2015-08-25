@@ -7,7 +7,7 @@
 /**
  * Implements hook_schema().
  */
-function comstack_private_messaging_schema() {
+function comstack_pm_schema() {
   $schema = array();
 
   $schema['comstack_conversation'] = array(
@@ -18,27 +18,6 @@ function comstack_private_messaging_schema() {
         'type' => 'serial',
         'unsigned' => TRUE,
         'not null' => TRUE,
-      ),
-      'type' => array(
-        'description' => 'The {comstack_message}.type of this conversation.',
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'entity_type' => array(
-        'description' => 'The entity type that started the conversation.',
-        'type' => 'varchar',
-        'length' => '128',
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'entity_id' => array(
-        'description' => 'The ID of the entity which started the conversation.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
       ),
       'container' => array(
         'description' => 'The machine name of the container e.g. Folder this conversation lives in.',
@@ -98,21 +77,13 @@ function comstack_private_messaging_schema() {
       ),
     ),
     'indexes' => array(
-      'type' => array('type'),
-      'entity_type' => array('entity_type'),
-      'entity_id' => array('entity_id'),
       'started' => array('started'),
       'updated' => array('updated'),
       'messages_count' => array('messages_count'),
       'pinned' => array('pinned'),
       'deleted' => array('deleted'),
     ),
-    'foreign keys' => array(
-      'type' => array(
-        'table' => 'comstack_message_type',
-        'columns' => array('type' => 'type'),
-      ),
-    ),
+    'foreign keys' => array(),
     'primary key' => array('conversation_id'),
   );
 
@@ -254,15 +225,370 @@ function comstack_private_messaging_schema() {
 }
 
 /**
+ * Implements hook_schema_alter().
+ */
+function comstack_pm_schema_alter(&$schema) {
+  $schema['message']['fields']['edits'] = array(
+    'type' => 'int',
+    'size' => 'tiny',
+    'not null' => TRUE,
+    'default' => 0,
+    'unsigned' => TRUE,
+    'description' => 'A small integer field which notes how many times this message has been edited, max value of 127.',
+  );
+}
+
+/**
  * Implements hook_install().
  */
 function comstack_pm_install() {
+  // If the edits field hasn't been thrown on the message schema, do it.
+  if (!db_field_exists('message', 'edits')) {
+    $schema = drupal_get_schema('message');
+    db_add_field('message', 'edits', $schema['fields']['edits']);
+  }
 
+  // Install the conversation fields.
+  comstack_pm_install_conversation_fields();
+
+  // Setup the comstack_pm comstack message type.
+  comstack_pm_install_entities();
+
+  // Add in the fields for the message entities.
+  comstack_pm_install_message_fields();
 }
 
 /**
  * Implements hook_uninstall().
  */
 function comstack_pm_uninstall() {
+  // Remove variables.
+  variable_del('comstack_pm_type');
 
+  // Remove schema alterations.
+  if (db_field_exists('message', 'edits')) {
+    db_drop_field('message', 'edits');
+  }
+
+  // Remove fields.
+  $fields = array('cs_pm_participants', 'cs_pm_historical_participants', 'cs_pm_started_by', 'cs_pm_last_updated_by');
+
+  foreach ($fields as $field) {
+    $instance = field_info_instance('comstack_conversation', $field, 'comstack_conversation');
+    field_delete_instance($instance);
+    field_delete_field($field);
+  }
+}
+
+/**
+ * Create the necessary entity reference fields on the comstack_conversation
+ * entity.
+ *
+ * https://www.drupal.org/node/1264160#comment-7985971
+ */
+function comstack_pm_install_conversation_fields() {
+  $t = get_t();
+
+  $fields = array(
+    'cs_pm_participants' => array(
+      'label' => $t('Participants'),
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    ),
+    'cs_pm_historical_participants' => array(
+      'label' => $t('Historical participants'),
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    ),
+    'cs_pm_started_by' => array(
+      'label' => $t('Started by'),
+      'cardinality' => 1,
+    ),
+    'cs_pm_last_updated_by' => array(
+      'label' => $t('Last updated by'),
+      'cardinality' => 1,
+    ),
+  );
+
+  foreach ($fields as $field_name => $details) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'entityreference',
+      'module' => 'entityreference',
+      'cardinality' => $details['cardinality'],
+      'entity_types' => array(),
+      'settings' => array(
+        'handler' => 'base',
+        'handler_settings' => array(
+          'behaviors' => array(
+            'views-select-list' => array(
+              'status' => 0,
+            ),
+          ),
+          'sort' => array(
+            'type' => 'none',
+          ),
+          'target_bundles' => array(),
+        ),
+        'target_type' => 'user',
+      ),
+      'foreign keys' => array(
+        'users' => array(
+          'columns' => array(
+            'target_id' => 'uid',
+          ),
+          'table' => 'users',
+        ),
+      ),
+      'indexes' => array(
+        'target_id' => array(
+          0 => 'target_id',
+        ),
+      ),
+      'locked' => 1,
+      'translatable' => 0,
+      'active' => 1,
+      'deleted' => 0,
+    );
+    field_create_field($field);
+
+    $instance = array(
+      'bundle' => 'comstack_conversation',
+      'default_value' => NULL,
+      'deleted' => 0,
+      'description' => '',
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'settings' => array(),
+          'type' => 'hidden',
+          'weight' => 5,
+        ),
+      ),
+      'entity_type' => 'comstack_conversation',
+      'field_name' => $field_name,
+      'label' => $details['label'],
+      'required' => 0,
+      'settings' => array(
+        'user_register_form' => FALSE,
+      ),
+      'widget' => array(
+        'active' => 1,
+        'module' => 'entityreference',
+        'settings' => array(
+          'match_operator' => 'CONTAINS',
+          'path' => '',
+          'size' => 60,
+        ),
+        'type' => 'entityreference_autocomplete',
+        'weight' => 3,
+      ),
+    );
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Create the message and comstack_message_type entities.
+ */
+function comstack_pm_install_entities() {
+  $message_type = entity_import('message_type', '{
+    "name" : "cs_pm",
+    "description" : "Private Messaging",
+    "argument_keys" : [],
+    "argument" : [],
+    "category" : "message_type",
+    "data" : {
+      "token options" : { "clear" : 0 },
+      "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" }
+    },
+    "language" : "",
+    "arguments" : null,
+    "message_text" : { "und" : [ { "value" : "-", "format" : "cs_pm", "safe_value" : "-" } ] },
+    "rdf_mapping" : []
+  }');
+  if (!entity_load_single('message_type', 'cs_pm')) {
+    entity_save('message_type', $message_type);
+  }
+
+  $comstack_message_type = entity_import('comstack_message_type', '{
+    "type" : "cs_pm",
+    "label" : "Private Messaging",
+    "structure" : "flat",
+    "conversation_record_separate_transcripts" : "1",
+    "subject" : "0",
+    "template" : "0",
+    "template_text" : "",
+    "user_preferences" : "0",
+    "flood_control" : "0",
+    "flood_control_interval" : "3600",
+    "flood_control_limit" : "50",
+    "store_last_read_time" : "0",
+    "record_read_receipts" : "0",
+    "record_read_receipts_perm" : "0",
+    "record_read_receipts_default" : "1",
+    "input_methods" : null,
+    "delivery_methods" : { "email" : "email" },
+    "ui_settings" : null,
+    "notification_settings" : null,
+    "grouping" : "0",
+    "groups" : [],
+    "actions" : "0",
+    "rdf_mapping" : []
+  }');
+  if (!entity_load_single('comstack_message_type', 'cs_pm')) {
+    entity_save('comstack_message_type', $comstack_message_type);
+  }
+}
+
+/**
+ * Add fields to the comstack private messaging message entity.
+ */
+function comstack_pm_install_message_fields() {
+  $field = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'cs_pm_conversation',
+    'indexes' => array(
+      'target_id' => array(
+        0 => 'target_id',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'entityreference',
+    'settings' => array(
+      'handler' => 'base',
+      'handler_settings' => array(
+        'behaviors' => array(
+          'views-select-list' => array(
+            'status' => 0,
+          ),
+        ),
+        'sort' => array(
+          'type' => 'none',
+        ),
+        'target_bundles' => array(),
+      ),
+      'target_type' => 'comstack_conversation',
+    ),
+    'translatable' => 0,
+    'type' => 'entityreference',
+  );
+  field_create_field($field);
+
+  $field = array(
+    'active' => 1,
+    'cardinality' => 1,
+    'deleted' => 0,
+    'entity_types' => array(),
+    'field_name' => 'cs_pm_text',
+    'indexes' => array(
+      'format' => array(
+        0 => 'format',
+      ),
+    ),
+    'locked' => 0,
+    'module' => 'text',
+    'settings' => array(),
+    'translatable' => 0,
+    'type' => 'text_long',
+  );
+  field_create_field($field);
+
+  $instance = array(
+    'bundle' => 'cs_pm',
+    'default_value' => NULL,
+    'default_value_function' => '',
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'entityreference',
+        'settings' => array(
+          'link' => FALSE,
+        ),
+        'type' => 'entityreference_label',
+        'weight' => 0,
+      ),
+    ),
+    'entity_type' => 'message',
+    'field_name' => 'cs_pm_conversation',
+    'label' => 'Conversation',
+    'required' => 1,
+    'settings' => array(
+      'behaviors' => array(
+        'prepopulate' => array(
+          'status' => 0,
+        ),
+      ),
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 1,
+    ),
+  );
+  field_create_instance($instance);
+
+  $instance = array(
+    'bundle' => 'cs_pm',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'module' => 'text',
+        'settings' => array(),
+        'type' => 'text_default',
+        'weight' => 1,
+      ),
+    ),
+    'entity_type' => 'message',
+    'field_name' => 'cs_pm_text',
+    'label' => 'Text',
+    'required' => 1,
+    'settings' => array(
+      'better_formats' => array(
+        'allowed_formats' => array(
+          'cs_pm' => 'cs_pm',
+        ),
+        'allowed_formats_toggle' => 1,
+        'default_order_toggle' => 0,
+        'default_order_wrapper' => array(
+          'formats' => array(
+            'cs_pm' => array(
+              'weight' => 0,
+            ),
+          ),
+        ),
+      ),
+      'text_processing' => 1,
+      'user_register_form' => FALSE,
+    ),
+    'widget' => array(
+      'active' => 1,
+      'module' => 'text',
+      'settings' => array(
+        'atjs_fieldset' => array(
+          'atjs' => 0,
+          'atjs_listeners' => array(
+            'harmony_users' => 0,
+          ),
+        ),
+        'rows' => 3,
+      ),
+      'type' => 'text_textarea',
+      'weight' => 2,
+    ),
+  );
+  field_create_instance($instance);
 }

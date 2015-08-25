@@ -130,7 +130,8 @@
         background-color: #ADAB26;
       }
 
-      .resource-verb.put {
+      .resource-verb.put,
+      .resource-verb.patch {
         background-color: #4b0082;
       }
 
@@ -237,7 +238,8 @@
         <p>
           <strong><code>GET</code></strong> - Used to access data, this API will not allow modification to happen over <code>GET</code>.<br>
           <strong><code>POST</code></strong> - Create a resource.<br>
-          <strong><code>PUT</code></strong> - Update a resource or perform an action.<br>
+          <strong><code>PUT</code></strong> - Perform an action on a resource.<br>
+          <strong><code>PATCH</code></strong> - Partially update a resource.<br>
           <strong><code>DELETE</code></strong> - Delete resources or undo an action.
         </p>
 
@@ -1597,10 +1599,10 @@
         </div>
 
         <div class="resource-request">
-          <span class="resource-verb put">PUT</span> /api/v1/cs-pm/messages/{message_id} <span class="show-details"><a href="#resource-message-specific-put" data-toggle="collapse">Show details</a></span>
+          <span class="resource-verb patch">PATCH</span> /api/v1/cs-pm/messages/{message_id} <span class="show-details"><a href="#resource-message-specific-patch" data-toggle="collapse">Show details</a></span>
         </div>
 
-        <div id="resource-message-specific-put" class="collapse response-details">
+        <div id="resource-message-specific-patch" class="collapse response-details">
           <blockquote>
             <p>Update the message text.</p>
             <p><strong>Requires:</strong> Authenticated user session.</p>

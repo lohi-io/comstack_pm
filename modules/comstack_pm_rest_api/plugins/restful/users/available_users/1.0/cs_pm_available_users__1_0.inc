@@ -5,9 +5,11 @@ $plugin = array(
   // All of the comstack private messaging rest api endpoints are prefixed.
   'resource' => 'cs-pm/users/available-users',
   // The name index must match this files name.
-  'name' => 'available_users__1_0',
+  'name' => 'cs_pm_available_users__1_0',
   'description' => t('Get a list of users that the current user can contact via Private Messaging.'),
   'class' => 'ComstackPMAvailableUsersResource__1_0',
+  'major_version' => 1,
+  'minor_version' => 0,
   // We're inheriting from the base user restful data provider, but still add
   // the entity type and bundle keys. If not working with an entity type then
   // you should set 'entity_type' to FALSE.
