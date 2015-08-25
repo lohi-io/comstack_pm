@@ -111,4 +111,60 @@ class ComstackPMMessagesResource__1_0 extends \RestfulEntityBase {
 
     return $public_fields;
   }
+
+  /**
+   * Overrides \RestfulEntityBase::patchEntity().
+   *
+   * Only allow the "text" property to be modified.
+   */
+  public function patchEntity($entity_id) {
+    // Loop through the exposed properties and remove all except "text".
+    $request = $this->getRequest();
+    foreach ($this->getPublicFields() as $public_field_name => $info) {
+      if (isset($request[$public_field_name]) && $public_field_name !== 'text') {
+        unset($request[$public_field_name]);
+      }
+    }
+    $this->setRequest($request);
+    unset($request);
+
+    return $this->updateEntity($entity_id, FALSE);
+  }
+
+  /**
+   * Overrides \RestfulEntityBase::propertyValuesPreprocessText().
+   *
+   * The input format is hardcoded into this function, use a variable instead.
+   */
+  protected function propertyValuesPreprocessText($property_name, $value, $field_info) {
+    // Text field. Check if field has an input format.
+    $instance = field_info_instance($this->getEntityType(), $property_name, $this->getBundle());
+    $format = variable_get('comstack_pm_rest_input_format', 'cs_pm');
+
+    if ($field_info['cardinality'] == 1) {
+      // Single value.
+      if (!$instance['settings']['text_processing']) {
+        return $value;
+      }
+
+      return array (
+        'value' => $value,
+        'format' => $format,
+      );
+    }
+
+    // Multiple values.
+    foreach ($value as $delta => $single_value) {
+      if (!$instance['settings']['text_processing']) {
+        $return[$delta] = $single_value;
+      }
+      else {
+        $return[$delta] = array(
+          'value' => $single_value,
+          'format' => $format,
+        );
+      }
+    }
+    return $return;
+  }
 }
