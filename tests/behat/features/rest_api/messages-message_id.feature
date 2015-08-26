@@ -7,7 +7,7 @@ Feature: GET a message and Update the message text, as Authenticated user.
     Given I have the payload:
     """
     {
-    "recipients": "[1]",
+    "recipients": "[1,2]",
     "text": "Sample text"
     }
     """
