@@ -7,7 +7,7 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
     Given I have the payload:
     """
     {
-    "recipients": "1988",
+    "recipients": "[1,2]",
     "text": "Sample text"
     }
     """
