@@ -9,7 +9,7 @@ Feature: List a users conversations and Create a new conversation.
     Given I have the payload:
     """
     {
-    "recipients": "1988",
+    "recipients": "[1,2]",
     "text": "Sample text"
     }
     """
