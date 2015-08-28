@@ -47,9 +47,9 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
   protected function checkEntityAccess($op, $entity_type, $entity) {
     $account = $this->getAccount();
 
-    if () {
+    /*if () {
 
-    }
+    }*/
 
     return comstack_pm_message_access($op, $entity, $account);
   }
