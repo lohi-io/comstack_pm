@@ -9,9 +9,45 @@
  * Implements hook_ctools_plugin_directory().
  */
 function comstack_pm_rest_api_ctools_plugin_directory($module, $plugin) {
-  if ($module === 'restful') {
+  if ($module === 'restful' || $module === 'entity_validator') {
     return "plugins/$plugin";
   }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function comstack_pm_rest_api_menu() {
+  $items = array();
+  $api_base_path = variable_get('restful_hook_menu_base_path', 'api');
+
+  // We're only after our one endpoint, so just work with that one.
+  $plugins = restful_get_restful_plugins();
+  $plugin = $plugins['messages__conversations__1_0'];
+
+  // This code is copied directly from the RESTful module. Take a look at
+  // restful_menu().
+  $item = array(
+    'title' => $plugin['name'],
+    'access callback' => 'restful_menu_access_callback',
+    // Hardcode the URL for the endpoint. Drupals menu system will accept % as
+    // a wildcard whereas RESTful works differently.
+    'access arguments' => array('cs-pm/conversations/%/messages'),
+    'page callback' => 'restful_menu_process_callback',
+    // Hardcode it again. The restful resource will do the work of grabbing the
+    // conversation ID from the URL.
+    'page arguments' => array('cs-pm/conversations/%/messages'),
+    'delivery callback' => 'restful_formatted_delivery',
+    'type' => MENU_CALLBACK,
+  );
+  $item['access arguments'][] = 1;
+  $item['page arguments'][] = 1;
+  $items[$api_base_path . '/v' . $plugin['major_version'] . '.' . $plugin['minor_version'] . '/' . $plugin['resource']] = $item;
+  $items[$api_base_path . '/v' . $plugin['major_version'] . '/' . $plugin['resource']] = $item;
+  $item['access arguments'] = $item['page arguments'] = array(1);
+  $items[$api_base_path . '/' . $plugin['resource']] = $item;
+
+  return $items;
 }
 
 /**

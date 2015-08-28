@@ -427,7 +427,8 @@
       'archived': false,
       'muted': false,
       'starred': false,
-      'forwarded': false
+      'forwarded': false,
+      'deleted': false
     },
     ...
   ],
@@ -800,7 +801,8 @@
       'updated': '2015-01-15T12:24:47+0000',
       'text': 'Blah blah...',
       'weight': 0,
-      'edits': 0
+      'edits': 0,
+      'deleted': false
     },
     ...
   ],
@@ -1825,7 +1827,8 @@
   'pinned: false,
   'archived': false,
   'muted': false,
-  'forwarded': false
+  'forwarded': false,
+  'deleted': false
 }</pre>
 </div>
 
@@ -1891,6 +1894,11 @@
       <td><code>Integer</code></td>
       <td>The number of times this message has been edited.</td>
     </tr>
+    <tr>
+      <td>deleted</td>
+      <td><code>Boolean</code></td>
+      <td>Whether or not this conversation has been deleted. Only users with a certain permission will have the API return conversations where this is true.</td>
+    </tr>
   </tbody>
 </table>
 <h5>Example</h5>
@@ -1912,7 +1920,8 @@
   'updated': '2015-01-15T12:24:47+0000',
   'text': 'Blah blah...',
   'weight': 0,
-  'edits': 0
+  'edits': 0,
+  'deleted': false
 }</pre>
 </div>
 
@@ -1952,6 +1961,11 @@
       <td>contact_frequency</td>
       <td><code>Integer</code></td>
       <td>The number of times this user has been contacted by the current user.</td>
+    </tr>
+    <tr>
+      <td>deleted</td>
+      <td><code>Boolean</code></td>
+      <td>Whether or not this message has been deleted. Only users with a certain permission will have the API return messages where this is true.</td>
     </tr>
   </tbody>
 </table>

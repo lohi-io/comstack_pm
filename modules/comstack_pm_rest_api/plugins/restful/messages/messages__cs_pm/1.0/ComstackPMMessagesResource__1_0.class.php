@@ -19,13 +19,30 @@ class ComstackPMMessagesResource__1_0 extends \RestfulEntityBase {
   }
 
   /**
+   * Overrides \RestfulEntityBase::checkEntityAccess().
+   *
+   * As the message entity has it's own access callback which we'll opt to
+   * ignore as within the Comstack PM context the rules change.
+   *
+   * message_access() only checks that the user has access to create new
+   * messages. $op can be "create", "update" and "delete". This class adds "view"
+   */
+  protected function checkEntityAccess($op, $entity_type, $entity) {
+    $account = $this->getAccount();
+
+    return comstack_pm_message_access($op, $entity, $account);
+  }
+
+  /**
    * Overrides \RestfulEntityBase::getQueryForList().
    *
    * Only expose messages which haven't been deleted.
    */
   public function getQueryForList() {
     $query = parent::getQueryForList();
-    $query->propertyCondition('deleted', 0);
+    if (!user_access('view deleted comstack messages', $this->getAccount())) {
+      $query->propertyCondition('deleted', 0);
+    }
     return $query;
   }
 
@@ -34,7 +51,9 @@ class ComstackPMMessagesResource__1_0 extends \RestfulEntityBase {
    */
   public function getQueryCount() {
     $query = parent::getQueryCount();
-    $query->propertyCondition('deleted', 0);
+    if (!user_access('view deleted comstack messages', $this->getAccount())) {
+      $query->propertyCondition('deleted', 0);
+    }
     return $query->count();
   }
 
@@ -106,6 +125,10 @@ class ComstackPMMessagesResource__1_0 extends \RestfulEntityBase {
       'property' => 'edits',
     );
 
+    $public_fields['deleted'] = array(
+      'property' => 'deleted',
+    );
+
     unset($public_fields['label']);
     unset($public_fields['self']);
 
@@ -137,6 +160,8 @@ class ComstackPMMessagesResource__1_0 extends \RestfulEntityBase {
    * The input format is hardcoded into this function, use a variable instead.
    */
   protected function propertyValuesPreprocessText($property_name, $value, $field_info) {
+    $value = trim($value);
+
     // Text field. Check if field has an input format.
     $instance = field_info_instance($this->getEntityType(), $property_name, $this->getBundle());
     $format = variable_get('comstack_pm_rest_input_format', 'cs_pm');

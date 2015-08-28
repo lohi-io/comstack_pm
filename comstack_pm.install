@@ -264,6 +264,7 @@ function comstack_pm_install() {
 function comstack_pm_uninstall() {
   // Remove variables.
   variable_del('comstack_pm_type');
+  variable_del('comstack_pm_c_delete_behaviour');
 
   // Remove schema alterations.
   if (db_field_exists('message', 'edits')) {

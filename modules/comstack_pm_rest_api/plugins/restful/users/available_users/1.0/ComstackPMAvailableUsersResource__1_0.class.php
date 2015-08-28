@@ -7,7 +7,7 @@
 
 class ComstackPMAvailableUsersResource__1_0 extends \ComstackPMUsersResource__1_0 {
   // Set the default range.
-  //$this->range = 50;
+  protected $range = 25;
 
   /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
