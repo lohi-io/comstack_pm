@@ -4,6 +4,9 @@ core = 7.x
 package = Communications Stack
 php = 5.3
 
+dependencies[] = entityreference
+dependencies[] = better_formats
+dependencies[] = message
 dependencies[] = comstack
 
 files[] = includes/ComstackConversation.php
