@@ -14,7 +14,9 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
   public static function controllersInfo() {
     return array(
       '' => array(
-        \RestfulInterface::GET => 'viewConversationMessages',
+        \RestfulInterface::GET => 'getList',
+      ),
+      'delete' => array(
         \RestfulInterface::POST => 'deleteConversationMessages',
       ),
     );
@@ -28,13 +30,39 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
     if (!$this->entity_id) {
       $entity_id = NULL;
 
+      $request = $this->getRequest();
+
+      // Take the request, find the last numeric chunk.
+      if (isset($request['q'])) {
+        $url_parts = explode('/', $request['q']);
+        foreach (array_reverse($url_parts) as $part) {
+          if (is_numeric($part) && $part > 0) {
+            $this->entity_id = $part;
+            break;
+          }
+        }
+      }
+
       // Still?? Something isn't right here, throw an exception.
-      if (!$entity_id) {
+      if (!$this->entity_id) {
         throw new RestfulBadRequestException('Path does not exist');
       }
     }
 
-    return $entity_id;
+    return $this->entity_id;
+  }
+
+  protected function checkConversationAccess() {
+    $account = $this->getAccount();
+
+    $conversation_id = $this->getEntityID();
+    $conversation = entity_load_single('comstack_conversation', $conversation_id);
+
+    if ($conversation && comstack_pm_conversation_access('view', $conversation, $account)) {
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
   /**
@@ -47,46 +75,63 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
   protected function checkEntityAccess($op, $entity_type, $entity) {
     $account = $this->getAccount();
 
-    /*if () {
+    // Validate that the user has access to the conversation.
+    if ($op === 'view' && comstack_pm_message_access($op, $entity, $account)) {
+      return TRUE;
+    }
+    elseif ($op === 'delete' && user_access('delete own comstack conversation messages', $account)) {
+      // Check that the user has access to this conversation.
+      if ($this->checkConversationAccess()) {
+        return TRUE;
+      }
+    }
 
-    }*/
-
-    return comstack_pm_message_access($op, $entity, $account);
+    return FALSE;
   }
 
   /**
-   * GET a list of messages within this conversation, this is a copy of:
-   * \RestfulEntityBase::getList() but with a filter hard coded to return
-   * a list of messages via entity reference.
+   * Overrides \RestfulEntityBase::getQueryForList().
    *
-   * The viewEntities() method is provided by \ComstackPMMessagesResource__1_0
-   * which makes our lives easier, only need to worry about implementing our
-   * own version of getList().
+   * Only expose conversations which haven't been deleted.
    */
-  public function viewConversationMessages() {
-    $request = $this->getRequest();
-    print_r($request);exit;
+  public function getQueryForList() {
+    $conversation_id = $this->getEntityID();
+    $query = parent::getQueryForList();
+
+    $query->fieldCondition('cs_pm_conversation', 'target_id', $conversation_id);
+
+    return $query;
+  }
+
+  /**
+   * Overrides \RestfulDataProviderEFQ::getQueryCount().
+   */
+  public function getQueryCount() {
+    $conversation_id = $this->getEntityID();
+    $query = parent::getQueryCount();
+
+    $query->fieldCondition('cs_pm_conversation', 'target_id', $conversation_id);
+
+    return $query->count();
+  }
+
+  /**
+   * Overrides \RestfulEntityBase::getList().
+   */
+  public function getList() {
+    if (!$this->checkConversationAccess()) {
+      return array();
+    }
+
+    return parent::getList();
   }
 
   /**
    * DELETE messages from a conversation.
    */
   public function deleteConversationMessages() {
-    /*$entity_info = $this->getEntityInfo();
-    $bundle_key = $entity_info['entity keys']['bundle'];
-    $values = $bundle_key ? array($bundle_key => $this->bundle) : array();
+    $conversation_id = $this->getEntityID();
 
-    $entity = entity_create($this->entityType, $values);
 
-    if ($this->checkEntityAccess('create', $this->entityType, $entity) === FALSE) {
-      // User does not have access to create entity.
-      $params = array('@resource' => $this->getPluginKey('label'));
-      throw new RestfulForbiddenException(format_string('You do not have access to create a new @resource resource.', $params));
-    }
-
-    $wrapper = entity_metadata_wrapper($this->entityType, $entity);
-
-    $this->setPropertyValues($wrapper);
-    return array($this->viewEntity($wrapper->getIdentifier()));*/
   }
 }

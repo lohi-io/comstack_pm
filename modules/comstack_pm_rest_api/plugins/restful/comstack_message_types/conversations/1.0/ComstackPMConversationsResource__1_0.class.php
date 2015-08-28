@@ -69,6 +69,36 @@ class ComstackPMConversationsResource__1_0 extends \RestfulEntityBase {
   }
 
   /**
+   * Return the entity ID found from the request URL.
+   */
+  protected function getEntityID() {
+    // If we've not set the entity id, do it.
+    if (!$this->entity_id) {
+      $entity_id = NULL;
+
+      $request = $this->getRequest();
+
+      // Take the request, find the last numeric chunk.
+      if (isset($request['q'])) {
+        $url_parts = explode('/', $request['q']);
+        foreach (array_reverse($url_parts) as $part) {
+          if (is_numeric($part) && $part > 0) {
+            $this->entity_id = $part;
+            break;
+          }
+        }
+      }
+
+      // Still?? Something isn't right here, throw an exception.
+      if (!$this->entity_id) {
+        throw new RestfulBadRequestException('Path does not exist');
+      }
+    }
+
+    return $this->entity_id;
+  }
+
+  /**
    * Overrides \RestfulEntityBase::getQueryForList().
    *
    * Only expose conversations which haven't been deleted.
