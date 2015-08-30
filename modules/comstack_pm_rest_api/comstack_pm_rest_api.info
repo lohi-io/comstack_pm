@@ -10,4 +10,5 @@ dependencies[] = restful
 dependencies[] = restful_token_auth
 dependencies[] = entity_validator
 
+files[] = plugins/restful/ComstackRestfulEntityBase.php
 files[] = plugins/restful/users/users/1.0/ComstackPMUsersResource__1_0.class.php

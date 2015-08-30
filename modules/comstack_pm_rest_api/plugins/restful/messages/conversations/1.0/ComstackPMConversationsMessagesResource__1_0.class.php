@@ -6,7 +6,7 @@
  */
 
 class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesResource__1_0 {
-  protected $entity_id;
+  protected $cursor_paging = TRUE;
 
   /**
    * Overrides \RestfulEntityBase::controllersInfo().
@@ -27,7 +27,7 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
    */
   protected function getEntityID() {
     // If we've not set the entity id, do it.
-    if (!$this->entity_id) {
+    if (!$this->wildcard_entity_id) {
       $entity_id = NULL;
 
       $request = $this->getRequest();
@@ -36,20 +36,20 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
       if (isset($request['q'])) {
         $url_parts = explode('/', $request['q']);
         foreach (array_reverse($url_parts) as $part) {
-          if (is_numeric($part) && $part > 0) {
-            $this->entity_id = $part;
+          if (ctype_digit($part) && $part > 0) {
+            $this->wildcard_entity_id = $part;
             break;
           }
         }
       }
 
       // Still?? Something isn't right here, throw an exception.
-      if (!$this->entity_id) {
+      if (!$this->wildcard_entity_id) {
         throw new RestfulBadRequestException('Path does not exist');
       }
     }
 
-    return $this->entity_id;
+    return $this->wildcard_entity_id;
   }
 
   protected function checkConversationAccess() {

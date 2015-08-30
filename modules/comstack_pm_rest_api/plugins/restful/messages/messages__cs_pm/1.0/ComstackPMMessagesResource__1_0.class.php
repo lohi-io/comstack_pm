@@ -5,7 +5,9 @@
  * Contains ComstackPMMessagesResource__1_0.
  */
 
-class ComstackPMMessagesResource__1_0 extends \RestfulEntityBase {
+class ComstackPMMessagesResource__1_0 extends \ComstackRestfulEntityBase {
+  protected $cursor_paging = TRUE;
+
   /**
    * Overrides \RestfulEntityBase::controllersInfo().
    */

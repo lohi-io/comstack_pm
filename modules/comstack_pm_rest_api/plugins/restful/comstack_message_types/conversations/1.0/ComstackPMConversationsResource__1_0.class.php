@@ -5,7 +5,7 @@
  * Contains ComstackPMConversationsResource__1_0.
  */
 
-class ComstackPMConversationsResource__1_0 extends \RestfulEntityBase {
+class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   // Set the default range for listings.
   protected $range = 25;
 
@@ -73,7 +73,7 @@ class ComstackPMConversationsResource__1_0 extends \RestfulEntityBase {
    */
   protected function getEntityID() {
     // If we've not set the entity id, do it.
-    if (!$this->entity_id) {
+    if (!$this->wildcard_entity_id) {
       $entity_id = NULL;
 
       $request = $this->getRequest();
@@ -82,20 +82,20 @@ class ComstackPMConversationsResource__1_0 extends \RestfulEntityBase {
       if (isset($request['q'])) {
         $url_parts = explode('/', $request['q']);
         foreach (array_reverse($url_parts) as $part) {
-          if (is_numeric($part) && $part > 0) {
-            $this->entity_id = $part;
+          if (ctype_digit($part) && $part > 0) {
+            $this->wildcard_entity_id = $part;
             break;
           }
         }
       }
 
       // Still?? Something isn't right here, throw an exception.
-      if (!$this->entity_id) {
+      if (!$this->wildcard_entity_id) {
         throw new RestfulBadRequestException('Path does not exist');
       }
     }
 
-    return $this->entity_id;
+    return $this->wildcard_entity_id;
   }
 
   /**
@@ -252,9 +252,5 @@ class ComstackPMConversationsResource__1_0 extends \RestfulEntityBase {
       }
     }
     return $return;
-  }
-
-  function quack($entity_id) {
-    return array('quack' => $entity_id);
   }
 }
