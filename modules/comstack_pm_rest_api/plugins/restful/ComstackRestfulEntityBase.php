@@ -61,9 +61,10 @@ abstract class ComstackRestfulEntityBase extends \RestfulEntityBase {
    * Overrides \RestfulDataProviderEFQ::queryForListPagination().
    */
   protected function queryForListPagination(\EntityFieldQuery $query) {
+    list($offset, $range) = $this->parseRequestForListPagination();
+
     // Normal pager stuff.
     if (!$this->cursor_paging) {
-      list($offset, $range) = $this->parseRequestForListPagination();
       $query->range($offset, $range);
     }
     // Cursor paging!
@@ -73,11 +74,14 @@ abstract class ComstackRestfulEntityBase extends \RestfulEntityBase {
       $before = isset($request['before']) && ctype_digit($request['before']) ? $request['before'] : NULL;
 
       if ($after) {
-        $query->propertyCondition('entity_id', $after, '>');
+        $query->entityCondition('entity_id', $after, '>');
       }
       if ($before) {
-        $query->propertyCondition('entity_id', $before, '<');
+        $query->entityCondition('entity_id', $before, '<');
       }
+
+      // Add limit from range.
+      $query->range(0, $range);
     }
   }
 
@@ -124,6 +128,8 @@ abstract class ComstackRestfulEntityBase extends \RestfulEntityBase {
       $first_id = $ids[0];
       $last_id = $ids[count($ids) - 1];
 
+      $is_first_page = !isset($request['after']) && !isset($request['before']);
+
       // Alter the request so generated URLs are for other pages.
       $request['after'] = $last_id;
       $request['before'] = $first_id;
@@ -133,23 +139,31 @@ abstract class ComstackRestfulEntityBase extends \RestfulEntityBase {
           'after' => $last_id,
           'before' => $first_id,
         ),
-        'previous' => array(
-          'title' => t('Previous'),
-        ),
-        'next' => array(
-          'title' => t('Next'),
-        ),
+        'previous' => NULL,
+        'next' => NULL,
       );
 
-      // Next.
-      unset($request['before']);
-      $request['after'] = $last_id;
-      $cursor_paging_data['next']['href'] = $this->getUrl($request);
+      // Provide a "Previous" paging link if we're not on the first page.
+      // If before or after haven't been specified in the request then it's
+      // fair to assume this is the first page.
+      if (!$is_first_page) {
+        unset($request['after']);
+        $request['before'] = $first_id;
+        $cursor_paging_data['previous'] = array(
+          'title' => t('Previous'),
+          'href' => $this->getUrl($request),
+        );
+      }
 
-      // Previous.
-      unset($request['after']);
-      $request['before'] = $first_id;
-      $cursor_paging_data['previous']['href'] = $this->getUrl($request);
+      // Provide a "Next" paging link if there's more data to have.
+      if ($this->getRange() == count($ids)) {
+        unset($request['before']);
+        $request['after'] = $last_id;
+        $cursor_paging_data['next'] = array(
+          'title' => t('Next'),
+          'href' => $this->getUrl($request),
+        );
+      }
 
       $this->cursor_paging_data = $cursor_paging_data;
     }
