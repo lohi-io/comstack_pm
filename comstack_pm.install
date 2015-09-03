@@ -45,52 +45,19 @@ function comstack_pm_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'messages_count' => array(
-        'description' => 'Number of messages in this conversation.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'pinned' => array(
-        'description' => 'Boolean indicating whether this conversation is pinned.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'boolean' => TRUE,
-      ),
-      'archived' => array(
-        'description' => 'Boolean indicating whether this conversation has been archives.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'boolean' => TRUE,
-      ),
-      'deleted' => array(
-        'description' => 'Boolean indicating whether this conversation is marked as deleted.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'boolean' => TRUE,
-      ),
     ),
     'indexes' => array(
       'started' => array('started'),
       'updated' => array('updated'),
-      'messages_count' => array('messages_count'),
-      'pinned' => array('pinned'),
-      'deleted' => array('deleted'),
     ),
     'foreign keys' => array(),
     'primary key' => array('conversation_id'),
   );
 
-  $schema['comstack_conversation_entity'] = array(
-    'description' => 'Linkage between a conversation and the recipients/participants read state. Simplest example would be user entity.',
+  $schema['comstack_conversation_user'] = array(
+    'description' => 'Linkage between a conversation and the recipients/participants read state.',
     'fields' => array(
-      'ceid' => array(
+      'ccuid' => array(
         'description' => 'The primary identifier for this record.',
         'type' => 'serial',
         'unsigned' => TRUE,
@@ -103,15 +70,8 @@ function comstack_pm_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'entity_type' => array(
-        'description' => 'The type of entity which is part of the conversation.',
-        'type' => 'varchar',
-        'length' => '128',
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'entity_id' => array(
-        'description' => 'The ID of the entity which is part of the conversation.',
+      'uid' => array(
+        'description' => 'The ID of the user related to this record.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -156,20 +116,49 @@ function comstack_pm_schema() {
         'size' => 'tiny',
         'boolean' => TRUE,
       ),
+      'pinned' => array(
+        'description' => 'Boolean indicating whether this conversation is pinned.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'boolean' => TRUE,
+      ),
+      'archived' => array(
+        'description' => 'Boolean indicating whether this conversation has been archives.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'boolean' => TRUE,
+      ),
+      'deleted' => array(
+        'description' => 'Boolean indicating whether this conversation is marked as deleted.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'tiny',
+        'boolean' => TRUE,
+      ),
     ),
     'indexes' => array(
       'conversation_id' => array('conversation_id'),
-      'entity_type' => array('entity_type'),
-      'entity_id' => array('entity_id'),
+      'uid' => array('uid'),
       'unread_count' => array('unread_count'),
+      'pinned' => array('pinned'),
+      'deleted' => array('deleted'),
     ),
     'foreign keys' => array(
       'conversation' => array(
         'table' => 'comstack_conversation',
         'columns' => array('conversation_id' => 'conversation_id'),
       ),
+      'participant' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
-    'primary key' => array('ceid'),
+    'primary key' => array('ccuid'),
   );
 
   $schema['comstack_conversation_message'] = array(
@@ -188,8 +177,15 @@ function comstack_pm_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'uid' => array(
+        'description' => 'The ID of the user related to this record.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'mid' => array(
-        'description' => 'The ID of the message that has been read.',
+        'description' => 'The ID of the message.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -206,6 +202,7 @@ function comstack_pm_schema() {
     ),
     'indexes' => array(
       'conversation_id' => array('conversation_id'),
+      'uid' => array('uid'),
       'mid' => array('mid'),
     ),
     'foreign keys' => array(
@@ -213,12 +210,57 @@ function comstack_pm_schema() {
         'table' => 'comstack_conversation',
         'columns' => array('conversation_id' => 'conversation_id'),
       ),
+      'participant' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
       'message' => array(
         'table' => 'message',
         'columns' => array('mid' => 'mid'),
       ),
     ),
     'primary key' => array('ccmid'),
+  );
+
+  $schema['comstack_message_edits'] = array(
+    'description' => 'Record a history of message edits.',
+    'fields' => array(
+      'mid' => array(
+        'description' => 'The ID of the message.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'timestamp' => array(
+        'description' => 'The Unix timestamp when the message was edited.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'text' => array(
+        'description' => 'The message text.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'format' => array(
+        'description' => 'The input format being used.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'indexes' => array(
+      'mid' => array('mid'),
+    ),
+    'foreign keys' => array(
+      'message' => array(
+        'table' => 'message',
+        'columns' => array('mid' => 'mid'),
+      ),
+    ),
   );
 
   return $schema;
@@ -265,17 +307,27 @@ function comstack_pm_uninstall() {
   // Remove variables.
   variable_del('comstack_pm_type');
   variable_del('comstack_pm_c_delete_behaviour');
+  variable_del('comstack_pm_input_format');
+  variable_del('comstack_pm_record_message_edits');
+  variable_del('comstack_pm_record_separate_transcripts');
 
   // Remove schema alterations.
   if (db_field_exists('message', 'edits')) {
     db_drop_field('message', 'edits');
   }
 
-  // Remove fields.
+  // Remove fields from the conversation entity.
   $fields = array('cs_pm_participants', 'cs_pm_historical_participants', 'cs_pm_started_by', 'cs_pm_last_updated_by');
-
   foreach ($fields as $field) {
     $instance = field_info_instance('comstack_conversation', $field, 'comstack_conversation');
+    field_delete_instance($instance);
+    field_delete_field($field);
+  }
+
+  // Remove fields from the message type.
+  $fields = array('cs_pm_conversation', 'cs_pm_text');
+  foreach ($fields as $field) {
+    $instance = field_info_instance('message', $field, 'cs_pm');
     field_delete_instance($instance);
     field_delete_field($field);
   }

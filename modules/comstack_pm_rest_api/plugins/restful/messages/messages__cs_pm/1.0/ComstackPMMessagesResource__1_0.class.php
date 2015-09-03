@@ -166,7 +166,7 @@ class ComstackPMMessagesResource__1_0 extends \ComstackRestfulEntityBase {
 
     // Text field. Check if field has an input format.
     $instance = field_info_instance($this->getEntityType(), $property_name, $this->getBundle());
-    $format = variable_get('comstack_pm_rest_input_format', 'cs_pm');
+    $format = variable_get('comstack_pm_input_format', 'cs_pm');
 
     if ($field_info['cardinality'] == 1) {
       // Single value.

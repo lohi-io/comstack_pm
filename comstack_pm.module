@@ -5,8 +5,16 @@
  * comstack_pm.module
  */
 
+// All logic relating to how this module specifically operates will go in here.
+include_once __DIR__ . '/includes/comstack_pm.comstack_pm.inc';
+// Other stuffs.
+// Devel.
 include_once __DIR__ . '/includes/comstack_pm.devel.inc';
+// Drush rebuild commands.
+include_once __DIR__ . '/includes/comstack_pm.drush.inc';
+// Entity info, metadata info and load callbacks.
 include_once __DIR__ . '/includes/comstack_pm.entity.inc';
+// Form builder callbacks, including validate, alters and submits.
 include_once __DIR__ . '/includes/comstack_pm.forms.inc';
 
 /**

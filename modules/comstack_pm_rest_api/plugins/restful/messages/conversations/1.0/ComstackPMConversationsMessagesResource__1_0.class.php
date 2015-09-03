@@ -36,7 +36,7 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
       if (isset($request['q'])) {
         $url_parts = explode('/', $request['q']);
         foreach (array_reverse($url_parts) as $part) {
-          if (ctype_digit($part) && $part > 0) {
+          if (ctype_digit((string) $part) && $part > 0) {
             $this->wildcard_entity_id = $part;
             break;
           }
@@ -100,6 +100,9 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
 
     $query->fieldCondition('cs_pm_conversation', 'target_id', $conversation_id);
 
+    // We loop in transcripts via hook_query_tag alter.
+    $query->addTag('comstack_pm_separate_transcripts');
+
     return $query;
   }
 
@@ -111,6 +114,9 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
     $query = parent::getQueryCount();
 
     $query->fieldCondition('cs_pm_conversation', 'target_id', $conversation_id);
+
+    // We loop in transcripts via hook_query_tag alter.
+    $query->addTag('comstack_pm_separate_transcripts');
 
     return $query->count();
   }

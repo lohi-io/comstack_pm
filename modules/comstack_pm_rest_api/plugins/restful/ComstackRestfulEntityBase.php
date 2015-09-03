@@ -70,8 +70,8 @@ abstract class ComstackRestfulEntityBase extends \RestfulEntityBase {
     // Cursor paging!
     else {
       $request = $this->getRequest();
-      $after = isset($request['after']) && ctype_digit($request['after']) ? $request['after'] : NULL;
-      $before = isset($request['before']) && ctype_digit($request['before']) ? $request['before'] : NULL;
+      $after = isset($request['after']) && ctype_digit((string) $request['after']) ? $request['after'] : NULL;
+      $before = isset($request['before']) && ctype_digit((string) $request['before']) ? $request['before'] : NULL;
 
       if ($after) {
         $query->entityCondition('entity_id', $after, '>');

@@ -82,7 +82,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       if (isset($request['q'])) {
         $url_parts = explode('/', $request['q']);
         foreach (array_reverse($url_parts) as $part) {
-          if (ctype_digit($part) && $part > 0) {
+          if (ctype_digit((string) $part) && $part > 0) {
             $this->wildcard_entity_id = $part;
             break;
           }
@@ -225,7 +225,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   protected function propertyValuesPreprocessText($property_name, $value, $field_info) {
     // Text field. Check if field has an input format.
     $instance = field_info_instance($this->getEntityType(), $property_name, $this->getBundle());
-    $format = variable_get('comstack_pm_rest_input_format', 'cs_pm');
+    $format = variable_get('comstack_pm_input_format', 'cs_pm');
 
     if ($field_info['cardinality'] == 1) {
       // Single value.

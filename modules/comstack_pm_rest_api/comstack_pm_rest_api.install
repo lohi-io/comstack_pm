@@ -9,12 +9,10 @@
  * Implements hook_install().
  */
 function comstack_pm_rest_api_install() {
-
 }
 
 /**
  * Implements hook_uninstall().
  */
 function comstack_pm_rest_api_uninstall() {
-  variable_del('comstack_pm_rest_input_format');
 }

@@ -15,7 +15,7 @@ function comstack_pm_entity_info() {
     'label' => t('Comstack Conversation'),
     'plural label' => t('Comstack Conversations'),
     // Don't use the default DrupalDefaultEntityController class.
-    'controller class' => 'EntityAPIController',
+    'controller class' => 'ComstackConversationController',
     'entity class' => 'ComstackConversation',
     'base table' => 'comstack_conversation',
     'fieldable' => TRUE,
@@ -45,8 +45,14 @@ function comstack_pm_entity_property_info_alter(&$info) {
   // Conversation entity.
   $conversation_properties = &$info['comstack_conversation']['properties'];
 
+  $conversation_properties['conversation_id'] = array(
+    'label' => t("Conversation ID"),
+    'type' => 'integer',
+    'description' => t("The unique ID of the conversation."),
+    'schema field' => 'conversation_id',
+  );
   $conversation_properties['started'] = array(
-    'label' => t('Date started'),
+    'label' => t('Conversation started'),
     'type' => 'date',
     'description' => t('The date the conversation was created.'),
     'setter callback' => 'entity_property_verbatim_set',
@@ -54,7 +60,7 @@ function comstack_pm_entity_property_info_alter(&$info) {
     'schema field' => 'started',
   );
   $conversation_properties['updated'] = array(
-    'label' => t('Date last updated'),
+    'label' => t('Conversation last updated'),
     'type' => 'date',
     'description' => t('The date the conversation was most recently updated.'),
     'setter callback' => 'entity_property_verbatim_set',
@@ -67,12 +73,45 @@ function comstack_pm_entity_property_info_alter(&$info) {
     'setter callback' => 'entity_property_verbatim_set',
     'schema field' => 'title',
   );
-  $conversation_properties['messages_count'] = array(
-    'label' => t('Messages count'),
-    'description' => t('Number of messages in the conversation.'),
+  $conversation_properties['uid'] = array(
+    'label' => t('Author'),
+    'type' => 'user',
+    'description' => t('The creator of the conversation.'),
+    'setter callback' => 'entity_property_verbatim_set',
+    'setter permission' => 'administer comstack content',
+    'required' => TRUE,
+    'schema field' => 'uid',
+  );
+  $conversation_properties['unread_count'] = array(
+    'label' => t('Unread count'),
+    'description' => t('Number of unread messages in the conversation.'),
     'type' => 'integer',
     'setter callback' => 'entity_property_verbatim_set',
-    'schema field' => 'messages_count',
+    'schema field' => 'unread_count',
+  );
+  $conversation_properties['muted'] = array(
+    'label' => t('Muted'),
+    'description' => t('Whether updates in this conversation should alert the user.'),
+    'setter callback' => 'entity_property_verbatim_set',
+    'setter permission' => 'administer comstack content',
+    'schema field' => 'muted',
+    'type' => 'boolean',
+  );
+  $conversation_properties['forwarded'] = array(
+    'label' => t('Forwarded'),
+    'description' => t('Whether or not this user has forwarded this conversation to someone else.'),
+    'setter callback' => 'entity_property_verbatim_set',
+    'setter permission' => 'administer comstack content',
+    'schema field' => 'forwarded',
+    'type' => 'boolean',
+  );
+  $conversation_properties['starred'] = array(
+    'label' => t('Starred'),
+    'description' => t('Boolean indicating if this user has starred this conversation.'),
+    'setter callback' => 'entity_property_verbatim_set',
+    'setter permission' => 'administer comstack content',
+    'schema field' => 'starred',
+    'type' => 'boolean',
   );
   $conversation_properties['pinned'] = array(
     'label' => t('Pinned'),
@@ -195,4 +234,32 @@ function comstack_pm_message_access($op, $entity, $account) {
   }
 
   return FALSE;
+}
+
+/**
+ * Load a conversation.
+ */
+function comstack_conversation_load($conversation_id, $uid = NULL, $reset = FALSE) {
+  $conversations = comstack_conversation_load_multiple(array($conversation_id), $uid, array(), $reset);
+  return reset($conversations);
+}
+
+/**
+ * Load a series of conversations.
+ */
+function comstack_conversation_load_multiple(array $conversation_ids = array(), $uid = NULL, array $conditions = array(), $reset = FALSE) {
+  if (!$uid) {
+    global $user;
+    $uid = $user->uid;
+  }
+
+  // Add the user id condition.
+  $conditions['uid'] = $uid;
+
+  $controller = entity_get_controller('comstack_conversation');
+  if ($reset) {
+    $controller->resetCache();
+  }
+
+  return $controller->load($conversation_ids, $conditions);
 }
