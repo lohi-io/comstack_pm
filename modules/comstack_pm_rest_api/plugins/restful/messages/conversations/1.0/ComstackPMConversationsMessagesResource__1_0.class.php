@@ -22,36 +22,6 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
     );
   }
 
-  /**
-   * Return the entity ID found from the request URL.
-   */
-  protected function getEntityID() {
-    // If we've not set the entity id, do it.
-    if (!$this->wildcard_entity_id) {
-      $entity_id = NULL;
-
-      $request = $this->getRequest();
-
-      // Take the request, find the last numeric chunk.
-      if (isset($request['q'])) {
-        $url_parts = explode('/', $request['q']);
-        foreach (array_reverse($url_parts) as $part) {
-          if (ctype_digit((string) $part) && $part > 0) {
-            $this->wildcard_entity_id = $part;
-            break;
-          }
-        }
-      }
-
-      // Still?? Something isn't right here, throw an exception.
-      if (!$this->wildcard_entity_id) {
-        throw new RestfulBadRequestException('Path does not exist');
-      }
-    }
-
-    return $this->wildcard_entity_id;
-  }
-
   protected function checkConversationAccess() {
     $account = $this->getAccount();
 

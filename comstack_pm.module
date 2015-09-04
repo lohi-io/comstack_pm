@@ -47,6 +47,10 @@ function comstack_pm_permission() {
       'title' => t('Set a conversations title'),
       'description' => t("Allows users to set the title of conversations that they're part of."),
     ),
+    'mark a comstack conversation as read' => array(
+      'title' => t('Mark a conversation as read'),
+      'description' => t('Allows users to mark a conversation as read. This permission allows users to reverse the action too.'),
+    ),
     'mute a comstack conversation' => array(
       'title' => t('Mute a conversation'),
       'description' => t('Allows users to mute a conversation suppressing any notifications from it. This permission allows users to reverse the action too.'),

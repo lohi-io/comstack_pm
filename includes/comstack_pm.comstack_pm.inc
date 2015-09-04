@@ -10,6 +10,16 @@
  */
 function comstack_pm_query_comstack_pm_separate_transcripts_alter(QueryAlterableInterface $query) {
   if (variable_get('comstack_pm_record_separate_transcripts', FALSE)) {
+    // This alter run operation can and will be run against a query that gets
+    // used as a countQuery. Because of this we need to check that the
+    // necessary tables are present before trying to change things. We'll check
+    // for {message}. This tag will still be applied as tags can apply to a
+    // query and any subqueries within.
+    $tables = $query->getTables();
+    if (!isset($tables['message'])) {
+      return;
+    }
+
     global $user;
 
     $query->join('comstack_conversation_message', 'ccm', 'message.mid = ccm.mid');
@@ -158,4 +168,6 @@ function comstack_pm_new_conversation($data) {
 
   // Create the first message.
   $conversation->reply($data['text'], $uid);
+
+  return $conversation;
 }

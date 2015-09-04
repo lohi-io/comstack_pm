@@ -234,16 +234,18 @@ class ComstackConversation extends Entity {
   }
 
   /**
-   * Invite another user to this conversation.
+   * Invite other users to this conversation.
    */
-  public function invite(int $uid) {
-    if (!ctype_digit((string) $uid)) {
-      throw new \ComstackInvalidParameterException(t("Failed to invite a user to a conversation because that's not a valid user ID."));
-    }
+  public function invite(array $ids) {
+    foreach ($ids as $uid) {
+      if (!ctype_digit((string) $uid)) {
+        throw new \ComstackInvalidParameterException(t("Failed to invite a user to a conversation because that's not a valid user ID."));
+      }
 
-    if (!$this->userIsAParticipant($uid)) {
-      $this->wrapper->cs_pm_participants[] = $uid;
-      $this->wrapper->cs_pm_historical_participants[] = $uid;
+      if (!$this->userIsAParticipant($uid)) {
+        $this->wrapper->cs_pm_participants[] = $uid;
+        $this->wrapper->cs_pm_historical_participants[] = $uid;
+      }
 
       // Save this conversation.
       $this->save();
@@ -270,10 +272,11 @@ class ComstackConversation extends Entity {
     $result = $query->execute();
 
     $available_ids = isset($result['message']) ? array_keys($result['message']) : array();
+    $record_transcripts = variable_get('comstack_pm_record_separate_transcripts', FALSE);
 
     // If we've got messages we can delete, do it.
     if ($available_ids) {
-      if (variable_get('comstack_pm_record_separate_transcripts', FALSE)) {
+      if ($record_transcripts) {
         db_update('comstack_conversation_message')
           ->fields(array(
             'deleted' => 1,
@@ -318,7 +321,7 @@ class ComstackConversation extends Entity {
   /**
    * Mark this conversation as unread by setting unread messages to "1".
    */
-  public function markAsUnRead() {
+  public function markAsUnread() {
     entity_get_controller('comstack_conversation')->setConversationUnreadCount($this, 1);
   }
 

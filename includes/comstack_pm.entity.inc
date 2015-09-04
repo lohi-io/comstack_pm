@@ -214,7 +214,7 @@ function comstack_pm_message_access($op, $entity, $account) {
   switch ($op) {
     case 'view':
     case 'create':
-      $wrapper = entity_metadata_wrapper($entity_type, $entity);
+      $wrapper = entity_metadata_wrapper('message', $entity);
       $conversation = $wrapper->cs_pm_conversation->value();
 
       if ($conversation && comstack_pm_conversation_access('view', $conversation, $account)) {

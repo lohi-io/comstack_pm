@@ -212,4 +212,57 @@ abstract class ComstackRestfulEntityBase extends \RestfulEntityBase {
     $url .= '/' . $plugin['resource'] . '/' . $path;
     return url(rtrim($url, '/'), $options);
   }
+
+  /**
+   * Return the entity ID found from the request URL.
+   */
+  protected function getEntityID() {
+    // If we've not set the entity id, do it.
+    if (!$this->wildcard_entity_id) {
+      $entity_id = NULL;
+
+      // Ugly :/ would use getRequest here but the path gets removed from it if
+      // cleanRequest has been executed.
+      $path = $this->getPath() ? $this->getPath() : $_GET['q'];
+
+      // Take the request path, find the last numeric chunk.
+      $url_parts = explode('/', $path);
+      foreach (array_reverse($url_parts) as $part) {
+        if (ctype_digit((string) $part) && $part > 0) {
+          $this->wildcard_entity_id = $part;
+          break;
+        }
+      }
+
+      // Still?? Something isn't right here, throw an exception.
+      if (!$this->wildcard_entity_id) {
+        throw new RestfulBadRequestException('Path does not exist');
+      }
+    }
+
+    return $this->wildcard_entity_id;
+  }
+
+  /**
+   * Return an array of data from the payload. This doesn't do any of the
+   * processing or validation against properties, simply grabs the request
+   * data and tidies it.
+   *
+   * @return array
+   *
+   * @see \RestfulEntityBase::setPropertyValues()
+   */
+  protected function getRequestData() {
+    $request = $this->getRequest();
+    static::cleanRequest($request);
+
+    // Make sure any text values are trimmed first.
+    foreach ($request as $k => $v) {
+      if (is_string($v)) {
+        $request[$k] = trim($v);
+      }
+    }
+
+    return $request;
+  }
 }
