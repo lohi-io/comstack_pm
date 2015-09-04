@@ -403,7 +403,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
     }
 
     // Validate the ids.
-    if (empty($request_data['ids']) || !empty($request_data['ids']) !is_array($request_data['ids'])) {
+    if (empty($request_data['ids']) || !empty($request_data['ids']) && !is_array($request_data['ids'])) {
       throw new \RestfulBadRequestException('In order to invite people to this conversation you need to provide an array of user IDs.');
     }
 
@@ -426,7 +426,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
     $request_data = $this->getRequestData();
 
     // Validate the ids.
-    if (empty($request_data['text']) || isset($request_data['text']) !is_string($request_data['text'])) {
+    if (empty($request_data['text']) || isset($request_data['text']) && !is_string($request_data['text'])) {
       throw new \RestfulBadRequestException('You need to pass in a string, even an empty one to set this conversations title.');
     }
 

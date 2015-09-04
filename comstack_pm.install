@@ -242,7 +242,6 @@ function comstack_pm_schema() {
         'description' => 'The message text.',
         'type' => 'text',
         'not null' => TRUE,
-        'default' => '',
       ),
       'format' => array(
         'description' => 'The input format being used.',
