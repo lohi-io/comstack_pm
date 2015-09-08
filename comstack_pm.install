@@ -307,6 +307,9 @@ function comstack_pm_uninstall() {
   variable_del('comstack_pm_type');
   variable_del('comstack_pm_c_delete_behaviour');
   variable_del('comstack_pm_input_format');
+  variable_del('comstack_pm_preferences__enabled__default');
+  variable_del('comstack_pm_preferences__enabled__null_as_true');
+  variable_del('comstack_pm_preferences__enabled__provide');
   variable_del('comstack_pm_record_message_edits');
   variable_del('comstack_pm_record_separate_transcripts');
 
