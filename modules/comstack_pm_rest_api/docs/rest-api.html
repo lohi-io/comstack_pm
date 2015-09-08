@@ -317,17 +317,51 @@
 
         <h4>Paging result sets</h4>
 
-        <p>Pagination works in the same way as it does with Facebooks OpenGraph API which implements Cursor paging.</p>
+        <h5>Offset pagination</h5>
+
+        <p>All endpoints except for one use offset paging. The response on an endpoint can have a <code>previous</code> and <code>next</code> properties, each of which will have a <code>title</code> and <code>href</code>. <code>previous</code> and <code>next</code> will only appear if there is a previous or next page to go to. The URL in the <code>href</code> property will have the same sort, filters and range as the current request.</p>
+
+        <p>How about an example! Data set omitted for brevity.</p>
+
+        <pre>{
+  'data': [...],
+  'next': {
+    'title': 'Next',
+    'href': ''
+  }
+        }</pre>
+
+        <h5>Cursor pagination</h5>
+
+        <p>On the conversations messages endpoint cursor paging is used. In short this allows us to not rely on the data set remaining consistent, all you need to do is make a request with <code>before</code> or <code>after</code> in the query string. By using either you're saying give me all the data before or after the specified Integer ID.</p>
+
+        <p>So, what do you get? Well exactly the same as with offset paging in terms of structure, but an extra but of information. In addition to the <code>previous</code> and <code>next</code> properties in the response (same level as <code>data</code>) you'll also get <code>paging_cursors</code> which will have <code>after</code> and <code>before</code>. The point of these bits of data are to give you the IDs of the first and last items in the data set, so when a user scrolls to them or near them you can start loading the previous or next page. Note it is possible that a <code>previous</code> or <code>next</code> property will be returned and the URL may not return any data, or that they'll be there and <code>null</code> missing a <code>title</code> and <code>href</code> property.</p>
+
+        <p>Here are some links which will probably explain it better...</p>
         <ul>
-          <li><a href="https://developers.facebook.com/docs/graph-api/using-graph-api/v2.4#paging">https://developers.facebook.com/docs/graph-api/using-graph-api/v2.4#paging</a></li>
           <li><a href="http://www.sitepoint.com/paginating-real-time-data-cursor-based-pagination/">http://www.sitepoint.com/paginating-real-time-data-cursor-based-pagination/</a></li>
+          <li><a href="https://developers.facebook.com/docs/graph-api/using-graph-api/v2.4#paging">https://developers.facebook.com/docs/graph-api/using-graph-api/v2.4#paging</a></li>
         </ul>
+
+        <p>An example:</p>
+
+        <pre>{
+  'data': [...],
+  'paging_cursors': {
+    'before': 1,
+    'after': 50
+  },
+  'next': {
+    'title': 'Next',
+    'href': ''
+  }
+}</pre>
+
 
         <h4>@todo</h4>
 
         <ul>
           <li>HAL for models.</li>
-          <li>Figure out paging for message lists.</li>
           <li>Friend list endpoints.</li>
         </ul>
 
