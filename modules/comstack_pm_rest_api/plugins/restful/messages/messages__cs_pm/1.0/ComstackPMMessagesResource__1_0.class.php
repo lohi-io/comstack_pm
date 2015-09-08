@@ -69,15 +69,20 @@ class ComstackPMMessagesResource__1_0 extends \ComstackRestfulEntityBase {
   public function publicFieldsInfo() {
     $public_fields = parent::publicFieldsInfo();
 
-    // Reorder things.
-    $id_field = $public_fields['id'];
+    // Remove ID as this requires the permission "create messages" to perform
+    // any operation against it, therefore is moot. So the module doesn't
+    // require that this permission is given to everyone, just map the ID to
+    // mid which seems to bypass all this, as we're saying schema thing, not
+    // entity ID.
     unset($public_fields['id']);
 
     $public_fields['type'] = array(
       'callback' => array('\RestfulManager::echoMessage', array('message')),
     );
 
-    $public_fields['id'] = $id_field;
+    $public_fields['id'] = array(
+      'property' => 'mid',
+    );
 
     $public_fields['message_type'] = array(
       'property' => 'type',
