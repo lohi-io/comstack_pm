@@ -7,6 +7,46 @@
 
 /**
  * Implements hook_query_TAG_alter().
+ *
+ * Alter the query to check that users are opted in to private messaging. This
+ * will add a join and where condition. Rather that this were done in the
+ * RESTful endpoint code but as it's and EntityFieldQuery you can't do joins.
+ */
+function comstack_pm_query_comstack_pm_preferences__enabled_alter(QueryAlterableInterface $query) {
+  // Check we're working with a proper table, not count query.
+  $tables = $query->getTables();
+  if (!isset($tables['users'])) {
+    return;
+  }
+
+  // Join to the preferences table.
+  $query->leftJoin('user_preferences', 'upr', 'users.uid = upr.uid');
+
+  // If we're treating NULL as true then we need to do so or'in. This is a
+  // reduced version of...
+  // https://github.com/lohi-io/user_preferences/blob/7.x-1.x/views/handlers/user_preferences_handler_filter_boolean.inc
+  if (variable_get('comstack_pm_preferences__enabled__null_as_true', TRUE)) {
+    $where = db_and()
+      ->condition(db_or()
+        ->condition('upr.name', 'comstack_pm_enabled', '=')
+        ->isNull('upr.name')
+      )
+      ->condition(db_or()
+        ->condition('upr.value', '1', '=')
+        ->isNull('upr.value')
+      );
+  }
+  else {
+    $where = db_and()
+      ->condition('upr.name', 'comstack_pm_enabled', '=')
+      ->condition('upr.value', '1', '=');
+  }
+
+  $query->condition($where);
+}
+
+/**
+ * Implements hook_query_TAG_alter().
  */
 function comstack_pm_query_comstack_pm_separate_transcripts_alter(QueryAlterableInterface $query) {
   if (variable_get('comstack_pm_record_separate_transcripts', FALSE)) {
