@@ -19,7 +19,7 @@ Feature: List a users conversations and Create a new conversation.
   Scenario: Start a conversation with payload.
     Given I am logged in as a user with the authenticated role
     And I have an access token
-    Given I have the payload:
+    And I have the payload:
     """
     {
     "recipients": "[??]",
