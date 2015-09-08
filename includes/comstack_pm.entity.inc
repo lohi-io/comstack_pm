@@ -173,7 +173,7 @@ function comstack_pm_conversation_access($op, $entity, $account, $entity_type = 
   $is_a_participant = FALSE;
   if ($wrapper && $wrapper->cs_pm_participants->value()) {
     foreach ($wrapper->cs_pm_participants->getIterator() as $delta => $user_wrapper) {
-      if ($user_wrapper->uid->value() == $account->uid) {
+      if ($user_wrapper->getIdentifier() == $account->uid) {
         // Found!
         $is_a_participant = TRUE;
       }
