@@ -44,7 +44,7 @@ $plugin = array(
   ),*/
   // Autocomplete settings for this endpoint.
   'autocomplete' => array(
-    'enable' => FALSE,
+    'enable' => TRUE,
     // You can define a default operator for the autocomplete, can be the
     // strings (not constants) STARTS_WITH, CONTAINS.
     // https://github.com/RESTful-Drupal/restful/blob/7.x-1.x/docs/api_drupal.md#autocomplete
