@@ -22,7 +22,7 @@ class ComstackConversation extends Entity {
    *
    * @var object
    */
-  private $wrapper;
+  protected $wrapper;
 
   /**
    * Set things up!
@@ -181,7 +181,7 @@ class ComstackConversation extends Entity {
 
     if ($this->wrapper->cs_pm_participants->value()) {
       foreach ($this->wrapper->cs_pm_participants->getIterator() as $delta => $user_wrapper) {
-        $participants[] = $user_wrapper->uid->value();
+        $participants[] = $user_wrapper->getIdentifier();
       }
     }
 
@@ -225,6 +225,19 @@ class ComstackConversation extends Entity {
       foreach ($participants as $k => $uid) {
         if ($this->current_uid = $uid) {
           unset($participants[$k]);
+
+          // When leaving a conversation, if we're keeping separate transcripts
+          // and we're set to erase histories on leaving a conversation do it.
+          // This is an actual delete rather than marking as deleted because
+          // even if it were deleted from this users history, it will still
+          // remain in the {message} table. We do this so if it were to be
+          // reported we could still access the message.
+          if (variable_get('comstack_pm_record_separate_transcripts', FALSE) && variable_get('comstack_pm_on_leave_erase_history', TRUE)) {
+            db_delete('comstack_conversation_message')
+              ->condition('conversation_id', $this->conversation_id)
+              ->condition('uid', $this->current_uid)
+              ->execute();
+          }
         }
       }
 
@@ -276,6 +289,7 @@ class ComstackConversation extends Entity {
 
     // If we've got messages we can delete, do it.
     if ($available_ids) {
+      // Update the transcript for this user.
       if ($record_transcripts) {
         db_update('comstack_conversation_message')
           ->fields(array(
@@ -285,13 +299,18 @@ class ComstackConversation extends Entity {
           ->condition('uid', $this->current_uid)
           ->execute();
       }
-      else {
-        db_update('message')
-          ->fields(array(
-            'deleted' => 1,
-          ))
-          ->condition('mid', $available_ids, 'IN')
-          ->execute();
+
+      // Aand update the message itself, we do this because if separate
+      // transcripts are on, any other participants will still have the
+      // message. If a new person joins and comstack_pm is set to inherit
+      // a history of previously sent messages, all the ones not marked as
+      // deleted will be used.
+      db_update('message')
+        ->fields(array(
+          'deleted' => 1,
+        ))
+        ->condition('mid', $available_ids, 'IN')
+        ->execute();
       }
     }
 
