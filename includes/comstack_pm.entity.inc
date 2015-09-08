@@ -188,7 +188,7 @@ function comstack_pm_conversation_access($op, $entity, $account, $entity_type = 
     elseif ($op === 'update' && user_access('set a comstack conversations title', $account)) {
       return TRUE;
     }
-    elseif ($op === 'delete' && user_access('delete a comstack conversation', $account)) {
+    elseif ($op === 'delete' && user_access('delete leave comstack conversation', $account)) {
       return TRUE;
     }
   }
