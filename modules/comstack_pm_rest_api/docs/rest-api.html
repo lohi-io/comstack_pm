@@ -207,6 +207,7 @@
         <ul>
           <li>Users will always be authenticated when accessing the API as if not there wouldn't be much point... Any non authenticated requests should be rejected with a <code>401</code> response.</li>
           <li>All responses will be <code>application/json</code>.</li>
+          <li>You understand <code>JSON</code>, if not you can read up here: <a href="https://www.json.com">https://www.json.com</a></li>
         </ul>
 
 
@@ -489,6 +490,13 @@
             </tbody>
           </table>
 
+          <h4>Example request body</h4>
+
+<pre>{
+  'recipients': [1],
+  'text': 'Hiiiiiiiiiiiiiiiiiiiiii.'
+}</pre>
+
           <h4>Responses</h4>
 
           <table class="table table-striped responses">
@@ -550,6 +558,12 @@
               </tr>
             </tbody>
           </table>
+
+          <h4>Example request body</h4>
+
+<pre>{
+  'query': 'quack'
+}</pre>
 
           <h4>Responses</h4>
 
@@ -714,6 +728,12 @@
             </tbody>
           </table>
 
+          <h4>Example request body</h4>
+
+<pre>{
+  'text': 'This is my reply.'
+}</pre>
+
           <h4>Responses</h4>
 
           <table class="table table-striped responses">
@@ -762,7 +782,7 @@
           <blockquote>
             <p>Get messages that belong to a conversation.</p>
             <p><strong>Requires:</strong> Authenticated user session.</p>
-            <p><strong>Default limit:</strong> 25.</p>
+            <p><strong>Default limit:</strong> 10.</p>
             <p><strong>Default sort:</strong> sent <code>DESC</code>.</p>
           </blockquote>
 
@@ -861,6 +881,12 @@
               </tr>
             </tbody>
           </table>
+
+          <h4>Example request body</h4>
+
+<pre>{
+  'ids': [1, 2]
+}</pre>
 
           <h4>Responses</h4>
            <table class="table table-striped responses">
@@ -1021,6 +1047,13 @@
               </tr>
             </tbody>
           </table>
+
+          <h4>Example request body</h4>
+
+<pre>{
+  'ids': [2, 3]
+}</pre>
+
            <h4>Responses</h4>
            <table class="table table-striped responses">
             <thead>
@@ -1078,6 +1111,13 @@
               </tr>
             </tbody>
           </table>
+
+          <h4>Example request body</h4>
+
+<pre>{
+  'text': 'Doddfest 2015 tickets'
+}</pre>
+
            <h4>Responses</h4>
            <table class="table table-striped responses">
             <thead>
@@ -1387,6 +1427,14 @@
             </tbody>
           </table>
 
+          <h4>Example request body</h4>
+
+<pre>{
+  'reasons': ['spam'],
+  'other_reason': "And I really didn't need any Viagra :C",
+  'posts': [123]
+}</pre>
+
           <h4>Responses</h4>
 
           <table class="table table-striped responses">
@@ -1448,6 +1496,12 @@
               </tr>
             </tbody>
           </table>
+
+          <h4>Example request body</h4>
+
+<pre>{
+  'query': 'tickets'
+}</pre>
 
           <h4>Responses</h4>
 
@@ -1628,6 +1682,13 @@
               </tr>
             </tbody>
           </table>
+
+          <h4>Example request body</h4>
+
+<pre>{
+  'text': 'Quack. Edit to capitalise.'
+}</pre>
+
            <h4>Responses</h4>
            <table class="table table-striped responses">
             <thead>
