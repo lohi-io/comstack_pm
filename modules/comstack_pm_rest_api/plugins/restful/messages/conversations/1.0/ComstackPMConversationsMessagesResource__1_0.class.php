@@ -6,6 +6,7 @@
  */
 
 class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesResource__1_0 {
+  protected $range = 10;
   protected $cursor_paging = TRUE;
 
   /**
@@ -92,11 +93,28 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
   }
 
   /**
+   * Load the current conversation being accessed.
+   *
+   * @throws \RestfulGoneException
+   */
+  public function getConversation() {
+    $conversation_id = $this->getEntityID();
+    $account = $this->getAccount();
+    $conversation = comstack_conversation_load($conversation_id, $account->uid);
+
+    if (!$conversation) {
+      throw new RestfulGoneException(t("We're having trouble loading that conversation, might want to tell someone about that."));
+    }
+
+    return $conversation;
+  }
+
+  /**
    * Overrides \RestfulEntityBase::getList().
    */
   public function getList() {
     if (!$this->checkConversationAccess()) {
-      return array();
+      throw new RestfulForbiddenException("You don't have access to this conversation.");
     }
 
     return parent::getList();
@@ -106,8 +124,18 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
    * DELETE messages from a conversation.
    */
   public function deleteConversationMessages() {
-    $conversation_id = $this->getEntityID();
+    $conversation = $this->getConversation();
+    $request_data = $this->getRequestData();
 
+    if ($this->checkEntityAccess('delete', $this->entityType, $conversation) === FALSE) {
+      throw new RestfulForbiddenException("You don't have access to this conversation.");
+    }
 
+    // Validate the ids.
+    if (empty($request_data['ids']) || !empty($request_data['ids']) && !is_array($request_data['ids'])) {
+      throw new \RestfulBadRequestException("In order to delete messages from this conversation, you'll need to send some valid ids.");
+    }
+
+    $conversation->deleteMessages($request_data['ids']);
   }
 }

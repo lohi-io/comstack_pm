@@ -223,7 +223,7 @@ abstract class ComstackRestfulEntityBase extends \RestfulEntityBase {
 
       // Ugly :/ would use getRequest here but the path gets removed from it if
       // cleanRequest has been executed.
-      $path = $this->getPath() ? $this->getPath() : $_GET['q'];
+      $path = $_GET['q'];
 
       // Take the request path, find the last numeric chunk.
       $url_parts = explode('/', $path);

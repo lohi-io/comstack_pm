@@ -7,7 +7,7 @@
 
 class ComstackPMAvailableUsersResource__1_0 extends \ComstackPMUsersResource__1_0 {
   // Set the default range.
-  protected $range = 25;
+  protected $range = 50;
 
   /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
@@ -43,6 +43,13 @@ class ComstackPMAvailableUsersResource__1_0 extends \ComstackPMUsersResource__1_
     // Add the comstack recipients tag so that other modules can jump in and
     // alter the query (restrict available users).
     $query->addTag('comstack_recipients');
+
+    // Check that the people this user is friends with has private messaging
+    // enabled.
+    if (variable_get('comstack_pm_preferences__enabled__provide', FALSE) && module_exists('user_preferences')) {
+      $query->addTag('comstack_pm_preferences__enabled');
+    }
+
     return $query;
   }
 
@@ -52,6 +59,12 @@ class ComstackPMAvailableUsersResource__1_0 extends \ComstackPMUsersResource__1_
   public function getQueryCount() {
     $query = parent::getQueryCount();
     $query->addTag('comstack_recipients');
+
+    // Check that the people this user is friends with has private messaging
+    // enabled.
+    if (variable_get('comstack_pm_preferences__enabled__provide', FALSE) && module_exists('user_preferences')) {
+      $query->addTag('comstack_pm_preferences__enabled');
+    }
 
     return $query->count();
   }

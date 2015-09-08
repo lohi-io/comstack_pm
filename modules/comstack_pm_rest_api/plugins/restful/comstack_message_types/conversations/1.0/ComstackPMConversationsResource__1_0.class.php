@@ -430,7 +430,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       throw new \RestfulBadRequestException('You need to pass in a string, even an empty one to set this conversations title.');
     }
 
-    $conversation->setTitle($request_data['ids']);
+    $conversation->setTitle($request_data['text']);
   }
 
   /**

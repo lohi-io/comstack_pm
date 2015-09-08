@@ -42,9 +42,11 @@ class ComstackPMMessagesResource__1_0 extends \ComstackRestfulEntityBase {
    */
   public function getQueryForList() {
     $query = parent::getQueryForList();
+
     if (!user_access('view deleted comstack messages', $this->getAccount())) {
       $query->propertyCondition('deleted', 0);
     }
+
     return $query;
   }
 
@@ -53,9 +55,11 @@ class ComstackPMMessagesResource__1_0 extends \ComstackRestfulEntityBase {
    */
   public function getQueryCount() {
     $query = parent::getQueryCount();
+
     if (!user_access('view deleted comstack messages', $this->getAccount())) {
       $query->propertyCondition('deleted', 0);
     }
+
     return $query->count();
   }
 
