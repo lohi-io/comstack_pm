@@ -7,6 +7,24 @@
 
 /**
  * Implements hook_query_TAG_alter().
+ */
+function comstack_pm_query_comstack_pm_conversation_hide_deleted_alter(QueryAlterableInterface $query) {
+  $tables = $query->getTables();
+  if (!isset($tables['comstack_conversation'])) {
+    return;
+  }
+
+  global $user;
+
+  // As the user specific data is held in a different table, we need to add in
+  // the condition via the alter as EFQ won't allow it.
+  $query->join('comstack_conversation_user', NULL, 'comstack_conversation.conversation_id = comstack_conversation_user.conversation_id');
+  $query->condition('comstack_conversation_user.uid', $user->uid);
+  $query->condition('comstack_conversation_user.deleted', 0);
+}
+
+/**
+ * Implements hook_query_TAG_alter().
  *
  * Alter the query to check that users are opted in to private messaging. This
  * will add a join and where condition. Rather that this were done in the
