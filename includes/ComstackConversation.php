@@ -224,7 +224,7 @@ class ComstackConversation extends Entity {
 
       foreach ($participants as $k => $uid) {
         if ($this->current_uid = $uid) {
-          unset($k);
+          unset($participants[$k]);
         }
       }
 
@@ -302,7 +302,7 @@ class ComstackConversation extends Entity {
    * Set the title of this conversation, expects that permission checking has
    * already been done. Null/'' is an acceptable title.
    */
-  public function setTitle(string $text) {
+  public function setTitle($text) {
     $this->wrapper->title->set($text);
     $this->save();
   }
