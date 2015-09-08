@@ -35,9 +35,9 @@ function comstack_pm_permission() {
       'title' => t('Start new conversations'),
       'description' => t('Allows users to start new conversations with each-other.'),
     ),
-    'delete a comstack conversation' => array(
+    'delete leave comstack conversation' => array(
       'title' => t('Delete/Leave a conversation'),
-      'description' => t("Allows users to leave conversations. It wouldn't appear in their inbox, but other participants retain it."),
+      'description' => t("Allows users to leave conversations. It wouldn't appear in their inbox, but other participants retain it. Only people who are participants in the conversation can delete it."),
     ),
     'invite users to a comstack conversation' => array(
       'title' => t('Invite users to a conversation'),
@@ -82,6 +82,29 @@ function comstack_pm_permission() {
   );
 
   return $permissions;
+}
+
+/**
+ * Implements hook_user_preferences().
+ */
+function comstack_pm_user_preferences() {
+  $preferences = array();
+
+  if (variable_get('comstack_pm_preferences__enabled__provide', FALSE)) {
+    $preferences['comstack_pm_enabled'] = array(
+      'title' => t('Comstack Private Messaging - Enabled'),
+      'default_value' => variable_get('comstack_pm_preferences__enabled__default', 0),
+      'form_ids' => array('user_profile_form'),
+      'form_item' => array(
+        '#title' => t('Allow people to send me private messages'),
+        '#description' => t("When enabled, people can send you private messages. If you disable this they won't be able to contact you, but any existing conversations will remain unless you choose to delete them."),
+        '#type' => 'checkbox',
+        '#weight' => 1,
+      ),
+    );
+  }
+
+  return $preferences;
 }
 
 /**
