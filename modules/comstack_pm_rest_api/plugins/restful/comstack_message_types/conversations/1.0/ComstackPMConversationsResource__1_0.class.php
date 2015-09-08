@@ -75,9 +75,15 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
    */
   public function getQueryForList() {
     $query = parent::getQueryForList();
+    $account = $this->getAccount();
+
+    // Restrict to conversations that involve this user.
+    $query->fieldCondition('cs_pm_participants', 'target_id', $account->uid);
+
     if (!user_access('view deleted comstack conversations', $this->getAccount())) {
-      $query->propertyCondition('deleted', 0);
+      $query->addTag('comstack_pm_conversation_hide_deleted');
     }
+
     return $query;
   }
 
@@ -86,9 +92,15 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
    */
   public function getQueryCount() {
     $query = parent::getQueryCount();
+    $account = $this->getAccount();
+
+    // Restrict to conversations that involve this user.
+    $query->fieldCondition('cs_pm_participants', 'target_id', $account->uid);
+
     if (!user_access('view deleted comstack conversations', $this->getAccount())) {
-      $query->propertyCondition('deleted', 0);
+      $query->addTag('comstack_pm_conversation_hide_deleted');
     }
+
     return $query->count();
   }
 
@@ -247,19 +259,20 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
    * @throws \RestfulBadRequestException
    */
   public function createEntity() {
+    $account = $this->getAccount();
+
     // Check that this user has permission to create new conversations.
-    if ($this->checkEntityAccess('create', $this->entityType, $entity) === FALSE) {
+    if (!comstack_pm_conversation_access('create', NULL, $account)) {
       // User does not have access to create entity.
       $params = array('@resource' => $this->getPluginKey('label'));
       throw new RestfulForbiddenException(format_string('You do not have access to create a new @resource resource.', $params));
     }
 
-    $account = $this->getAccount();
     $request_data = $this->getRequestData();
 
     // Validate the request has all the data we need.
     if (empty($request_data['recipients']) || empty($request_data['text']) || isset($request_data['recipients']) && !is_array($request_data['recipients']) || isset($request_data['text']) && !is_string($request_data['text'])) {
-      throw new \RestfulBadRequestException("The data you're attempting to create a conversation with is either incomplete or has invalid values.");
+      throw new \RestfulBadRequestException(format_string("The data you're attempting to create a conversation with is either incomplete or has invalid values. @data", array('@data' => print_r($request_data, TRUE) )));
     }
 
     // Add the current user to the list of recipients/participants.
