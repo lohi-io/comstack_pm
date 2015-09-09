@@ -1591,6 +1591,77 @@
           </table>
         </div>
 
+        <h4 class="text-primary">/users/current-user</h4>
+        <div class="resource-request">
+          <span class="resource-verb get">GET</span> /api/v1/cs-pm/users/current-user
+          <span class="show-details"><a href="#resource-users-current-user-get" data-toggle="collapse">Show details</a></span>
+        </div>
+
+        <div id="resource-users-current-user-get" class="collapse response-details">
+          <blockquote>
+            <p>Return information about the current user, including the permissions they have.</p>
+            <p><strong>Requires:</strong> Authenticated user session.</p>
+          </blockquote>
+
+          <h4>Responses</h4>
+
+          <table class="table table-striped responses">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>200</code></td>
+                <td>Valid response.</td>
+                <td>
+<h5>Body</h5>
+<pre>{
+  'data': [
+    'user': {
+      'type': 'user',
+      'id': 1,
+      'name': 'username',
+      'avatars': [
+        '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+        '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+      ],
+      'contact_frequency': 0
+    },
+    'permissions': {
+      'conversations': {
+        'start': true,
+        'leave': true,
+        'reply': true,
+        'invite_others': false,
+        'set_title': false,
+        'mark_as_read': false,
+        'mute': false,
+        'archive': false,
+        'pin': false,
+        'start': false
+      },
+      'messages': {
+        'edit': false,
+        'delete': false
+      }
+    }
+  ]
+}</pre>
+                </td>
+              </tr>
+              <tr>
+                <td><code>401</code></td>
+                <td colspan="2">No authorised/logged in.</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+
         <h4 class="text-primary">/users/available-users</h4>
         <div class="resource-request">
           <span class="resource-verb get">GET</span> /api/v1/cs-pm/users/available-users
