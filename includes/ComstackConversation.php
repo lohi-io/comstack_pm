@@ -196,10 +196,23 @@ class ComstackConversation extends Entity {
    */
   public function userIsAParticipant($uid) {
     if (!ctype_digit((string) $uid)) {
-      throw new \ComstackInvalidParameterException(t("When checking that a user is a participant in a conversation you must pass in an integer."));
+      throw new \ComstackInvalidParameterException(t('When checking that a user is a participant in a conversation you must pass in an integer.'));
     }
 
     return in_array($uid, $this->getParticipants());
+  }
+
+  /**
+   * Check that a user is available to the current user.
+   *
+   * @return boolean
+   */
+  public function userIsAvailable($uid) {
+    if (!ctype_digit((string) $uid)) {
+      throw new \ComstackInvalidParameterException(t('When checking that a user is available to this user you must pass in an integer.'));
+    }
+
+
   }
 
   /**
@@ -311,7 +324,6 @@ class ComstackConversation extends Entity {
         ))
         ->condition('mid', $available_ids, 'IN')
         ->execute();
-      }
     }
 
     return FALSE;
