@@ -80,9 +80,9 @@ before_script:
   - drush dl comstack-7.x-1.x
 
   # Enable comstack and default permissions module.
-  - drush en -y comstack comstack_default_permissions comstack_pm restful
-  - drush en -y restful_token_auth comstack_pm_rest_api
-  - drush en -y devel devel_generate
+  - drush en -y comstack comstack_pm restful
+  - drush en -y restful_token_auth comstack_pm_rest_api comstack_default_permissions
+  - drush en -y devel devel_generate comstack_pm_default_permissions
 
   # Setup files.
   - sudo chmod -R 777 sites/all
