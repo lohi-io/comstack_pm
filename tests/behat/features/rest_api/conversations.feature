@@ -4,17 +4,6 @@ Feature: List a users conversations and Create a new conversation.
 
    Background: Logged in as Basic user
 
-    Given I am on the homepage
-    And I disable the mobile password plugin
-    When I click element with class "action-link-text hidden-xs"
-    When I fill in "edit-name" with "basic_user_1"
-    When I fill in "edit-pass" with "password"
-    And I press "Sign in"
-    And I wait for 5000 seconds
-    And I click element with class "username"
-    Then I should see "Edit my profile"
-    Then I should see "Sign out"
-
   @api
   Scenario: Start a conversation with payload.
     Given I am logged in as a user with the authenticated role
@@ -61,16 +50,16 @@ Feature: List a users conversations and Create a new conversation.
     forwarded
     deleted
     """
-    Then the "type" property is a string equalling "user"
-    Then the "id" property is an integer equalling "1"
-    Then the "participants" property is an empty array
-    Then the "historical_participants" property is an empty array
-    Then the "started_by" property is an object
-    Then the "last_updated_by" property is an object
-    Then the "unread_count" property equals "0"
-    Then the "pinned" property is a boolean equalling "false"
-    Then the "archived" property is a boolean equalling "false"
-    Then the "muted" property is a boolean equalling "false"
-    Then the "starred" property is a boolean equalling "false"
-    Then the "forwarded" property is a boolean equalling "false"
-    Then the "deleted" property is a boolean equalling "false"
+    And the "type" property is a string equalling "user"
+    And the "id" property is an integer equalling "1"
+    And the "participants" property is an array
+    And the "historical_participants" property is an array
+    And the "started_by" property is an object
+    And the "last_updated_by" property is an object
+    And the "unread_count" property equals "0"
+    And the "pinned" property is a boolean equalling "false"
+    And the "archived" property is a boolean equalling "false"
+    And the "muted" property is a boolean equalling "false"
+    And the "starred" property is a boolean equalling "false"
+    And the "forwarded" property is a boolean equalling "false"
+    And the "deleted" property is a boolean equalling "false"
