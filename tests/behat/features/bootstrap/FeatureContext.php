@@ -55,6 +55,11 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     protected $accessToken;
 
     /**
+     * CSRF Token required when making write operations to the API.
+     */
+    protected $CSRFToken;
+
+    /**
      * Initializes context.
      * Every scenario gets it's own context object.
      *
@@ -89,14 +94,18 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
         }
 
         $method = strtolower($httpMethod);
+        $options = array();
 
         try {
             switch ($httpMethod) {
                 case 'PUT':
                 case 'POST':
+                    $options['X-CSRF-Token'] = $this->CSRFToken;
+                    $options['body'] = $this->requestPayload;
+
                     $this->response = $this
                         ->client
-                        ->$method($resource, null, array('body' => $this->requestPayload));
+                        ->$method($resource, $options);
                     break;
 
                 default:
@@ -149,6 +158,22 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
 
             if (isset($json['access_token'])) {
                 $this->accessToken = $json['access_token'];
+            }
+        }
+    }
+
+    /**
+     * @Given /^I have a CSRF token$/
+     */
+    public function iHaveACSRFToken()
+    {
+        $this->visitPath('/api/session/token');
+        if ($this->getSession()->getStatusCode() == 200) {
+            $page_content = $this->getSession()->getDriver()->getContent();
+            $json = json_decode($page_content->getContents(), TRUE);
+
+            if (isset($json['X-CSRF-Token'])) {
+                $this->CSRFToken = $json['X-CSRF-Token'];
             }
         }
     }
