@@ -6,17 +6,17 @@ Feature: Authentication
     Given I am on the homepage
     Then I should see "Login"
 
-  @api
+  @api @core
   Scenario: Log in as a regular user
     Given I am logged in as a user with the "authenticated user" role
     Then I should not see "Login"
 
-  @api
+  @api @core
   Scenario: Log in as an admin
     Given I am logged in as a user with the "administrator" role
     Then I should not see "Login"
 
-  @api @javascript
+  @api @core @javascript
   Scenario: Log in via selenium
     Given I am logged in as a user with the "administrator" role
     Then I should not see "Login"

@@ -1,6 +1,6 @@
 Feature: Report a conversation as Authenticated user.
 
-  @api
+  @api @restapi @post @expectsvalid
   Scenario: Content successfully created.
     Given I am logged in as a user with the authenticated role
     And I have an access token
@@ -14,7 +14,7 @@ Feature: Report a conversation as Authenticated user.
     When I request "POST /api/v1/cs-pm/conversations"
     Then The REST API returns a 201 response
 
-  @api
+  @api @restapi @post @expectsvalid
   Scenario: Report a conversation.
     Given I am logged in as a user with the authenticated role
     And I have an access token
@@ -29,14 +29,14 @@ Feature: Report a conversation as Authenticated user.
     When I request "POST /api/v1/cs-pm/conversations/1/report"
     Then The REST API returns a 201 response
 
-  @api
+  @api @restapi @post @expectsinvalid
   Scenario: Attempt to report a conversation without sending any detail/reason data.
     Given I am logged in as a user with the authenticated role
     And I have an access token
     When I request "POST /api/v1/cs-pm/conversations/1/report"
     Then The REST API returns a 400 response
 
-  @api
+  @api @restapi @post @expectsinvalid
   Scenario: Attempt to report a conversation which doesn't exist.
     Given I am logged in as a user with the authenticated role
     And I have an access token

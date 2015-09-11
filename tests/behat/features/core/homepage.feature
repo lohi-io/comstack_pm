@@ -3,6 +3,7 @@ Feature: Homepage
   As any user
   I should see the homepage
 
+  @core
   Scenario: Homepage works
     When I go to the homepage
     Then I should get a "200" HTTP response

@@ -114,8 +114,12 @@ before_script:
   - cd tests/behat
 
 script:
-  # Run the Behat tests.
-  ./bin/behat
+  # Run the Behat tests, use tags to order things.
+  - ./bin/behat --tags @core
+  - ./bin/behat --tags @post
+  - ./bin/behat --tags @get
+  - ./bin/behat --tags @put
+  - ./bin/behat --tags @delete
 
 notifications:
   email:

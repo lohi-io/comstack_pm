@@ -2,7 +2,7 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
 
   Background: Logged in as Basic user
 
-  @api
+  @api @restapi @post @expectsvalid
   Scenario: Content successfully created.
     Given I am logged in as a user with the authenticated role
     And I have an access token
@@ -16,7 +16,7 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
     When I request "POST /api/v1/cs-pm/conversations"
     Then The REST API returns a 201 response
 
- @api
+ @api @restapi @get @expectsvalid
  Scenario: Authenticated user session.
     Given I am logged in as a user with the authenticated role
     And I have an access token
@@ -55,21 +55,21 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
     And the "forwarded" property is a boolean equalling "false"
     And the "deleted" property is a boolean equalling "false"
 
- @api
+ @api @restapi @get @expectsinvalid
  Scenario: Authenticated user session with wrong conversation ID
     Given I am logged in as a user with the authenticated role
     And I have an access token
     When I request "GET /api/v1/cs-pm/conversations/9"
     Then I should get a 404 HTTP response
 
- @api
+ @api @restapi @delete @expectsvalid
  Scenario: Authenticated user session.
     Given I am logged in as a user with the authenticated role
     And I have an access token
     When I request "DELETE /api/v1/cs-pm/conversations/1"
     Then I should get a 200 HTTP response
 
- @api
+ @api @restapi @delete @expectsinvalid
  Scenario: Authenticated user session with wrong conversation ID
     Given I am logged in as a user with the authenticated role
     And I have an access token

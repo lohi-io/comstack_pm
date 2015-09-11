@@ -2,7 +2,7 @@ Feature: Add a reply to a conversation, as Authenticated user.
 
   Background: Logged in as Basic user
 
-  @api
+  @api @restapi @post @expectsvalid
   Scenario: Valid content is posted and successfully saved.
     Given I am logged in as a user with the authenticated role
     And I have an access token
@@ -30,15 +30,15 @@ Feature: Add a reply to a conversation, as Authenticated user.
     And the "type" property is a string equalling "message"
     And the "conversation_id" property is an integer equalling "1"
     And the "text" property is a string equalling "Blah blah"
-  
-  @api
+
+  @api @restapi @post @expectsinvalid
   Scenario: Attempt to add a reply without any text.
     Given I am logged in as a user with the authenticated role
     And I have an access token
     When I request "POST /api/v1/cs-pm/conversations/1/reply"
     Then The REST API returns a 400 response
 
-  @api
+  @api @restapi @post @expectsinvalid
   Scenario: Attempt to add a reply to a conversation that doesn't exist.
     Given I am logged in as a user with the authenticated role
     And I have an access token

@@ -3,7 +3,7 @@ Feature: List the available users to start conversations with, as Authenticated 
   Background: Logged in as Basic user
 
   #Before run this the user should add friends manually.
-  @api
+  @api @restapi @get @expectsvalid
   Scenario: The available users list successfully displayed.
     Given I am logged in as a user with the authenticated role
     And I have an access token
@@ -21,7 +21,8 @@ Feature: List the available users to start conversations with, as Authenticated 
     And the "name" property is a string equalling "user name"
     # We don't test for the "avatars" property as this can be false if the user
     # doesn't have one.
-  @api
+
+  @api @restapi @get @expectsinvalid
   Scenario: No content (no available users).
     Given I am logged in as a user with the authenticated role
     And I have an access token
