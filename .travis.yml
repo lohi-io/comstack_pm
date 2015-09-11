@@ -117,7 +117,7 @@ script:
   # Run the Behat tests, use tags to order things.
   - ./bin/behat --tags @core
   - ./bin/behat --tags @runfirst
-  - ./bin/behat --tags @post ~@runfirst
+  - ./bin/behat --tags '@post&&~@runfirst'
   - ./bin/behat --tags @get
   - ./bin/behat --tags @put
   - ./bin/behat --tags @delete
