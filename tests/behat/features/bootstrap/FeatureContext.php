@@ -100,7 +100,9 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
             switch ($httpMethod) {
                 case 'PUT':
                 case 'POST':
-                    $options['X-CSRF-Token'] = $this->CSRFToken;
+                    if ($this->CSRFToken) {
+                        $options['headers']['X-CSRF-Token'] = $this->CSRFToken;
+                    }
                     if ($this->requestPayload) {
                         $options['body'] = $this->requestPayload;
                     }

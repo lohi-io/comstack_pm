@@ -1,13 +1,12 @@
 Feature: List a users conversations and Create a new conversation.
 
-    #204 No content (no conversations exist for this user)
-
-   Background: Logged in as Basic user
+  Background: Logged in as Basic user
 
   @api
   Scenario: Start a conversation with payload.
     Given I am logged in as a user with the authenticated role
     And I have an access token
+    And I have a CSRF token
     And I have the payload:
     """
     {
@@ -24,7 +23,7 @@ Feature: List a users conversations and Create a new conversation.
     And I have an access token
     When I request "POST /api/v1/cs-pm/conversations"
     Then The REST API returns a 400 response
-    
+
   @api
   Scenario: Validating the GET response
     Given I am logged in as a user with the authenticated role
