@@ -7,7 +7,7 @@ Feature: Return information about the current user, including the permissions th
     Given I am logged in as a user with the authenticated role
     And I have an access token
     When I request "GET /api/v1/cs-pm/users/current-user"
-    Then I should get a 200 HTTP response
+    Then The REST API returns a 200 response
     And scope into the "data" property
     And the properties exist:
     """
@@ -52,5 +52,5 @@ Feature: Return information about the current user, including the permissions th
     Given I am logged in as a user with the authenticated role
     And I have an access token
     When I request "GET /api/v1/cs-pm/users/current-user"
-    Then I should get a 401 HTTP response
+    Then The REST API returns a 401 response
 
