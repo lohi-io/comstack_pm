@@ -146,6 +146,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
             $bodyOutput = $response->getBody();
         } else {
             $bodyOutput = 'The REST API responded with ' . $this->getResponse()->getStatusCode() . ' and the incorrect content type of "' . $contentType . '" where we always expect JSON.';
+            $bodyOutput .= "\n" . $response->getBody();
         }
         assertSame((int) $statusCode, (int) $this->getResponse()->getStatusCode(), $bodyOutput);
     }
