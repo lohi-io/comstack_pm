@@ -2,8 +2,8 @@ Feature: Return information about the current user, including the permissions th
 
   Background: Logged in as Basic user
 
- @api @restapi @get @expectsvalid
- Scenario: Authenticated user session.
+  @api @restapi @get @expectsvalid
+  Scenario: Authenticated user session.
     Given I am logged in as a user with the authenticated role
     And I have an access token
     When I request "GET /api/v1/cs-pm/users/current-user"
@@ -47,8 +47,8 @@ Feature: Return information about the current user, including the permissions th
     And the "edit_own" property is a boolean equalling "false"
     And the "delete" property is a boolean equalling "false"
 
- @api @restapi @get @expectsinvalid
- Scenario: No authorisation response
+  @api @restapi @get @expectsinvalid
+  Scenario: No authorisation response
     Given I am logged in as a user with the authenticated role
     And I have an access token
     When I request "GET /api/v1/cs-pm/users/current-user"

@@ -2,7 +2,7 @@ Feature: List a users conversations and Create a new conversation.
 
   Background: Logged in as Basic user
 
-  @api @restapi @post @expectsvalid
+  @api @restapi @post @expectsvalid @runfirst
   Scenario: Start a new conversation.
     Given I am logged in as a user with the authenticated role
     And I have an access token
