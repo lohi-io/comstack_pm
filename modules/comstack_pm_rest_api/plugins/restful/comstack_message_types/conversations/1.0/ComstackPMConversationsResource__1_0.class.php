@@ -273,7 +273,12 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
     // Validate the request has all the data we need.
     if (empty($request_data['recipients']) || empty($request_data['text']) || isset($request_data['recipients']) && !is_array($request_data['recipients']) || isset($request_data['text']) && !is_string($request_data['text'])) {
       $this->setHttpHeaders('Status', 400);
-      throw new \RestfulBadRequestException(format_string("The data you're attempting to create a conversation with is either incomplete or has invalid values. @data", array('@data' => var_export($request_data, TRUE) )));
+      $a = (string) empty($request_data['recipients']);
+      $b = (string) empty($request_data['text']);
+      $c = (string) isset($request_data['recipients']) && !is_array($request_data['recipients']);
+      $d = (string) isset($request_data['text']) && !is_string($request_data['text']);
+
+      throw new \RestfulBadRequestException(format_string("The data you're attempting to create a conversation with is either incomplete or has invalid values. $a.$b.$c.$d.@data", array('@data' => print_r($request_data, TRUE) )));
     }
 
     // Add the current user to the list of recipients/participants.
