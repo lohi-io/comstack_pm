@@ -265,6 +265,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
     if (!comstack_pm_conversation_access('create', NULL, $account)) {
       // User does not have access to create entity.
       $params = array('@resource' => $this->getPluginKey('label'));
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException(format_string('You do not have access to create a new @resource resource.', $params));
     }
 
@@ -289,6 +290,10 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
 
     $conversation = comstack_pm_new_conversation($data);
 
+    if ($conversation) {
+      $this->setHttpHeaders('Status', 201);
+    }
+
     return array($this->viewEntity($conversation->conversation_id));
   }
 
@@ -303,6 +308,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
     $conversation = comstack_conversation_load($conversation_id, $account->uid);
 
     if (!$conversation) {
+      $this->setHttpHeaders('Status', 404);
       throw new RestfulGoneException(t("We're having trouble loading that conversation, might want to tell someone about that."));
     }
 
@@ -314,6 +320,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
    */
   public function checkUpdateAccess($conversation) {
     if ($this->checkEntityAccess('update', $this->entityType, $conversation) === FALSE) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You don't have access to update this conversation.");
     }
 
@@ -334,6 +341,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
     // Check access.
     if (!user_access('bypass comstack_pm access checks', $account)) {
       if (!user_access('reply to a comstack conversation', $account) || $this->checkEntityAccess('view', $this->entityType, $conversation) === FALSE) {
+        $this->setHttpHeaders('Status', 403);
         throw new RestfulForbiddenException("You don't have access to reply to this conversation.");
       }
     }
@@ -343,6 +351,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
 
     // Validate the request has all the data we need.
     if (empty($request_data['text']) || isset($request_data['text']) && !is_string($request_data['text'])) {
+      $this->setHttpHeaders('Status', 400);
       throw new \RestfulBadRequestException("The text you're trying to create a reply with isn't valid, it empty?");
     }
 
@@ -353,6 +362,10 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
     // Set the same account on the handler.
     $handler->setAccount($account);
 
+    if (!empty($message)) {
+      $this->setHttpHeaders('Status', 201);
+    }
+
     return array($handler->viewEntity($message->mid));
   }
 
@@ -362,6 +375,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function markAsRead() {
     $account = $this->getAccount();
     if (!user_access('mark a comstack conversation as read', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't mark conversations as read.");
     }
 
@@ -376,6 +390,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function markAsUnread() {
     $account = $this->getAccount();
     if (!user_access('mark a comstack conversation as read', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't mark conversations as read.");
     }
 
@@ -391,6 +406,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
     $conversation = $this->getConversation();
 
     if ($this->checkEntityAccess('delete', $this->entityType, $conversation) === FALSE) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You don't have access to leave to this conversation.");
     }
 
@@ -405,6 +421,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function invite() {
     $account = $this->getAccount();
     if (!user_access('invite users to a comstack conversation', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You don't have access to invite users to this conversation.");
     }
 
@@ -413,11 +430,13 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
 
     // Check access against this entity.
     if ($this->checkEntityAccess('view', $this->entityType, $conversation) === FALSE) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You don't have access to this conversation.");
     }
 
     // Validate the ids.
     if (empty($request_data['ids']) || !empty($request_data['ids']) && !is_array($request_data['ids'])) {
+      $this->setHttpHeaders('Status', 400);
       throw new \RestfulBadRequestException('In order to invite people to this conversation you need to provide an array of user IDs.');
     }
 
@@ -432,6 +451,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function setTitle() {
     $account = $this->getAccount();
     if (!user_access('set a comstack conversations title', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't set conversation titles.");
     }
 
@@ -441,6 +461,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
 
     // Validate the ids.
     if (empty($request_data['text']) || isset($request_data['text']) && !is_string($request_data['text'])) {
+      $this->setHttpHeaders('Status', 400);
       throw new \RestfulBadRequestException('You need to pass in a string, even an empty one to set this conversations title.');
     }
 
@@ -453,6 +474,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function mute() {
     $account = $this->getAccount();
     if (!user_access('mute a comstack conversation', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't mute or unmute conversations.");
     }
 
@@ -467,6 +489,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function unMute() {
     $account = $this->getAccount();
     if (!user_access('mute a comstack conversation', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't mute or unmute conversations.");
     }
 
@@ -481,6 +504,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function archive() {
     $account = $this->getAccount();
     if (!user_access('archive a comstack conversation', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't archive or unarchive conversations.");
     }
 
@@ -495,6 +519,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function unArchive() {
     $account = $this->getAccount();
     if (!user_access('archive a comstack conversation', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't archive or unarchive conversations.");
     }
 
@@ -509,6 +534,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function pin() {
     $account = $this->getAccount();
     if (!user_access('pin a comstack conversation', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't pin or unpin conversations.");
     }
 
@@ -523,6 +549,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function unPin() {
     $account = $this->getAccount();
     if (!user_access('pin a comstack conversation', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't pin or unpin conversations.");
     }
 
@@ -537,6 +564,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function star() {
     $account = $this->getAccount();
     if (!user_access('star a comstack conversation', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't star or unstar conversations.");
     }
 
@@ -551,6 +579,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function unStar() {
     $account = $this->getAccount();
     if (!user_access('star a comstack conversation', $account)) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't star or unstar conversations.");
     }
 
