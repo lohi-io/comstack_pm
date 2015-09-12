@@ -298,7 +298,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       $this->setHttpHeaders('Status', 201);
     }
 
-    return array($this->viewEntity($conversation->conversation_id));
+    return $this->viewEntity($conversation->conversation_id);
   }
 
   /**
