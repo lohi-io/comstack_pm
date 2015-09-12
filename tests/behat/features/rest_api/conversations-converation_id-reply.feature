@@ -1,7 +1,5 @@
 Feature: Add a reply to a conversation, as Authenticated user.
 
-  Background: Logged in as Basic user
-
   @api @restapi @post @expectsvalid
   Scenario: Valid content is posted and successfully saved.
     Given I am logged in as a user with the authenticated role

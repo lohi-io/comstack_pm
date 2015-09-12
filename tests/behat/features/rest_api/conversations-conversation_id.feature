@@ -1,7 +1,5 @@
 Feature: Test the endpoint for specific conversations with the available HTTP methods - GET and DELETE.
 
-  Background: Logged in as Basic user
-
   @api @restapi @post @expectsvalid
   Scenario: Content successfully created.
     Given I am logged in as a user with the authenticated role

@@ -1,7 +1,5 @@
 Feature: GET messages that belong to a conversation, as Authenticated user.
 
-  Background: Logged in as Basic user
-
   @api @restapi @post @expectsvalid
   Scenario: Content successfully created.
     Given I am logged in as a user with the authenticated role
