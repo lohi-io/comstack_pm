@@ -2,7 +2,7 @@ Feature: GET messages that belong to a conversation, as Authenticated user.
 
   @api @restapi @post @expectsvalid
   Scenario: Content successfully created.
-    Given I am logged in as a user with the authenticated role
+    Given I am logged in as testy
     And I have an access token
     Given I have the payload:
     """
@@ -16,7 +16,7 @@ Feature: GET messages that belong to a conversation, as Authenticated user.
 
  @api @restapi @get @expectsvalid
  Scenario: GET messages from a conversation which exists.
-    Given I am logged in as a user with the authenticated role
+    Given I am logged in as testy
     And I have an access token
     When I request "GET /api/v1/cs-pm/conversations/1/messages"
     Then The REST API returns a 200 response
@@ -40,14 +40,14 @@ Feature: GET messages that belong to a conversation, as Authenticated user.
 
  @api @restapi @get @expectsinvalid
  Scenario: Attempt to GET messages from an empty conversation.
-    Given I am logged in as a user with the authenticated role
+    Given I am logged in as testy
     And I have an access token
     When I request "GET /api/v1/cs-pm/conversations/1/messages"
     Then The REST API returns a 204 response
 
  @api @restapi @get @expectsinvalid
  Scenario: Attempt to get messages from a conversation that doesn't exist.
-    Given I am logged in as a user with the authenticated role
+    Given I am logged in as testy
     And I have an access token
     When I request "GET /api/v1/cs-pm/conversations/99999/messages"
     Then The REST API returns a 404 response

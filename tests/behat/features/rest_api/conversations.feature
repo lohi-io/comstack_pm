@@ -2,7 +2,7 @@ Feature: List a users conversations and Create a new conversation.
 
   @api @restapi @post @expectsvalid @runfirst
   Scenario: Start a new conversation.
-    Given I am logged in as a user with the authenticated role
+    Given I am logged in as testy
     And I have an access token
     And I have a CSRF token
     And I have the payload:
@@ -38,14 +38,14 @@ Feature: List a users conversations and Create a new conversation.
 
   @api @restapi @post @expectsinvalid
   Scenario: Start a new conversation without any text.
-    Given I am logged in as a user with the authenticated role
+    Given I am logged in as testy
     And I have an access token
     When I request "POST /api/v1/cs-pm/conversations"
     Then The REST API returns a 400 response
 
   @api @restapi @get @expectsvalid
   Scenario: Validating the GET response
-    Given I am logged in as a user with the authenticated role
+    Given I am logged in as testy
     And I have an access token
     When I request "GET /api/v1/cs-pm/conversations"
     Then The REST API returns a 200 response

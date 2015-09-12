@@ -87,6 +87,8 @@ before_script:
   # Setup files.
   - sudo chmod -R 777 sites/all
 
+  # Generate our predictable test user "testy".
+  - drush ucrt testy
   # Generate some test users.
   - drush generate-users 50
 
