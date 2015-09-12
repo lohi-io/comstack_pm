@@ -74,7 +74,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     }
 
     /**
-    * @Given I am logged in as :name
+    * @override Given I am logged in as :name
     */
     public function assertLoggedInByName($name) {
         if (!isset($this->users[$name])) {
