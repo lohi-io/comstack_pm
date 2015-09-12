@@ -14,6 +14,25 @@ Feature: List a users conversations and Create a new conversation.
     """
     When I request "POST /api/v1/cs-pm/conversations"
     Then The REST API returns a 201 response
+    And scope into the "data" property
+    And the properties exist:
+    """
+    type
+    id
+    participants
+    historical_participants
+    started_by
+    last_updated_by
+    Started
+    Updated
+    unread_count
+    pinned
+    archived
+    muted
+    starred
+    forwarded
+    deleted
+    """
 
   @api @restapi @post @expectsinvalid
   Scenario: Start a new conversation without any text.
