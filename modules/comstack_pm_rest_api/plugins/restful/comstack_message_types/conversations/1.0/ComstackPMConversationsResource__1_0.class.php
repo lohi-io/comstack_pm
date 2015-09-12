@@ -200,6 +200,10 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       'property' => 'muted',
     );
 
+    $public_fields['starred'] = array(
+      'property' => 'starred',
+    );
+
     $public_fields['forwarded'] = array(
       'property' => 'forwarded',
     );
