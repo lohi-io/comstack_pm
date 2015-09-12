@@ -23,8 +23,10 @@ Feature: List a users conversations and Create a new conversation.
     historical_participants
     started_by
     last_updated_by
-    Started
-    Updated
+    started
+    updated
+    container
+    title
     unread_count
     pinned
     archived
@@ -56,8 +58,10 @@ Feature: List a users conversations and Create a new conversation.
     historical_participants
     started_by
     last_updated_by
-    Started
-    Updated
+    started
+    updated
+    container
+    title
     unread_count
     pinned
     archived
