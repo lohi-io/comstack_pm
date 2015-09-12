@@ -74,6 +74,28 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     }
 
     /**
+    * @Given I am logged in as :name
+    */
+    public function assertLoggedInByName($name) {
+        if (!isset($this->users[$name])) {
+            $user = user_load_by_name($name);
+
+            if ($user) {
+                $this->users[$user->name] = $this->user = $user;
+            }
+            else {
+                throw new \Exception(sprintf('No user with %s name is registered with the driver.', $name));
+            }
+        }
+
+        // Change internal current user.
+        $this->user = $this->users[$name];
+
+        // Login.
+        $this->login();
+    }
+
+    /**
      * @Given /^I have the payload:$/
      */
     public function iHaveThePayload(PyStringNode $requestPayload)
