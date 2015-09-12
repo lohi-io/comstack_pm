@@ -1,8 +1,5 @@
 Feature: List the available users to start conversations with, as Authenticated user.
 
-  Background: Logged in as Basic user
-
-  #Before run this the user should add friends manually.
   @api @restapi @get @expectsvalid
   Scenario: The available users list successfully displayed.
     Given I am logged in as a user with the authenticated role
