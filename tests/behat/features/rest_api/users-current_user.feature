@@ -1,7 +1,5 @@
 Feature: Return information about the current user, including the permissions they have.
 
-  Background: Logged in as Basic user
-
   @api @restapi @get @expectsvalid
   Scenario: Authenticated user session.
     Given I am logged in as a user with the authenticated role
