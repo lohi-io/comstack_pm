@@ -74,12 +74,12 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     }
 
     /**
-    * @override Given I am logged in as :name
+    * @Given I'm logged in as :name
     */
-    public function assertLoggedInByName($name) {
+    public function assertComstackLoggedInByName($name) {
         if (!isset($this->users[$name])) {
             $user = user_load_by_name($name);
-exit;
+
             if ($user) {
                 $this->users[$user->name] = $this->user = $user;
             }
