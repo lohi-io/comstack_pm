@@ -1,19 +1,5 @@
 Feature: GET a message and Update the message text, as Authenticated user.
 
-  @api @restapi @post @expectsvalid
-  Scenario: Content successfully created.
-    Given I am logged in as testy
-    And I have an access token
-    Given I have the payload:
-    """
-    {
-    "recipients": [1,2],
-    "text": "Sample text"
-    }
-    """
-    When I request "POST /api/v1/cs-pm/conversations"
-    Then The REST API returns a 201 response
-
   @api @restapi @get @expectsvalid
   Scenario: GET an existing message by ID.
     Given I am logged in as testy

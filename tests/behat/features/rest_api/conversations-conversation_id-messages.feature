@@ -1,19 +1,5 @@
 Feature: GET messages that belong to a conversation, as Authenticated user.
 
-  @api @restapi @post @expectsvalid
-  Scenario: Content successfully created.
-    Given I am logged in as testy
-    And I have an access token
-    Given I have the payload:
-    """
-    {
-    "recipients": "[33562]",
-    "text": "Blah blah"
-    }
-    """
-    When I request "POST /api/v1/cs-pm/conversations"
-    Then The REST API returns a 201 response
-
  @api @restapi @get @expectsvalid
  Scenario: GET messages from a conversation which exists.
     Given I am logged in as testy

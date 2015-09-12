@@ -1,19 +1,5 @@
 Feature: Test the endpoint for specific conversations with the available HTTP methods - GET and DELETE.
 
-  @api @restapi @post @expectsvalid
-  Scenario: Content successfully created.
-    Given I am logged in as testy
-    And I have an access token
-    And I have the payload:
-    """
-    {
-    "recipients": [1],
-    "text": "Blah blah"
-    }
-    """
-    When I request "POST /api/v1/cs-pm/conversations"
-    Then The REST API returns a 201 response
-
  @api @restapi @get @expectsvalid
  Scenario: Authenticated user session.
     Given I am logged in as testy
