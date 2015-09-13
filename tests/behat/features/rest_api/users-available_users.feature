@@ -2,7 +2,7 @@ Feature: List the available users to start conversations with, as Authenticated 
 
   @api @restapi @get @expectsvalid
   Scenario: The available users list successfully displayed.
-    Given I am logged in as testy
+    Given I'm logged in as testy
     And I have an access token
     When I request "GET /api/v1/cs-pm/users/available-users"
     Then The REST API returns a 200 response
@@ -21,7 +21,7 @@ Feature: List the available users to start conversations with, as Authenticated 
 
   @api @restapi @get @expectsinvalid
   Scenario: No content (no available users).
-    Given I am logged in as testy
+    Given I'm logged in as testy
     And I have an access token
     When I request "GET /api/v1/cs-pm/users/available-users"
     Then The REST API returns a 204 response

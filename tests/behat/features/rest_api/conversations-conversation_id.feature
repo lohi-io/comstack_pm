@@ -2,7 +2,7 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
 
  @api @restapi @get @expectsvalid
  Scenario: Authenticated user session.
-    Given I am logged in as testy
+    Given I'm logged in as testy
     And I have an access token
     When I request "GET /api/v1/cs-pm/conversations/1"
     Then I should get a 200 HTTP response
@@ -43,21 +43,21 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
 
  @api @restapi @get @expectsinvalid
  Scenario: Authenticated user session with wrong conversation ID
-    Given I am logged in as testy
+    Given I'm logged in as testy
     And I have an access token
     When I request "GET /api/v1/cs-pm/conversations/9"
     Then I should get a 404 HTTP response
 
  @api @restapi @delete @expectsvalid
  Scenario: Authenticated user session.
-    Given I am logged in as testy
+    Given I'm logged in as testy
     And I have an access token
     When I request "DELETE /api/v1/cs-pm/conversations/1"
     Then I should get a 200 HTTP response
 
  @api @restapi @delete @expectsinvalid
  Scenario: Authenticated user session with wrong conversation ID
-    Given I am logged in as testy
+    Given I'm logged in as testy
     And I have an access token
     When I request "DELETE /api/v1/cs-pm/conversations/99"
     Then I should get a 404 HTTP response
