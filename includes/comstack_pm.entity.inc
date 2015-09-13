@@ -263,3 +263,10 @@ function comstack_conversation_load_multiple(array $conversation_ids = array(), 
 
   return $controller->load($conversation_ids, $conditions);
 }
+
+/**
+ * Access callback for the cs_pm bundle of the message entity.
+ */
+function _comstack_message_access__cs_pm($op, $entity, $account, $entity_type) {
+  return TRUE;
+}
