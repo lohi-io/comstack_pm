@@ -38,14 +38,14 @@ Feature: GET a message and Update the message text, as Authenticated user.
       "text": "Sample text"
     }
     """
-    When I request "PUT /api/v1/cs-pm/messages/1"
+    When I request "PATCH /api/v1/cs-pm/messages/1"
     Then The REST API returns a 200 response
 
   @api @restapi @put @expectsvalid
   Scenario: Update an existing message but without any data.
     Given I'm logged in as testy
     And I have an access token
-    When I request "PUT /api/v1/cs-pm/messages/1"
+    When I request "PATCH /api/v1/cs-pm/messages/1"
     Then The REST API returns a 400 response
 
   @api @restapi @put @expectsinvalid
@@ -58,5 +58,5 @@ Feature: GET a message and Update the message text, as Authenticated user.
       "text": "Sample text"
     }
     """
-    When I request "PUT /api/v1/cs-pm/messages/99999"
+    When I request "PATCH /api/v1/cs-pm/messages/99999"
     Then The REST API returns a 404 response
