@@ -182,10 +182,10 @@ function comstack_pm_conversation_access($op, $entity, $account, $entity_type = 
 
   // Check the other operations.
   if ($is_a_participant) {
-    if ($op === 'view') {
-      return TRUE;
-    }
-    elseif ($op === 'update' && user_access('set a comstack conversations title', $account)) {
+    // Update operations relate to things like setting a conversation title,
+    // marking a conversation as read and so on, if they're part of the
+    // conversation then that's fine.
+    if ($op === 'view' || $op === 'update') {
       return TRUE;
     }
     elseif ($op === 'delete' && user_access('delete leave comstack conversation', $account)) {
