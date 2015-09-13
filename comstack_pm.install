@@ -319,7 +319,7 @@ function comstack_pm_uninstall() {
   }
 
   // Remove fields from the conversation entity.
-  $fields = array('cs_pm_participants', 'cs_pm_historical_participants', 'cs_pm_started_by', 'cs_pm_last_updated_by');
+  $fields = array('cs_pm_participants', 'cs_pm_historical_participants', 'cs_pm_started_by', 'cs_pm_last_updated_by', 'cs_pm_last_message');
   foreach ($fields as $field) {
     $instance = field_info_instance('comstack_conversation', $field, 'comstack_conversation');
     field_delete_instance($instance);
@@ -439,6 +439,86 @@ function comstack_pm_install_conversation_fields() {
     );
     field_create_instance($instance);
   }
+
+  comstack_pm_install_conversation_fields_last_message();
+}
+
+/**
+ * Install the message entity reference field on the conversation entity.
+ */
+function comstack_pm_install_conversation_fields_last_message() {
+  $t = get_t();
+  $field = array(
+    'field_name' => 'cs_pm_last_message',
+    'type' => 'entityreference',
+    'module' => 'entityreference',
+    'cardinality' => 1,
+    'entity_types' => array(),
+    'settings' => array(
+      'handler' => 'base',
+      'handler_settings' => array(
+        'behaviors' => array(
+          'views-select-list' => array(
+            'status' => 0,
+          ),
+        ),
+        'sort' => array(
+          'type' => 'none',
+        ),
+        'target_bundles' => array('cs_pm'),
+      ),
+      'target_type' => 'message',
+    ),
+    'foreign keys' => array(
+      'message' => array(
+        'columns' => array(
+          'target_id' => 'mid',
+        ),
+        'table' => 'message',
+      ),
+    ),
+    'indexes' => array(
+      'target_id' => array(
+        0 => 'target_id',
+      ),
+    ),
+    'locked' => 1,
+    'translatable' => 0,
+    'active' => 1,
+    'deleted' => 0,
+  );
+  field_create_field($field);
+
+  $instance = array(
+    'bundle' => 'comstack_conversation',
+    'default_value' => NULL,
+    'deleted' => 0,
+    'description' => '',
+    'display' => array(
+      'default' => array(
+        'label' => 'above',
+        'settings' => array(),
+        'type' => 'hidden',
+        'weight' => 5,
+      ),
+    ),
+    'entity_type' => 'comstack_conversation',
+    'field_name' => 'cs_pm_last_message',
+    'label' => $t('Last message'),
+    'required' => 0,
+    'widget' => array(
+      'active' => 1,
+      'module' => 'entityreference',
+      'settings' => array(
+        'match_operator' => 'CONTAINS',
+        'path' => '',
+        'size' => 60,
+      ),
+      'type' => 'entityreference_autocomplete',
+      'weight' => 3,
+    ),
+  );
+  field_create_instance($instance);
 }
 
 /**
@@ -646,4 +726,14 @@ function comstack_pm_install_message_fields() {
     ),
   );
   field_create_instance($instance);
+}
+
+/* Update hooks. */
+
+/**
+ * Add an entity reference field on to the conversation entity for "last
+ * message".
+ */
+function comstack_pm_update_7100() {
+  comstack_pm_install_conversation_fields_last_message();
 }

@@ -162,6 +162,16 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       ),
     );
 
+    $public_fields['last_message'] = array(
+      'property' => 'cs_pm_last_message',
+      'resource' => array(
+        'cs_pm' => array(
+          'name' => 'cs-pm/messages',
+          'full_view' => TRUE,
+        ),
+      ),
+    );
+
     $public_fields['started'] = array(
       'property' => 'started',
       'process_callbacks' => array(

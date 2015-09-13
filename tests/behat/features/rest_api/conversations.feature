@@ -23,6 +23,7 @@ Feature: List a users conversations and Create a new conversation.
     historical_participants
     started_by
     last_updated_by
+    last_message
     started
     updated
     container
@@ -58,6 +59,7 @@ Feature: List a users conversations and Create a new conversation.
     historical_participants
     started_by
     last_updated_by
+    last_message
     started
     updated
     container
@@ -76,6 +78,7 @@ Feature: List a users conversations and Create a new conversation.
     And the "historical_participants" property is an array
     And the "started_by" property is an object
     And the "last_updated_by" property is an object
+    And the "last_message" property is an object
     And the "unread_count" property equals "0"
     And the "pinned" property is a boolean equalling "false"
     And the "archived" property is a boolean equalling "false"

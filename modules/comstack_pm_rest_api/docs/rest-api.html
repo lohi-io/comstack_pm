@@ -452,6 +452,28 @@
         ],
         'contact_frequency': 0
       }
+      'last_message': {
+        'type': 'message',
+        'id': 1,
+        'message_type': 'cs_pm',
+        'conversation_id': 1,
+        'sender': {
+          'type': 'user',
+          'id': 1,
+          'name': 'username',
+          'avatars': [
+            '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+            '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+          ],
+          'contact_frequency': 0
+        },
+        'sent': '',
+        'updated': '',
+        'text': 'Quack quack',
+        'weight': 0,
+        'edits': 0,
+        'deleted': false
+      },
       'started': '2015-01-15T12:24:47+0000',
       'updated': '2015-01-15T12:24:47+0000',
       'container': '',
@@ -1875,6 +1897,11 @@
       <td>A user object of the user who last posted a reply in the conversation.</td>
     </tr>
     <tr>
+      <td>last_message</td>
+      <td><code>Object</code></td>
+      <td>A message object, the last/most recently posted message in this conversation.</td>
+    </tr>
+    <tr>
       <td>started</td>
       <td><code>String</code></td>
       <td>An <code>ISO 8601</code> date and time including timezone of when the conversation was started.</td>
@@ -1967,7 +1994,7 @@
       '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
     ],
     'contact_frequency': 0
-  }
+  },
   'last_updated_by': {
     'type': 'user',
     'id': 1,
@@ -1977,7 +2004,29 @@
       '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
     ],
     'contact_frequency': 0
-  }
+  },
+  'last_message': {
+    'type': 'message',
+    'id': 1,
+    'message_type': 'cs_pm',
+    'conversation_id': 1,
+    'sender': {
+      'type': 'user',
+      'id': 1,
+      'name': 'username',
+      'avatars': [
+        '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
+        '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
+      ],
+      'contact_frequency': 0
+    },
+    'sent': '',
+    'updated': '',
+    'text': 'Quack quack',
+    'weight': 0,
+    'edits': 0,
+    'deleted': false
+  },
   'started': '2015-01-15T12:24:47+0000',
   'updated': '2015-01-15T12:24:47+0000',
   'container': '',

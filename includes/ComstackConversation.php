@@ -88,6 +88,7 @@ class ComstackConversation extends Entity {
       // Set this conversations "last updated by" and "updated" fields.
       $this->wrapper->cs_pm_last_updated_by->set($uid);
       $this->wrapper->updated->set(REQUEST_TIME);
+      $this->wrapper->cs_pm_last_message->set($message->mid);
       $this->save();
 
       // Update user specific data.

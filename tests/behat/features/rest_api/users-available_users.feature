@@ -15,7 +15,6 @@ Feature: List the available users to start conversations with, as Authenticated 
     """
     And the "type" property is a string equalling "user"
     And the "id" property is a integer equalling "1"
-    And the "name" property is a string equalling "user name"
     # We don't test for the "avatars" property as this can be false if the user
     # doesn't have one.
 

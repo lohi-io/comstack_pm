@@ -15,6 +15,7 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
     historical_participants
     started_by
     last_updated_by
+    last_message
     started
     updated
     container
@@ -33,6 +34,7 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
     And the "historical_participants" property is an array
     And the "started_by" property is an object
     And the "last_updated_by" property is an object
+    And the "last_message" property is an object
     And the "unread_count" property equals "0"
     And the "pinned" property is a boolean equalling "false"
     And the "archived" property is a boolean equalling "false"
