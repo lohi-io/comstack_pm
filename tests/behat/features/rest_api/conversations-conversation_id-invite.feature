@@ -7,7 +7,7 @@ Feature: Invite a user to the conversation, as Authenticated user.
     And I have the payload:
     """
     {
-      "ids": [3],
+      "ids": [3]
     }
     """
     When I request "POST /api/v1/cs-pm/conversations/1/invite"
@@ -27,7 +27,7 @@ Feature: Invite a user to the conversation, as Authenticated user.
     And I have the payload:
     """
     {
-      "ids": [3],
+      "ids": [3]
     }
     """
     When I request "POST /api/v1/cs-pm/conversations/99999/invite"
