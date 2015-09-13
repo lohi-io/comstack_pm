@@ -42,14 +42,14 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
     And the "deleted" property is a boolean equalling "false"
 
  @api @restapi @get @expectsinvalid
- Scenario: Authenticated user session with wrong conversation ID
+ Scenario: Attempt to load a conversation which doesn't exist.
     Given I'm logged in as testy
     And I have an access token
     When I request "GET /api/v1/cs-pm/conversations/9"
     Then I should get a 404 HTTP response
 
- @api @restapi @delete @expectsvalid
- Scenario: Authenticated user session.
+ @api @restapi @delete @expectsvalid @runlast
+ Scenario: Delete a conversation.
     Given I'm logged in as testy
     And I have an access token
     When I request "DELETE /api/v1/cs-pm/conversations/1"
@@ -59,5 +59,5 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
  Scenario: Authenticated user session with wrong conversation ID
     Given I'm logged in as testy
     And I have an access token
-    When I request "DELETE /api/v1/cs-pm/conversations/99"
+    When I request "DELETE /api/v1/cs-pm/conversations/99999"
     Then I should get a 404 HTTP response

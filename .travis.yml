@@ -125,7 +125,8 @@ script:
   - ./bin/behat --tags '@post&&~@runfirst'
   - ./bin/behat --tags @get
   - ./bin/behat --tags @put
-  - ./bin/behat --tags @delete
+  - ./bin/behat --tags '@delete&&~@runlast'
+  - ./bin/behat --tags @runlast
 
 notifications:
   email:

@@ -49,7 +49,7 @@ Feature: List a users conversations and Create a new conversation.
     And I have an access token
     When I request "GET /api/v1/cs-pm/conversations"
     Then The REST API returns a 200 response
-    And scope into the "data" property
+    And scope into the first "data" property
     And the properties exist:
     """
     type
