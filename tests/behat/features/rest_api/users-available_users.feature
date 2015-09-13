@@ -19,9 +19,9 @@ Feature: List the available users to start conversations with, as Authenticated 
     # We don't test for the "avatars" property as this can be false if the user
     # doesn't have one.
 
-  @api @restapi @get @expectsinvalid
-  Scenario: No content (no available users).
-    Given I'm logged in as testy
-    And I have an access token
-    When I request "GET /api/v1/cs-pm/users/available-users"
-    Then The REST API returns a 204 response
+  #@api @restapi @get @expectsinvalid
+  #Scenario: No content (no available users).
+  #  Given I'm logged in as testy
+  #  And I have an access token
+  #  When I request "GET /api/v1/cs-pm/users/available-users"
+  #  Then The REST API returns a 204 response
