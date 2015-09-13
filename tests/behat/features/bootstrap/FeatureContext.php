@@ -81,6 +81,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
             $user = user_load_by_name($name);
 
             if ($user) {
+                $user->role = 'authenticated user';
                 $this->users[$user->name] = $this->user = $user;
             }
             else {
