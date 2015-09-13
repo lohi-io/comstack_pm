@@ -11,22 +11,7 @@ Feature: Return information about the current user, including the permissions th
     """
     user
     permissions
-    """
-    And scope into the "user" property
-    And the properties exist:
-    """
-    type
-    id
-    name
-    """
-    And the "type" property is a string equalling "user"
-    And reset scope
-    And scope into the "data" property
-    And scope into the "permissions" property
-    And the properties exist:
-    """
-    conversations
-    messages
+    preferences
     """
 
   @api @restapi @get @expectsinvalid

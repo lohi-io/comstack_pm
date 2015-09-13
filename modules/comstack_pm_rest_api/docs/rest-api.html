@@ -1621,7 +1621,7 @@
 
         <div id="resource-users-current-user-get" class="collapse response-details">
           <blockquote>
-            <p>Return information about the current user, including the permissions they have.</p>
+            <p>Return information about the current user, including the permissions they have. Preferences are also included, only one right now is "read only mode" which is provided by a user preference which allows users to opt out of Private messaging.</p>
             <p><strong>Requires:</strong> Authenticated user session.</p>
           </blockquote>
 
@@ -1670,6 +1670,9 @@
         'edit_own': false,
         'delete': false
       }
+    },
+    'preferences': {
+      'read_only_mode': false
     }
   }
 }</pre>
