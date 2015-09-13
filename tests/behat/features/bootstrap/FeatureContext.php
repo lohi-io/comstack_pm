@@ -92,7 +92,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
         }
 
         // Change internal current user.
-        //$this->user = $this->users[$name];
+        $this->user = $this->users[$name];
 
         // Login.
         $this->login();
