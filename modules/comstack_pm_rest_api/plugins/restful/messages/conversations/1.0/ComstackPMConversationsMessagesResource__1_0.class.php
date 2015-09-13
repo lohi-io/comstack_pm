@@ -27,7 +27,7 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
     $account = $this->getAccount();
 
     $conversation_id = $this->getEntityID();
-    $conversation = entity_load_single('comstack_conversation', $conversation_id);
+    $conversation = $this->getConversation();
 
     if ($conversation && comstack_pm_conversation_access('view', $conversation, $account)) {
       return TRUE;
@@ -103,6 +103,7 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
     $conversation = comstack_conversation_load($conversation_id, $account->uid);
 
     if (!$conversation) {
+      $this->setHttpHeaders('Status', 404);
       throw new RestfulGoneException(t("We're having trouble loading that conversation, might want to tell someone about that."));
     }
 
@@ -114,6 +115,7 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
    */
   public function getList() {
     if (!$this->checkConversationAccess()) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You don't have access to this conversation.");
     }
 
@@ -128,14 +130,17 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
     $request_data = $this->getRequestData();
 
     if ($this->checkEntityAccess('delete', $this->entityType, $conversation) === FALSE) {
+      $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You don't have access to this conversation.");
     }
 
     // Validate the ids.
     if (empty($request_data['ids']) || !empty($request_data['ids']) && !is_array($request_data['ids'])) {
+      $this->setHttpHeaders('Status', 400);
       throw new \RestfulBadRequestException("In order to delete messages from this conversation, you'll need to send some valid ids.");
     }
 
     $conversation->deleteMessages($request_data['ids']);
+    $this->setHttpHeaders('Status', 200);
   }
 }

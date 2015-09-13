@@ -98,29 +98,6 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
         if (!$this->loggedIn()) {
             throw new \Exception(sprintf("Failed to log in as '%s'", $name));
         }
-
-
-
-
-        /*if (!isset($this->users[$name])) {
-            $user = user_load_by_name($name);
-
-            if ($user) {
-                $user->role = 'authenticated user';
-                $user->pass = 'password';
-                $this->dispatchHooks('AfterUserCreateScope', $user);
-                $this->users[$user->name] = $this->user = $user;
-            }
-            else {
-                throw new \Exception(sprintf('No user with the name %s is registered with the driver.', $name));
-            }
-        }
-
-        // Change internal current user.
-        $this->user = $this->users[$name];
-
-        // Login.
-        $this->login();*/
     }
 
     /**
