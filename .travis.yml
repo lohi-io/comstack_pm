@@ -93,7 +93,7 @@ before_script:
   - drush generate-users 50
 
   # Set permissions we don't want in features because of conflicts.
-  - drush rap 'authenticated user' "access user profiles"
+  - drush rap "authenticated user" "access user profiles"
 
   # Clear all the caches!
   - drush cc all
