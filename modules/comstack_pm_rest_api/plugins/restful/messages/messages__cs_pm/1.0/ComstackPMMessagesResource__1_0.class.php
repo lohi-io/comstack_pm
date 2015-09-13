@@ -86,7 +86,7 @@ class ComstackPMMessagesResource__1_0 extends \ComstackRestfulEntityBase {
 
     $public_fields['message_type'] = array(
       'property' => 'type',
-      // Get the straight value from the {message} table.
+      // Get the value straight from the {message} table.
       // http://www.drupalcontrib.org/api/drupal/contributions%21entity%21includes%21entity.wrapper.inc/function/EntityMetadataWrapper%3A%3Araw/7
       'wrapper_method' =>  'raw',
     );
