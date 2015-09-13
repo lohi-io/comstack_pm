@@ -94,6 +94,9 @@ class ComstackPMMessagesResource__1_0 extends \ComstackRestfulEntityBase {
     $public_fields['conversation_id'] = array(
       'property' => 'cs_pm_conversation',
       'wrapper_method' =>  'raw',
+      'process_callbacks' => array(
+        'intval',
+      ),
     );
 
     $public_fields['sender'] = array(

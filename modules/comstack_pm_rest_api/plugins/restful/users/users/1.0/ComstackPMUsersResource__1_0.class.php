@@ -51,6 +51,8 @@ class ComstackPMUsersResource__1_0 extends \RestfulEntityBaseUser {
     );
 
     $public_fields['id'] = $id_field;
+    // Force correct data type on output.
+    $public_fields['id']['process_callbacks'][] = 'intval';
 
     $public_fields['name'] = array(
       'property' => 'name',
