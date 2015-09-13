@@ -70,7 +70,7 @@ Feature: List a users conversations and Create a new conversation.
     forwarded
     deleted
     """
-    And the "type" property is a string equalling "user"
+    And the "type" property is a string equalling "conversation"
     And the "id" property is a integer equalling "1"
     And the "participants" property is an array
     And the "historical_participants" property is an array

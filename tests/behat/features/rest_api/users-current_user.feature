@@ -20,7 +20,7 @@ Feature: Return information about the current user, including the permissions th
     name
     """
     And the "type" property is a string equalling "user"
-    And I reset scope
+    And reset scope
     And scope into the "data" property
     And scope into the "permissions" property
     And the properties exist:
