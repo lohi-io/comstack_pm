@@ -1,6 +1,6 @@
 Feature: Removing the valid user from the conversation, as Authenticated user.
 
-  @api @restapi @put @expectsvalid
+  @api @restapi @put @expectsvalid @runlast
   Scenario: Allow the current user to leave a conversation.
     Given I'm logged in as testy
     And I have an access token
