@@ -87,7 +87,11 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
                 $this->users[$user->name] = $this->user = $user;
             }
             else {
-                throw new \Exception(sprintf('No user with %s name is registered with the driver.', $name));
+                print_r($this->users);
+                print_r($name);
+                var_dump($user);
+                exit;
+                throw new \Exception(sprintf('No user with the name %s is registered with the driver.', $name));
             }
         }
 
