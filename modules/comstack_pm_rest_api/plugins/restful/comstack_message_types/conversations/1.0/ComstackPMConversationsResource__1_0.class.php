@@ -23,7 +23,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       ),
       // A specific entity.
       '^(\d+)*\d+$' => array(
-        \RestfulInterface::GET => 'viewEntities',
+        \RestfulInterface::GET => 'viewEntity',
         \RestfulInterface::DELETE => 'leave',
       ),
       // Actions against a specific conversation.
