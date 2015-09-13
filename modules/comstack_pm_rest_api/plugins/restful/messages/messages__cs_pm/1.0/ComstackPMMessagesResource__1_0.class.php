@@ -14,7 +14,7 @@ class ComstackPMMessagesResource__1_0 extends \ComstackRestfulEntityBase {
   public static function controllersInfo() {
     return array(
       '^(\d+,)*\d+$' => array(
-        \RestfulInterface::GET => 'viewEntities',
+        \RestfulInterface::GET => 'viewEntity',
         \RestfulInterface::PATCH => 'patchEntity',
       ),
     );
