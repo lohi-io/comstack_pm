@@ -77,7 +77,32 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     * @Given I'm logged in as :name
     */
     public function iMLoggedInAs($name) {
-        if (!isset($this->users[$name])) {
+        // Check if logged in.
+        if ($this->loggedIn()) {
+            $this->logout();
+        }
+
+        $this->getSession()->visit($this->locatePath('/user'));
+        $element = $this->getSession()->getPage();
+        $element->fillField($this->getDrupalText('username_field'), $name);
+        $element->fillField($this->getDrupalText('password_field'), 'password');
+        $submit = $element->findButton($this->getDrupalText('log_in'));
+
+        if (empty($submit)) {
+            throw new \Exception(sprintf("No submit button at %s", $this->getSession()->getCurrentUrl()));
+        }
+
+        // Log in.
+        $submit->click();
+
+        if (!$this->loggedIn()) {
+            throw new \Exception(sprintf("Failed to log in as '%s'", $name));
+        }
+
+
+
+
+        /*if (!isset($this->users[$name])) {
             $user = user_load_by_name($name);
 
             if ($user) {
@@ -87,10 +112,6 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
                 $this->users[$user->name] = $this->user = $user;
             }
             else {
-                print_r($this->users);
-                print_r($name);
-                var_dump($user);
-                exit;
                 throw new \Exception(sprintf('No user with the name %s is registered with the driver.', $name));
             }
         }
@@ -99,7 +120,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
         $this->user = $this->users[$name];
 
         // Login.
-        $this->login();
+        $this->login();*/
     }
 
     /**
