@@ -247,6 +247,10 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
             assertTrue(array_key_exists($property, get_object_vars($payload)), $message);
 
         } else {
+            if (!is_array($payload)) {
+                throw new Exception("When checking for a property in the current scope, it was empty, tripped up at $property.");
+            }
+
             assertTrue(array_key_exists($property, $payload), $message);
         }
     }
