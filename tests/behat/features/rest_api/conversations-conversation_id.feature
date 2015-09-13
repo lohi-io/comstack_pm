@@ -45,7 +45,7 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
  Scenario: Attempt to load a conversation which doesn't exist.
     Given I'm logged in as testy
     And I have an access token
-    When I request "GET /api/v1/cs-pm/conversations/9"
+    When I request "GET /api/v1/cs-pm/conversations/99999"
     Then I should get a 404 HTTP response
 
  @api @restapi @delete @expectsvalid @runlast
@@ -56,7 +56,7 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
     Then I should get a 200 HTTP response
 
  @api @restapi @delete @expectsinvalid
- Scenario: Authenticated user session with wrong conversation ID
+ Scenario: Attempt to DELETE a conversation which doesn't exist.
     Given I'm logged in as testy
     And I have an access token
     When I request "DELETE /api/v1/cs-pm/conversations/99999"
