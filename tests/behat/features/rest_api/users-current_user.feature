@@ -31,7 +31,7 @@ Feature: Return information about the current user, including the permissions th
 
   @api @restapi @get @expectsinvalid
   Scenario: No authorisation response
-    Given I'm not logged in
+    Given I am not logged in
     When I request "GET /api/v1/cs-pm/users/current-user"
     Then The REST API returns a 401 response
 
