@@ -71,7 +71,7 @@ Feature: List a users conversations and Create a new conversation.
     deleted
     """
     And the "type" property is a string equalling "user"
-    And the "id" property is an integer equalling "1"
+    And the "id" property is a integer equalling "1"
     And the "participants" property is an array
     And the "historical_participants" property is an array
     And the "started_by" property is an object

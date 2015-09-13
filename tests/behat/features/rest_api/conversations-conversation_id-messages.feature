@@ -21,7 +21,7 @@ Feature: GET messages that belong to a conversation, as Authenticated user.
     deleted
     """
     And the "type" property is a string equalling "message"
-    And the "conversation_id" property is an integer equalling "1"
+    And the "conversation_id" property is a integer equalling "1"
     And the "text" property is a string equalling "Blah blah"
 
  @api @restapi @get @expectsinvalid
