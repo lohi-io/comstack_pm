@@ -2,7 +2,7 @@ Feature: List a users conversations and Create a new conversation.
 
   @api @restapi @post @expectsvalid @runfirst
   Scenario: Start a new conversation.
-    Given I'm logged in as "testy"
+    Given I'm logged in as testy
     And I have an access token
     And I have a CSRF token
     And I have the payload:
