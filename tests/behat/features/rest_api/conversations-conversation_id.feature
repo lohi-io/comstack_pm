@@ -5,7 +5,7 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
     Given I'm logged in as testy
     And I have an access token
     When I request "GET /api/v1/cs-pm/conversations/1"
-    Then I should get a 200 HTTP response
+    Then The REST API returns a 200 response
     And scope into the "data" property
     And the properties exist:
     """
@@ -48,18 +48,22 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
     Given I'm logged in as testy
     And I have an access token
     When I request "GET /api/v1/cs-pm/conversations/99999"
-    Then I should get a 404 HTTP response
+    Then The REST API returns a 404 response
 
  @api @restapi @delete @expectsvalid @runlast
  Scenario: Delete a conversation.
     Given I'm logged in as testy
     And I have an access token
     When I request "DELETE /api/v1/cs-pm/conversations/1"
-    Then I should get a 200 HTTP response
+    Then The REST API returns a 200 response
+    And I'm logged in as testy
+    And I have an access token
+    When I request "DELETE /api/v1/cs-pm/conversations/1"
+    Then The REST API returns a 404 response
 
  @api @restapi @delete @expectsinvalid
  Scenario: Attempt to DELETE a conversation which doesn't exist.
     Given I'm logged in as testy
     And I have an access token
     When I request "DELETE /api/v1/cs-pm/conversations/99999"
-    Then I should get a 404 HTTP response
+    Then The REST API returns a 404 response
