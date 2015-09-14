@@ -125,6 +125,7 @@ script:
   - ./bin/behat --tags '@post&&~@runfirst'
   - ./bin/behat --tags @get
   - ./bin/behat --tags @put
+  - ./bin/behat --tags @patch
   - ./bin/behat --tags '@delete&&~@runlast'
   - ./bin/behat --tags @runlast
 
