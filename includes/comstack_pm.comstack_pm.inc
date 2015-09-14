@@ -259,7 +259,7 @@ function comstack_pm_get_available_users($uid = NULL, $reset = FALSE) {
       ->addMetaData('account', $account);
 
     $result = $query->execute();
-    $available_users[$uid] = isset($result['user']) ? array_keys($result['user']) : array()
+    $available_users[$uid] = isset($result['user']) ? array_keys($result['user']) : array();
   }
 
   return $available_users[$uid];
