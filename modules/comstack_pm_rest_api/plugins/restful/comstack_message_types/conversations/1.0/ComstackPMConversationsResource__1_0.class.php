@@ -7,7 +7,7 @@
 
 class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   // Set the default range for listings.
-  protected $range = 25;
+  protected $range = 10;
 
   /**
    * Overrides \RestfulEntityBase::controllersInfo().

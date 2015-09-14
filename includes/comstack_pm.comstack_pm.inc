@@ -14,12 +14,16 @@ function comstack_pm_query_comstack_pm_conversation_hide_deleted_alter(QueryAlte
     return;
   }
 
-  global $user;
+  $account = $query->getMetaData('account');
+  if (!$account) {
+    global $user;
+    $account = $user;
+  }
 
   // As the user specific data is held in a different table, we need to add in
   // the condition via the alter as EFQ won't allow it.
   $query->join('comstack_conversation_user', NULL, 'comstack_conversation.conversation_id = comstack_conversation_user.conversation_id');
-  $query->condition('comstack_conversation_user.uid', $user->uid);
+  $query->condition('comstack_conversation_user.uid', $account->uid);
   $query->condition('comstack_conversation_user.deleted', 0);
 }
 
@@ -78,10 +82,14 @@ function comstack_pm_query_comstack_pm_separate_transcripts_alter(QueryAlterable
       return;
     }
 
-    global $user;
+    $account = $query->getMetaData('account');
+    if (!$account) {
+      global $user;
+      $account = $user;
+    }
 
     $query->join('comstack_conversation_message', 'ccm', 'message.mid = ccm.mid');
-    $query->condition('ccm.uid', $user->uid);
+    $query->condition('ccm.uid', $account->uid);
 
     if (!user_access('view deleted comstack messages')) {
       $query->condition('ccm.deleted', 0);
@@ -228,4 +236,31 @@ function comstack_pm_new_conversation($data) {
   $conversation->reply($data['text'], $uid);
 
   return $conversation;
+}
+
+/**
+ * Return a list of user ids who are available to a user.
+ */
+function comstack_pm_get_available_users($uid = NULL, $reset = FALSE) {
+  $available_users = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($available_users[$uid]) || $reset) {
+    if (!$uid) {
+      global $user;
+      $uid = $user->uid;
+    }
+
+    $account = user_load($uid);
+
+    $query = new EntityFieldQuery();
+    $query->entityCondition('entity_type', 'user')
+      ->propertyCondition('status', 1)
+      ->addTag('comstack_recipients')
+      ->addMetaData('account', $account);
+
+    $result = $query->execute();
+    $available_users[$uid] = isset($result['user']) ? array_keys($result['user']) : array()
+  }
+
+  return $available_users[$uid];
 }
