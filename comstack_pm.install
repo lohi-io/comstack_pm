@@ -289,6 +289,9 @@ function comstack_pm_install() {
     db_add_field('message', 'edits', $schema['fields']['edits']);
   }
 
+  // Chuck in our input format.
+  comstack_pm_install_input_formats();
+
   // Install the conversation fields.
   comstack_pm_install_conversation_fields();
 
@@ -728,6 +731,50 @@ function comstack_pm_install_message_fields() {
   field_create_instance($instance);
 }
 
+/**
+ * Install input formats, we could've used features but nah, this means that
+ * the format can be altered or deleted without resulting in conflicts.
+ */
+function comstack_pm_install_input_formats() {
+  $formats_cs_pm = array(
+    'format' => 'cs_pm',
+    'name' => 'Comstack Private Messaging',
+    'cache' => 1,
+    'status' => 1,
+    'weight' => 0,
+    'filters' => array(
+      'filter_htmlcorrector' => array(
+        'weight' => -50,
+        'status' => 1,
+        'settings' => array(),
+      ),
+      'filter_html_escape' => array(
+        'weight' => -49,
+        'status' => 1,
+        'settings' => array(),
+      ),
+      'filter_url' => array(
+        'weight' => -43,
+        'status' => 1,
+        'settings' => array(
+          'filter_url_length' => 72,
+        ),
+      ),
+      'filter_autop' => array(
+        'weight' => -40,
+        'status' => 1,
+        'settings' => array(),
+      ),
+    ),
+  );
+
+  $formats_cs_pm = (object) $formats_cs_pm;
+  filter_format_save($formats_cs_pm);
+
+  // Setup the permission.
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('use text format cs_pm'));
+}
+
 /* Update hooks. */
 
 /**
@@ -736,4 +783,11 @@ function comstack_pm_install_message_fields() {
  */
 function comstack_pm_update_7100() {
   comstack_pm_install_conversation_fields_last_message();
+}
+
+/**
+ * Install a Comstack Private Messaging specific input format.
+ */
+function comstack_pm_update_7101() {
+  comstack_pm_install_input_formats();
 }
