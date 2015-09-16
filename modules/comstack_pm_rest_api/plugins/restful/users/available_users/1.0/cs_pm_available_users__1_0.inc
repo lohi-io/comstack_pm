@@ -50,4 +50,5 @@ $plugin = array(
     // https://github.com/RESTful-Drupal/restful/blob/7.x-1.x/docs/api_drupal.md#autocomplete
     'operator' => 'STARTS_WITH',
   ),
+  'formatter' => 'comstack_json',
 );

@@ -15,4 +15,5 @@ $plugin = array(
   'autocomplete' => array(
     'enable' => FALSE,
   ),
+  'formatter' => 'comstack_json',
 );

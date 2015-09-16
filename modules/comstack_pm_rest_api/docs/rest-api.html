@@ -317,25 +317,31 @@
 
         <h4>Paging result sets</h4>
 
-        <h5>Offset pagination</h5>
-
-        <p>All endpoints except for one use offset paging. The response on an endpoint can have a <code>previous</code> and <code>next</code> properties, each of which will have a <code>title</code> and <code>href</code>. <code>previous</code> and <code>next</code> will only appear if there is a previous or next page to go to. The URL in the <code>href</code> property will have the same sort, filters and range as the current request.</p>
-
-        <p>How about an example! Data set omitted for brevity.</p>
+        <p>All Comstack endpoints will provide paging information of some kind within the <code>paging</code> root property of the response, next to <code>data</code>.</p>
+        <p>The information included will be a <code>previous</code> and/or <code>next</code> page if there is one, a <code>total</code> count of data found (e.g. 99) and the <code>range</code> of the data returned which is basically number per page.</p>
+        <p>Here's an example of the standard "Offset pagination" which means normal, pages 1, 2, 3.</p>
+        <p><code>previous</code> and <code>next</code> properties are returned if there is a next page, though it can happen that these will be present but <code>null</code>. Any URLs for paging will have the same filters, sorts and range settings applied. Anyway, example</p>
 
         <pre>{
-  'data': [...],
-  'next': {
-    'title': 'Next',
-    'href': ''
+  "data": [...],
+  "paging": {
+    "range": 10,
+    "total": 14,
+    "current_page": 1,
+    "next": {
+      "title": "Next",
+      "href": "https://..."
+    }
   }
-        }</pre>
+}</pre>
 
         <h5>Cursor pagination</h5>
 
         <p>On the conversations messages endpoint cursor paging is used. In short this allows us to not rely on the data set remaining consistent, all you need to do is make a request with <code>before</code> or <code>after</code> in the query string. By using either you're saying give me all the data before or after the specified Integer ID.</p>
 
-        <p>So, what do you get? Well exactly the same as with offset paging in terms of structure, but an extra but of information. In addition to the <code>previous</code> and <code>next</code> properties in the response (same level as <code>data</code>) you'll also get <code>paging_cursors</code> which will have <code>after</code> and <code>before</code>. The point of these bits of data are to give you the IDs of the first and last items in the data set, so when a user scrolls to them or near them you can start loading the previous or next page. Note it is possible that a <code>previous</code> or <code>next</code> property will be returned and the URL may not return any data, or that they'll be there and <code>null</code> missing a <code>title</code> and <code>href</code> property.</p>
+        <p>So, what do you get? Well exactly the same as with offset paging in terms of structure, but an extra but of information. In addition to the <code>previous</code> and <code>next</code> properties in the response (within <code>paging</code>) you'll also get <code>cursors</code> which will have <code>after</code> and <code>before</code>. The point of these bits of data are to give you the IDs of the first and last items in the data set, so when a user scrolls to them or near them you can start loading the previous or next page. Note it is possible that a <code>previous</code> or <code>next</code> property will be returned and the URL may not return any data, or that they'll be there and <code>null</code> missing a <code>title</code> and <code>href</code> property.</p>
+
+        <p>Note that the <code>current_page</code> property will be omitted when cursor paging is active.</p>
 
         <p>Here are some links which will probably explain it better...</p>
         <ul>
@@ -346,14 +352,18 @@
         <p>An example:</p>
 
         <pre>{
-  'data': [...],
-  'paging_cursors': {
-    'before': 1,
-    'after': 50
-  },
-  'next': {
-    'title': 'Next',
-    'href': ''
+  "data": [...],
+  "paging": {
+    "range": 10,
+    "total": 14,
+    "cursors": {
+      "after": 9,
+      "before": 0
+    }
+    "next": {
+      "title": "Next",
+      "href": "https://..."
+    }
   }
 }</pre>
 
@@ -489,12 +499,7 @@
     ...
   ],
   'paging': {
-    'cursors': {
-      'before': 26,
-      'after': 50
-    },
-    'previous': 'https://example.com/api/v1/cs-pm/conversations?before=26',
-    'next': 'https://example.com/api/v1/cs-pm/conversations?after=50',
+    // See the top of this document for details on pagination.
   }
 }</pre>
                 </td>
@@ -652,12 +657,7 @@
     ...
   ],
   'paging': {
-    'cursors': {
-      'before': 26,
-      'after': 50
-    },
-    'previous': 'https://example.com/api/v1/cs-pm/conversations/search?before=26',
-    'next': 'https://example.com/api/v1/cs-pm/conversations/search?after=50',
+    // See the top of this document for details on pagination.
   }
 }</pre>
                 </td>
@@ -882,12 +882,7 @@
     ...
   ],
   'paging': {
-    'cursors': {
-      'before': 26,
-      'after': 50
-    },
-    'previous': 'https://example.com/api/v1/cs-pm/conversations?before=26',
-    'next': 'https://example.com/api/v1/cs-pm/conversations?after=50',
+    // See the top of this document for details on pagination.
   }
 }</pre>
                 </td>
@@ -1587,12 +1582,7 @@
     ...
   ],
   'paging': {
-    'cursors': {
-      'before': 26,
-      'after': 50
-    },
-    'previous': 'https://example.com/api/v1/cs-pm/conversations/1/search?before=26',
-    'next': 'https://example.com/api/v1/cs-pm/conversations/1/search?after=50',
+    // See the top of this document for details on pagination.
   }
 }</pre>
                 </td>
