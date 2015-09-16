@@ -22,7 +22,7 @@ Feature: GET messages that belong to a conversation, as Authenticated user.
     """
     And the "type" property is a string equalling "message"
     And the "conversation_id" property is a integer equalling "1"
-    And the "text" property is a string equalling "Blah blah"
+    And the "text" property is a string equalling "<p>Blah blah<p>"
 
  @api @restapi @get @expectsinvalid
  Scenario: Attempt to get messages from a conversation that doesn't exist.
