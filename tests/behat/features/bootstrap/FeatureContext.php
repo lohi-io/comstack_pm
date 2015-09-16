@@ -360,6 +360,24 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     }
 
     /**
+     * @Given /^the "([^"]*)" property is a string which contains "([^"]*)"$/
+     */
+    public function thePropertyIsAStringWhichContains($property, $expectedValue)
+    {
+        $payload = $this->getScopePayload();
+
+        $this->thePropertyIsAString($property);
+
+        $actualValue = $this->arrayGet($payload, $property);
+
+        assertContains(
+            $actualValue,
+            $expectedValue,
+            "Asserting the [$property] property in current scope [{$this->scope}] is a string equalling [$expectedValue]."
+        );
+    }
+
+    /**
      * @Given /^the "([^"]*)" property is a boolean$/
      */
     public function thePropertyIsABoolean($property)

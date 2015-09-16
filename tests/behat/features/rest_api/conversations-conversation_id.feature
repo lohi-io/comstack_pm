@@ -57,8 +57,9 @@ Feature: Test the endpoint for specific conversations with the available HTTP me
     And I have an access token
     And I have a CSRF token
     When I request "DELETE /api/v1/cs-pm/conversations/1"
+    Then The REST API returns a 200 response
     And I request "GET /api/v1/cs-pm/conversations/1"
-    Then The REST API returns a 404 response
+    And The REST API returns a 404 response
 
  @api @restapi @delete @expectsinvalid
  Scenario: Attempt to DELETE a conversation which doesn't exist.
