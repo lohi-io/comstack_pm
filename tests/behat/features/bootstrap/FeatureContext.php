@@ -109,7 +109,7 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
     }
 
     /**
-     * @When /^I request "(GET|PUT|POST|DELETE) ([^"]*)"$/
+     * @When /^I request "(GET|PUT|POST|PATCH|DELETE) ([^"]*)"$/
      */
     public function iRequest($httpMethod, $resource)
     {
