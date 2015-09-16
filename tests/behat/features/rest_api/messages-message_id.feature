@@ -35,7 +35,7 @@ Feature: GET a message and Update the message text, as Authenticated user.
     And I have the payload:
     """
     {
-      "text": "Sample text"
+    "text": "Sample text"
     }
     """
     When I request "PATCH /api/v1/cs-pm/messages/1"
@@ -55,7 +55,7 @@ Feature: GET a message and Update the message text, as Authenticated user.
     And I have the payload:
     """
     {
-      "text": "Sample text"
+    "text": "Sample text"
     }
     """
     When I request "PATCH /api/v1/cs-pm/messages/99999"
