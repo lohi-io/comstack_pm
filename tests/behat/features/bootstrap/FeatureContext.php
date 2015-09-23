@@ -371,9 +371,9 @@ class FeatureContext extends RawDrupalContext implements SnippetAcceptingContext
         $actualValue = $this->arrayGet($payload, $property);
 
         assertContains(
-            $actualValue,
             $expectedValue,
-            "Asserting the [$property] property in current scope [{$this->scope}] is a string equalling [$expectedValue]."
+            $actualValue,
+            "Asserting the [$property] property in current scope [{$this->scope}] is a string which contains [$expectedValue]."
         );
     }
 
