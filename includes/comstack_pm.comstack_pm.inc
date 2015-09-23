@@ -264,3 +264,42 @@ function comstack_pm_get_available_users($uid = NULL, $reset = FALSE) {
 
   return $available_users[$uid];
 }
+
+/**
+ * Build an EntityFieldQuery object for getting a list of conversations.
+ */
+function comstack_pm_conversations_query($account) {
+  if (!$account) {
+    global $user;
+    $account = user_load($user->uid);
+  }
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'comstack_conversation')
+    ->fieldCondition('cs_pm_participants', 'target_id', $account->uid)
+    ->addTag('comstack_conversations')
+    ->addMetaData('account', $account);
+
+  if (!user_access('view deleted comstack conversations', $account)) {
+    $query->addTag('comstack_pm_conversation_hide_deleted');
+  }
+
+  return $query;
+}
+
+/**
+ * Load a users conversations.
+ */
+function comstack_pm_load_conversations($account = NULL, $limit = 10) {
+  if (!$account) {
+    global $user;
+    $account = user_load($user->uid);
+  }
+
+  $query = comstack_pm_conversations_query($account);
+  $query->range(0, $limit);
+  $result = $query->execute();
+  $conversation_ids = isset($result['comstack_conversation']) ? array_keys($result['comstack_conversation']) : array();
+
+  return !empty($conversation_ids) ? entity_load('comstack_conversation', $conversation_ids) : array();
+}

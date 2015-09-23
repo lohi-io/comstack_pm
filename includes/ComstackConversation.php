@@ -95,10 +95,9 @@ class ComstackConversation extends Entity {
       foreach ($this->getParticipants() as $participant_uid) {
         if ($uid != $participant_uid) {
           // Update this conversations unread count.
-
-
-          // Trigger notification.
           db_query('UPDATE {comstack_conversation_user} SET unread_count = unread_count + 1 WHERE conversation_id = :conversation_id AND uid = :uid', array(':conversation_id' => $this->conversation_id, ':uid' => $participant_uid));
+
+          // Trigger notifications.
         }
       }
     }
@@ -213,7 +212,14 @@ class ComstackConversation extends Entity {
       throw new \ComstackInvalidParameterException(t('When checking that a user is available to this user you must pass in an integer.'));
     }
 
+    $available_ids = comstack_pm_get_available_users();
 
+    if (in_array($uid, $available_ids)) {
+      return TRUE;
+    }
+    else {
+      throw new \ComstackUnavailableUserException();
+    }
   }
 
   /**
