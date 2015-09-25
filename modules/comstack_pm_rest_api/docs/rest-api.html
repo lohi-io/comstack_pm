@@ -251,10 +251,10 @@
         <p>Here's an example...</p>
 
         <pre>{
-  'status' => 400,
-  'title' => 'The sort wrong_key is not allowed for this path.',
-  'detail' => 'Bad Request.',
-  'type' => 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1'
+  "status": 400,
+  "title": "The sort wrong_key is not allowed for this path.",
+  "detail": Bad Request.',
+  "type": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1"
 }</pre>
 
         <h4>Response codes</h4>
@@ -411,94 +411,94 @@
                 <td>
 <h5>Body</h5>
 <pre>{
-  'data': [
+  "data": [
     {
-      'type': 'conversation',
-      'id': 1,
-      'participants': [
+      "type": "conversation",
+      "id": 1,
+      "participants": [
         {
-          'type': 'user',
-          'id': 1,
-          'name': 'username',
-          'avatars': [
+          "type": "user",
+          "id": 1,
+          "name": "username",
+          "avatars": [
             '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
             '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
           ],
-          'contact_frequency': 0
+          "contact_frequency": 0
         },
         {
-          'type': 'user',
-          'id': 2,
-          'name': 'username2',
-          'avatars': [
+          "type": "user",
+          "id": 2,
+          "name": "username2",
+          "avatars": [
             '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av2.jpg?itok=123',
             '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av2.jpg?itok=123'
           ],
-          'contact_frequency': 0
+          "contact_frequency": 0
         },
       ],
-      'historical_participants': [
+      "historical_participants": [
         {
           // Same as 'participants' property.
         }
       ],
-      'started_by': {
-        'type': 'user',
-        'id': 1,
-        'name': 'username',
-        'avatars': [
+      "started_by": {
+        "type": "user",
+        "id": 1,
+        "name": "username",
+        "avatars": [
           '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
           '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
         ],
-        'contact_frequency': 0
+        "contact_frequency": 0
       }
-      'last_updated_by': {
-        'type': 'user',
-        'id': 1,
-        'name': 'username',
-        'avatars': [
+      "last_updated_by": {
+        "type": "user",
+        "id": 1,
+        "name": "username",
+        "avatars": [
           '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
           '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
         ],
-        'contact_frequency': 0
+        "contact_frequency": 0
       }
-      'last_message': {
-        'type': 'message',
-        'id': 1,
-        'message_type': 'cs_pm',
-        'conversation_id': 1,
-        'sender': {
-          'type': 'user',
-          'id': 1,
-          'name': 'username',
-          'avatars': [
+      "last_message": {
+        "type": "message",
+        "id": 1,
+        "message_type": "cs_pm",
+        "conversation_id": 1,
+        "sender": {
+          "type": "user",
+          "id": 1,
+          "name": "username",
+          "avatars": [
             '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
             '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
           ],
-          'contact_frequency': 0
+          "contact_frequency": 0
         },
-        'sent': '',
-        'updated': '',
-        'text': 'Quack quack',
-        'weight': 0,
-        'edits': 0,
-        'deleted': false
+        "sent": "",
+        "updated": "",
+        "text": "Quack quack",
+        "weight": 0,
+        "edits": 0,
+        "deleted": false
       },
-      'started': '2015-01-15T12:24:47+0000',
-      'updated': '2015-01-15T12:24:47+0000',
-      'container': '',
-      'title': '',
-      'unread_count': 0,
+      "started": "2015-01-15T12:24:47+0000",
+      "updated": "2015-01-15T12:24:47+0000",
+      "container": "",
+      "title": "",
+      "unread_count": 0,
       'pinned: false,
-      'archived': false,
-      'muted': false,
-      'starred': false,
-      'forwarded': false,
-      'deleted': false
+      "archived": false,
+      "muted": false,
+      "starred": false,
+      "forwarded": false,
+      "deleted": false
     },
     ...
   ],
-  'paging': {
+  "paging": {
     // See the top of this document for details on pagination.
   }
 }</pre>
@@ -554,8 +554,8 @@
           <h4>Example request body</h4>
 
 <pre>{
-  'recipients': [1],
-  'text': 'Hiiiiiiiiiiiiiiiiiiiiii.'
+  "recipients": [1],
+  "text": "Hiiiiiiiiiiiiiiiiiiiiii."
 }</pre>
 
           <h4>Responses</h4>
@@ -623,7 +623,7 @@
           <h4>Example request body</h4>
 
 <pre>{
-  'query': 'quack'
+  "query": "quack"
 }</pre>
 
           <h4>Responses</h4>
@@ -642,21 +642,21 @@
                 <td>Content found.</td>
                 <td>
 <pre>{
-  'data': [
+  "data": [
     {
-      'type': 'conversation_search_result',
-      'conversation': {
+      "type": "conversation_search_result",
+      "conversation": {
         // See the conversation model.
       },
-      'message': {
+      "message": {
         // See the message model.
       },
-      'relevance': 1.0,
-      'page': 'https://example.com/api/v1/cs-pm/conversations/1/messages?before=124'
+      "relevance": 1.0,
+      "page": "https://example.com/api/v1/cs-pm/conversations/1/messages?before=124"
     }
     ...
   ],
-  'paging': {
+  "paging": {
     // See the top of this document for details on pagination.
   }
 }</pre>
@@ -787,7 +787,7 @@
           <h4>Example request body</h4>
 
 <pre>{
-  'text': 'This is my reply.'
+  "text": "This is my reply."
 }</pre>
 
           <h4>Responses</h4>
@@ -857,31 +857,31 @@
                 <td>An array of messages.</td>
                 <td>
 <pre>{
-  'data': [
+  "data": [
     {
-      'type': 'message',
-      'id': 1,
-      'message_type': 'comstack_pm',
-      'conversation_id': 1,
-      'sender': {
-        'type': 'user',
-        'id': 1,
-        'name': 'username',
-        'avatars': [
+      "type": "message",
+      "id": 1,
+      "message_type": "comstack_pm",
+      "conversation_id": 1,
+      "sender": {
+        "type": "user",
+        "id": 1,
+        "name": "username",
+        "avatars": [
           '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
           '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
         ]
       },
-      'sent': '2015-01-15T12:24:47+0000',
-      'updated': '2015-01-15T12:24:47+0000',
-      'text': 'Blah blah...',
-      'weight': 0,
-      'edits': 0,
-      'deleted': false
+      "sent": "2015-01-15T12:24:47+0000",
+      "updated": "2015-01-15T12:24:47+0000",
+      "text": "Blah blah...",
+      "weight": 0,
+      "edits": 0,
+      "deleted": false
     },
     ...
   ],
-  'paging': {
+  "paging": {
     // See the top of this document for details on pagination.
   }
 }</pre>
@@ -936,7 +936,7 @@
           <h4>Example request body</h4>
 
 <pre>{
-  'ids': [1, 2]
+  "ids": [1, 2]
 }</pre>
 
           <h4>Responses</h4>
@@ -1102,7 +1102,7 @@
           <h4>Example request body</h4>
 
 <pre>{
-  'ids': [2, 3]
+  "ids": [2, 3]
 }</pre>
 
            <h4>Responses</h4>
@@ -1166,7 +1166,7 @@
           <h4>Example request body</h4>
 
 <pre>{
-  'text': 'Doddfest 2015 tickets'
+  "text": "Doddfest 2015 tickets"
 }</pre>
 
            <h4>Responses</h4>
@@ -1481,9 +1481,9 @@
           <h4>Example request body</h4>
 
 <pre>{
-  'reasons': ['spam'],
-  'other_reason': "And I really didn't need any Viagra :C",
-  'posts': [123]
+  "reasons": ['spam'],
+  "other_reason": "And I really didn't need any Viagra :C",
+  "posts": [123]
 }</pre>
 
           <h4>Responses</h4>
@@ -1551,7 +1551,7 @@
           <h4>Example request body</h4>
 
 <pre>{
-  'query': 'tickets'
+  "query": "tickets"
 }</pre>
 
           <h4>Responses</h4>
@@ -1570,18 +1570,18 @@
                 <td>Content found.</td>
                 <td>
 <pre>{
-  'data': [
+  "data": [
     {
-      'type': 'message_search_result',
-      'message': {
+      "type": "message_search_result",
+      "message": {
         // See the message model.
       },
-      'relevance': 1.0,
-      'page': 'https://example.com/api/v1/cs-pm/conversations/1/messages?before=124'
+      "relevance": 1.0,
+      "page": "https://example.com/api/v1/cs-pm/conversations/1/messages?before=124"
     }
     ...
   ],
-  'paging': {
+  "paging": {
     // See the top of this document for details on pagination.
   }
 }</pre>
@@ -1632,37 +1632,37 @@
                 <td>
 <h5>Body</h5>
 <pre>{
-  'data': {
-    'user': {
-      'type': 'user',
-      'id': 1,
-      'name': 'username',
-      'avatars': [
+  "data": {
+    "user": {
+      "type": "user",
+      "id": 1,
+      "name": "username",
+      "avatars": [
         '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
         '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
       ],
-      'contact_frequency': 0
+      "contact_frequency": 0
     },
-    'permissions': {
-      'conversations': {
-        'start': true,
-        'leave': true,
-        'reply': true,
-        'invite_others': false,
-        'set_title': false,
-        'mark_as_read': false,
-        'mute': false,
-        'archive': false,
-        'pin': false,
-        'start': false
+    "permissions": {
+      "conversations": {
+        "start": true,
+        "leave": true,
+        "reply": true,
+        "invite_others": false,
+        "set_title": false,
+        "mark_as_read": false,
+        "mute": false,
+        "archive": false,
+        "pin": false,
+        "start": false
       },
-      'messages': {
-        'edit_own': false,
-        'delete': false
+      "messages": {
+        "edit_own": false,
+        "delete": false
       }
     },
-    'preferences': {
-      'read_only_mode': false
+    "preferences": {
+      "read_only_mode": false
     }
   }
 }</pre>
@@ -1708,16 +1708,16 @@
                 <td>
 <h5>Body</h5>
 <pre>{
-  'data': [
+  "data": [
     {
-      'type': 'user',
-      'id': 1,
-      'name': 'username',
-      'avatars': [
+      "type": "user",
+      "id": 1,
+      "name": "username",
+      "avatars": [
         '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
         '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
       ],
-      'contact_frequency': 0
+      "contact_frequency": 0
     },
     ...
   ]
@@ -1759,7 +1759,7 @@
                 <td>The message has been found.</td>
                 <td>
 <pre>{
-  'data': {
+  "data": {
     // See the message model.
   }
 }</pre>
@@ -1806,7 +1806,7 @@
           <h4>Example request body</h4>
 
 <pre>{
-  'text': 'Quack. Edit to capitalise.'
+  "text": "Quack. Edit to capitalise."
 }</pre>
 
            <h4>Responses</h4>
@@ -1824,7 +1824,7 @@
                 <td>The conversation has been updated.</td>
                 <td>
 <pre>{
-  'data': {
+  "data": {
     // See the message model.
   }
 }</pre>
@@ -1949,87 +1949,87 @@
 <h5>Example</h5>
 <pre>
 {
-  'type': 'conversation',
-  'id': 1,
-  'participants': [
+  "type": "conversation",
+  "id": 1,
+  "participants": [
     {
-      'type': 'user',
-      'id': 1,
-      'name': 'username',
-      'avatars': [
+      "type": "user",
+      "id": 1,
+      "name": "username",
+      "avatars": [
         '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
         '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
       ],
-      'contact_frequency': 0
+      "contact_frequency": 0
     },
     {
-      'type': 'user',
-      'id': 2,
-      'name': 'username2',
-      'avatars': [
+      "type": "user",
+      "id": 2,
+      "name": "username2",
+      "avatars": [
         '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av2.jpg?itok=123',
         '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av2.jpg?itok=123'
       ],
-      'contact_frequency': 0
+      "contact_frequency": 0
     },
   ],
-  'historical_participants': [
+  "historical_participants": [
     {
       // Same as 'participants' property.
     }
   ],
-  'started_by': {
-    'type': 'user',
-    'id': 1,
-    'name': 'username',
-    'avatars': [
+  "started_by": {
+    "type": "user",
+    "id": 1,
+    "name": "username",
+    "avatars": [
       '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
       '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
     ],
-    'contact_frequency': 0
+    "contact_frequency": 0
   },
-  'last_updated_by': {
-    'type': 'user',
-    'id': 1,
-    'name': 'username',
-    'avatars': [
+  "last_updated_by": {
+    "type": "user",
+    "id": 1,
+    "name": "username",
+    "avatars": [
       '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
       '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
     ],
-    'contact_frequency': 0
+    "contact_frequency": 0
   },
-  'last_message': {
-    'type': 'message',
-    'id': 1,
-    'message_type': 'cs_pm',
-    'conversation_id': 1,
-    'sender': {
-      'type': 'user',
-      'id': 1,
-      'name': 'username',
-      'avatars': [
+  "last_message": {
+    "type": "message",
+    "id": 1,
+    "message_type": "cs_pm",
+    "conversation_id": 1,
+    "sender": {
+      "type": "user",
+      "id": 1,
+      "name": "username",
+      "avatars": [
         '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
         '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
       ],
-      'contact_frequency': 0
+      "contact_frequency": 0
     },
-    'sent': '',
-    'updated': '',
-    'text': 'Quack quack',
-    'weight': 0,
-    'edits': 0,
-    'deleted': false
+    "sent": "",
+    "updated": "",
+    "text": "Quack quack",
+    "weight": 0,
+    "edits": 0,
+    "deleted": false
   },
-  'started': '2015-01-15T12:24:47+0000',
-  'updated': '2015-01-15T12:24:47+0000',
-  'container': '',
-  'title': '',
-  'unread_count': 0,
+  "started": "2015-01-15T12:24:47+0000",
+  "updated": "2015-01-15T12:24:47+0000",
+  "container": "",
+  "title": "",
+  "unread_count": 0,
   'pinned: false,
-  'archived': false,
-  'muted': false,
-  'forwarded': false,
-  'deleted': false
+  "archived": false,
+  "muted": false,
+  "forwarded": false,
+  "deleted": false
 }</pre>
 </div>
 
@@ -2104,25 +2104,25 @@
 </table>
 <h5>Example</h5>
 <pre>{
-  'type': 'message',
-  'id': 1,
-  'message_type': 'comstack_pm',
-  'conversation_id': 1,
-  'sender': {
-    'type': 'user',
-    'id': 1,
-    'name': 'username',
-    'avatars': [
+  "type": "message",
+  "id": 1,
+  "message_type": "comstack_pm",
+  "conversation_id": 1,
+  "sender": {
+    "type": "user",
+    "id": 1,
+    "name": "username",
+    "avatars": [
       '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
       '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
     ]
   },
-  'sent': '2015-01-15T12:24:47+0000',
-  'updated': '2015-01-15T12:24:47+0000',
-  'text': 'Blah blah...',
-  'weight': 0,
-  'edits': 0,
-  'deleted': false
+  "sent": "2015-01-15T12:24:47+0000",
+  "updated": "2015-01-15T12:24:47+0000",
+  "text": "Blah blah...",
+  "weight": 0,
+  "edits": 0,
+  "deleted": false
 }</pre>
 </div>
 
@@ -2172,14 +2172,14 @@
 </table>
 <h5>Example</h5>
 <pre>{
-  'type': 'user',
-  'id': 1,
-  'name': 'username',
-  'avatars': [
+  "type": "user",
+  "id": 1,
+  "name": "username",
+  "avatars": [
     '100-100': 'https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123',
     '200-200' 'https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123'
   ],
-  'contact_frequency': 0
+  "contact_frequency": 0
 }</pre>
 </div>
 
@@ -2224,15 +2224,15 @@
 </table>
 <h5>Example</h5>
 <pre>{
-  'type': 'conversation_search_result',
-  'conversation': {
+  "type": "conversation_search_result",
+  "conversation": {
     // See the conversation model.
   },
-  'message': {
+  "message": {
     // See the message model.
   },
-  'relevance': 1.0,
-  'page': 'https://example.com/api/v1/cs-pm/conversations/1/messages?before=124'
+  "relevance": 1.0,
+  "page": "https://example.com/api/v1/cs-pm/conversations/1/messages?before=124"
 }</pre>
 </div>
 
@@ -2273,12 +2273,12 @@
 
 <h5>Example</h5>
 <pre>{
-  'type': 'message_search_result',
-  'message': {
+  "type": "message_search_result",
+  "message": {
     // See the message model.
   },
-  'relevance': 1.0,
-  'page': 'https://example.com/api/v1/cs-pm/conversations/1/messages?before=124'
+  "relevance": 1.0,
+  "page": "https://example.com/api/v1/cs-pm/conversations/1/messages?before=124"
 }</pre>
 </div>
 
