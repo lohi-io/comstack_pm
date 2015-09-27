@@ -126,7 +126,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       // \ComstackPMMessagesResource__1_0::publicFieldsInfo().
       'resource' => array(
         'user' => array(
-          'name' => 'cs-pm/users',
+          'name' => 'cs/users',
           'full_view' => TRUE,
         ),
       ),
@@ -136,7 +136,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       'property' => 'cs_pm_historical_participants',
       'resource' => array(
         'user' => array(
-          'name' => 'cs-pm/users',
+          'name' => 'cs/users',
           'full_view' => TRUE,
         ),
       ),
@@ -146,7 +146,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       'property' => 'cs_pm_started_by',
       'resource' => array(
         'user' => array(
-          'name' => 'cs-pm/users',
+          'name' => 'cs/users',
           'full_view' => TRUE,
         ),
       ),
@@ -156,7 +156,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       'property' => 'cs_pm_last_updated_by',
       'resource' => array(
         'user' => array(
-          'name' => 'cs-pm/users',
+          'name' => 'cs/users',
           'full_view' => TRUE,
         ),
       ),

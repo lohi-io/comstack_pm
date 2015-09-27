@@ -106,7 +106,7 @@ class ComstackPMMessagesResource__1_0 extends \ComstackRestfulEntityBase {
       // and the "name" of resource, which is the path? :/
       'resource' => array(
         'user' => array(
-          'name' => 'cs-pm/users',
+          'name' => 'cs/users',
           'full_view' => TRUE,
         ),
       ),

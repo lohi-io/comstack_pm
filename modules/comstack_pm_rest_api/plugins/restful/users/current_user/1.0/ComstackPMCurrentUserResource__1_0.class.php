@@ -5,7 +5,7 @@
  * Contains ComstackPMCurrentUserResource__1_0.
  */
 
-class ComstackPMCurrentUserResource__1_0 extends \ComstackPMUsersResource__1_0 {
+class ComstackPMCurrentUserResource__1_0 extends \ComstackUsersResource__1_0 {
   /**
    * Overrides \RestfulDataProviderEFQ::controllersInfo().
    */

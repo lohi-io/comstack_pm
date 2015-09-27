@@ -5,7 +5,7 @@
  * Contains ComstackPMAvailableUsersResource__1_0.
  */
 
-class ComstackPMAvailableUsersResource__1_0 extends \ComstackPMUsersResource__1_0 {
+class ComstackPMAvailableUsersResource__1_0 extends \ComstackUsersResource__1_0 {
   // Set the default range.
   protected $range = 50;
 
