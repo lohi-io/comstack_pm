@@ -7,7 +7,6 @@ php = 5.3
 dependencies[] = ctools
 dependencies[] = comstack_pm
 dependencies[] = restful
-dependencies[] = restful_token_auth
 dependencies[] = entity_validator
 
 files[] = plugins/restful/users/users/1.0/ComstackPMUsersResource__1_0.class.php
