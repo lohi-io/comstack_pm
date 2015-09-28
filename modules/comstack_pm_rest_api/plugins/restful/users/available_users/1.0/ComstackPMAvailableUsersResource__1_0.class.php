@@ -68,4 +68,21 @@ class ComstackPMAvailableUsersResource__1_0 extends \ComstackUsersResource__1_0 
 
     return $query->count();
   }
+
+  /**
+   * Overrides \RestfulEntityBase::getQueryForAutocomplete().
+   */
+  protected function getQueryForAutocomplete() {
+    $query = parent::getQueryForAutocomplete();
+
+    $query->addTag('comstack_recipients');
+
+    // Check that the people this user is friends with has private messaging
+    // enabled.
+    if (variable_get('comstack_pm_preferences__enabled__provide', FALSE) && module_exists('user_preferences')) {
+      $query->addTag('comstack_pm_preferences__enabled');
+    }
+
+    return $query;
+  }
 }
