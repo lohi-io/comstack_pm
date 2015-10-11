@@ -46,10 +46,15 @@ class ComstackPMCurrentUserResource__1_0 extends \ComstackUsersResource__1_0 {
           'archive' => user_access('archive a comstack conversation', $account),
           'pin' => user_access('pin a comstack conversation', $account),
           'star' => user_access('star a comstack conversation', $account),
+          'report' => user_access('flag comstack_pm_report', $account),
         ),
         'messages' => array(
           'edit_own' => user_access('edit own comstack conversation messages', $account),
           'delete' => user_access('delete own comstack conversation messages', $account),
+        ),
+        'users' => array(
+          'friend' => user_access('can request comstack_friends relationships', $account),
+          'block' => user_access('can request comstack_blocked relationships', $account),
         ),
       ),
       'preferences' => array(
