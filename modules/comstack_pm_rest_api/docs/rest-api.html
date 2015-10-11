@@ -426,7 +426,8 @@
             "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
             "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
           ],
-          "contact_frequency": 0
+          "contact_frequency": 0,
+          "profile": "http://example.com/users/username"
         },
         {
           "type": "user",
@@ -436,7 +437,8 @@
             "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av2.jpg?itok=123",
             "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av2.jpg?itok=123"
           ],
-          "contact_frequency": 0
+          "contact_frequency": 0,
+          profile: "http://example.com/users/username2"
         },
       ],
       "historical_participants": [
@@ -452,7 +454,8 @@
           "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
           "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
         ],
-        "contact_frequency": 0
+        "contact_frequency": 0,
+          "profile": "http://example.com/users/username"
       }
       "last_updated_by": {
         "type": "user",
@@ -462,7 +465,8 @@
           "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
           "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
         ],
-        "contact_frequency": 0
+        "contact_frequency": 0,
+          "profile": "http://example.com/users/username"
       }
       "last_message": {
         "type": "message",
@@ -477,7 +481,8 @@
             "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
             "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
           ],
-          "contact_frequency": 0
+          "contact_frequency": 0,
+          "profile": "http://example.com/users/username"
         },
         "sent": "",
         "updated": "",
@@ -872,7 +877,9 @@
         "avatars": [
           "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
           "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
-        ]
+        ],
+        "contact_frequency": 0,
+        "profile": "http://example.com/users/username"
       },
       "sent": "2015-01-15T12:24:47+0000",
       "updated": "2015-01-15T12:24:47+0000",
@@ -1435,89 +1442,6 @@
           </table>
         </div>
 
-        <h4 class="text-primary">/conversations/{conversation_id}/report</h4>
-
-        <div class="resource-request">
-          <span class="resource-verb post">POST</span> /api/v1/cs-pm/conversations/{conversation_id}/report
-          <span class="show-details"><a href="#resource-conversations-specific-post" data-toggle="collapse">Show details</a></span>
-        </div>
-
-        <div id="resource-conversations-specific-post" class="collapse response-details">
-          <blockquote>
-            <p>Report a conversation.</p>
-          </blockquote>
-
-          <h4>Request body</h4>
-
-          <table class="table table-striped request-body">
-            <thead>
-              <tr>
-                <th>Property</th>
-                <th>Type</th>
-                <th>Description</th>
-                <th>Required?</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>reasons</td>
-                <td><code>Array</code></td>
-                <td>An array of machine name strings that represent the reasons for the report.</td>
-                <td><span class="glyphicon glyphicon-ok"></span></td>
-              </tr>
-              <tr>
-                <td>other_reason</td>
-                <td><code>String</code></td>
-                <td>The "other" reason text value.</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>posts</td>
-                <td><code>Array</code></td>
-                <td>An array of post ids relevant to the report.</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h4>Example request body</h4>
-
-<pre>{
-  "reasons": ['spam'],
-  "other_reason": "And I really didn't need any Viagra :C",
-  "posts": [123]
-}</pre>
-
-          <h4>Responses</h4>
-
-          <table class="table table-striped responses">
-            <thead>
-              <tr>
-                <th>Status</th>
-                <th>Description</th>
-                <th>Example</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>201</code></td>
-                <td>Content created.</td>
-                <td>
-                  No response
-                </td>
-              </tr>
-              <tr>
-                <td><code>400</code></td>
-                <td colspan="2">Validation issue or otherwise, see issue text.</td>
-              </tr>
-              <tr>
-                <td><code>404</code></td>
-                <td colspan="2">Conversation not found.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
         <h4 class="text-primary">/conversations/{conversation_id}/search</h4>
         <div class="resource-request">
           <span class="resource-verb post">POST</span> /api/v1/cs-pm/conversations/{conversation_id}/search
@@ -1643,7 +1567,8 @@
         "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
         "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
       ],
-      "contact_frequency": 0
+      "contact_frequency": 0,
+      "profile": "http://example.com/users/username"
     },
     "permissions": {
       "conversations": {
@@ -1719,7 +1644,8 @@
         "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
         "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
       ],
-      "contact_frequency": 0
+      "contact_frequency": 0,
+      "profile": "http://example.com/users/username"
     },
     ...
   ]
@@ -1962,7 +1888,8 @@
         "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
         "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
       ],
-      "contact_frequency": 0
+      "contact_frequency": 0,
+      "profile": "http://example.com/users/username"
     },
     {
       "type": "user",
@@ -1972,7 +1899,8 @@
         "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av2.jpg?itok=123",
         "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av2.jpg?itok=123"
       ],
-      "contact_frequency": 0
+      "contact_frequency": 0,
+      profile: "http://example.com/users/username2"
     },
   ],
   "historical_participants": [
@@ -1988,7 +1916,8 @@
       "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
       "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
     ],
-    "contact_frequency": 0
+    "contact_frequency": 0,
+    "profile": "http://example.com/users/username"
   },
   "last_updated_by": {
     "type": "user",
@@ -1998,7 +1927,8 @@
       "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
       "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
     ],
-    "contact_frequency": 0
+    "contact_frequency": 0,
+    "profile": "http://example.com/users/username"
   },
   "last_message": {
     "type": "message",
@@ -2013,7 +1943,8 @@
         "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
         "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
       ],
-      "contact_frequency": 0
+      "contact_frequency": 0,
+      "profile": "http://example.com/users/username"
     },
     "sent": "",
     "updated": "",
@@ -2181,7 +2112,8 @@
     "100-100": "https://example.com/sites/default/files/styles/cs-100-100/public/avatars/av1.jpg?itok=123",
     "200-200": "https://example.com/sites/default/files/styles/cs-200-200/public/avatars/av1.jpg?itok=123"
   ],
-  "contact_frequency": 0
+  "contact_frequency": 0,
+  "profile": "http://example.com/users/username"
 }</pre>
 </div>
 
