@@ -10,6 +10,13 @@ class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesRe
   protected $cursor_paging = TRUE;
 
   /**
+   * Overrides \RestfulDataProviderEFQ::defaultSortInfo().
+   */
+  public function defaultSortInfo() {
+    return array('id' => 'DESC');
+  }
+
+  /**
    * Overrides \RestfulEntityBase::controllersInfo().
    */
   public static function controllersInfo() {

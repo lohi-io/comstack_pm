@@ -10,6 +10,13 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   protected $range = 10;
 
   /**
+   * Overrides \RestfulDataProviderEFQ::defaultSortInfo().
+   */
+  public function defaultSortInfo() {
+    return array('id' => 'DESC');
+  }
+
+  /**
    * Overrides \RestfulEntityBase::controllersInfo().
    */
   public static function controllersInfo() {
