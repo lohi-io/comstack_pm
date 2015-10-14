@@ -13,7 +13,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
    * Overrides \RestfulDataProviderEFQ::defaultSortInfo().
    */
   public function defaultSortInfo() {
-    return array('id' => 'DESC');
+    return array('updated' => 'DESC');
   }
 
   /**

@@ -16,6 +16,9 @@ $plugin = array(
   'autocomplete' => array(
     'enable' => FALSE,
   ),
+  'url_params' => array(
+    'range' => TRUE,
+  ),
   // This endpoint will live off of cs-pm/conversations, to do this we need to
   // define our own hook_menu implementation.
   'hook_menu' => FALSE,
