@@ -8,6 +8,7 @@
 class ComstackPMConversationsMessagesResource__1_0 extends \ComstackPMMessagesResource__1_0 {
   protected $range = 10;
   protected $cursor_paging = TRUE;
+  public $max_range = 50;
 
   /**
    * Overrides \RestfulDataProviderEFQ::defaultSortInfo().
