@@ -203,26 +203,6 @@ class ComstackConversation extends Entity {
   }
 
   /**
-   * Check that a user is available to the current user.
-   *
-   * @return boolean
-   */
-  public function userIsAvailable($uid) {
-    if (!ctype_digit((string) $uid)) {
-      throw new \ComstackInvalidParameterException(t('When checking that a user is available to this user you must pass in an integer.'));
-    }
-
-    $available_ids = comstack_pm_get_available_users();
-
-    if (in_array($uid, $available_ids)) {
-      return TRUE;
-    }
-    else {
-      throw new \ComstackUnavailableUserException();
-    }
-  }
-
-  /**
    * Join this conversation.
    */
   public function join() {
@@ -276,9 +256,18 @@ class ComstackConversation extends Entity {
       }
 
       if (!$this->userIsAParticipant($uid)) {
-        $this->wrapper->cs_pm_participants[] = $uid;
-        $this->wrapper->cs_pm_historical_participants[] = $uid;
+        throw new \ComstackInvalidParameterException(t("Failed to invite a user to a conversation they're already part of."));
       }
+
+      try {
+        comstack_pm_validate_recipients(array($uid), $account);
+      }
+      catch (ComstackUnavailableUserException $e) {
+        throw $e;
+      }
+
+      $this->wrapper->cs_pm_participants[] = $uid;
+      $this->wrapper->cs_pm_historical_participants[] = $uid;
 
       // Save this conversation.
       $this->save();

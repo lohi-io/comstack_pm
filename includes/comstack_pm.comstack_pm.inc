@@ -266,6 +266,59 @@ function comstack_pm_get_available_users($uid = NULL, $reset = FALSE) {
 }
 
 /**
+ * Validate that an array of User IDs are contacts that are available to a user
+ * or the current user.
+ *
+ * @param $ids
+ * An array of user ids.
+ * @param $uid
+ * Optional, the user to check from.
+ *
+ * @return boolean
+ */
+function comstack_pm_validate_recipients(array $ids, $uid = NULL) {
+  if (variable_get('comstack_friends_restrict_entity_ref_to_friends', FALSE)) {
+    if (!$uid) {
+      global $user;
+      $uid = $user->uid;
+    }
+
+    if (!ctype_digit((string) $uid)) {
+      throw new \ComstackInvalidParameterException(t('When checking that a user is available to this user you must pass in an integer.'));
+    }
+
+    // Remove the current user.
+    if (in_array($uid, $ids)) {
+      foreach ($ids as $k => $id) {
+        if ($uid == $id) {
+          unset($ids[$k]);
+        }
+      }
+    }
+
+    $users = comstack_pm_get_available_users($uid);
+    $fail = FALSE;
+
+    foreach ($ids as $id) {
+      if (!in_array($id, $users)) {
+        $fail = TRUE;
+        break;
+      }
+    }
+
+    if ($fail) {
+      throw new \ComstackUnavailableUserException();
+    }
+    else {
+      return TRUE;
+    }
+  }
+  else {
+    return TRUE;
+  }
+}
+
+/**
  * Build an EntityFieldQuery object for getting a list of conversations.
  */
 function comstack_pm_conversations_query($account) {
