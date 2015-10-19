@@ -97,11 +97,11 @@ class ComstackConversationController extends EntityAPIController {
    */
   public function getUserConversationProperties(ComstackConversation $conversation) {
     return array(
-      'muted' => $conversation->muted ? $conversation->muted : 0,
-      'forwarded' => $conversation->forwarded ? $conversation->forwarded : 0,
-      'starred' => $conversation->starred ? $conversation->starred : 0,
-      'pinned' => $conversation->pinned ? $conversation->pinned : 0,
-      'archived' => $conversation->archived ? $conversation->archived : 0,
+      'muted' => isset($conversation->muted) ? $conversation->muted : 0,
+      'forwarded' => isset($conversation->forwarded) ? $conversation->forwarded : 0,
+      'starred' => isset($conversation->starred) ? $conversation->starred : 0,
+      'pinned' => isset($conversation->pinned) ? $conversation->pinned : 0,
+      'archived' => isset($conversation->archived) ? $conversation->archived : 0,
     );
   }
 
@@ -118,9 +118,7 @@ class ComstackConversationController extends EntityAPIController {
       $fields['uid'] = $uid;
 
       // For users who didn't create this message, set the unread count to 1.
-      if ($uid != $uid) {
-        $fields['unread_count'] = 1;
-      }
+      $fields['unread_count'] = $uid != $user->uid ? 1 : 0;
 
       db_insert('comstack_conversation_user')
         ->fields($fields)
