@@ -62,7 +62,7 @@ class ComstackConversationController extends EntityAPIController {
    */
   public function delete($ids, DatabaseTransaction $transaction = NULL) {
     try {
-      db_update('comstack_conversation')
+      db_update('comstack_conversation_user')
         ->fields(array(
           'deleted' => 1,
         ))

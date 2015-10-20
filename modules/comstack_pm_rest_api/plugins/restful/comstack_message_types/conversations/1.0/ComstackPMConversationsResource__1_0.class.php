@@ -300,7 +300,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
 
     // Validate that this user can contact these peoples.
     try {
-      comstack_pm_validate_recipients($request_data['recipients'], $account);
+      comstack_pm_validate_recipients($request_data['recipients'], $account->uid);
     } catch (ComstackUnavailableUserException $e) {
       $this->setHttpHeaders('Status', 400);
       throw new \RestfulBadRequestException(t("You're attempting to contact users that you can't, sorry pal."));

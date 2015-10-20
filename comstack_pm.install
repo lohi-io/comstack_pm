@@ -315,6 +315,8 @@ function comstack_pm_uninstall() {
   variable_del('comstack_pm_preferences__enabled__provide');
   variable_del('comstack_pm_record_message_edits');
   variable_del('comstack_pm_record_separate_transcripts');
+  variable_del('comstack_pm_max_participants');
+  variable_del('comstack_pm_allow_separate_conversations');
 
   // Remove schema alterations.
   if (db_field_exists('message', 'edits')) {

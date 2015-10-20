@@ -213,6 +213,35 @@ function comstack_pm_new_conversation($data) {
   // Create the conversation.
   global $user;
   $uid = isset($data['uid']) && ctype_digit((string) $data['uid']) ? (integer) $data['uid'] : $user->uid;
+
+  // Prevent multiple one on one conversations if set to.
+  if (!variable_get('comstack_pm_allow_separate_conversations', FALSE) && count($data['participants']) === 2) {
+    // Check to see if a conversation exists.
+    $query = db_select('comstack_conversation_user', 'ccu1');
+    $query->join('comstack_conversation_user', 'ccu2', 'ccu1.conversation_id = ccu2.conversation_id');
+    $results = $query->fields('ccu1', array('conversation_id'))
+      ->condition('ccu1.uid', $data['participants'][0])
+      ->condition('ccu2.uid', $data['participants'][1])
+      ->condition('ccu1.deleted', 0)
+      ->condition('ccu2.deleted', 0)
+      ->execute();
+
+    if ($results->rowCount() > 0) {
+      foreach ($results->fetchAll() as $result) {
+        $conversation = comstack_conversation_load($result->conversation_id);
+
+        if ($conversation) {
+          $conversation->reply($data['text'], $uid);
+          $conversation = comstack_conversation_load($result->conversation_id, $uid, TRUE);
+
+          return $conversation;
+        }
+
+        break;
+      }
+    }
+  }
+
   $conversation = entity_create('comstack_conversation', array());
 
   // Wrap the entity and start setting data.
