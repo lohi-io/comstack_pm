@@ -44,12 +44,6 @@ class ComstackPMAvailableUsersResource__1_0 extends \ComstackUsersResource__1_0 
     // alter the query (restrict available users).
     $query->addTag('comstack_recipients');
 
-    // Check that the people this user is friends with has private messaging
-    // enabled.
-    if (variable_get('comstack_pm_preferences__enabled__provide', FALSE) && module_exists('user_preferences')) {
-      $query->addTag('comstack_pm_preferences__enabled');
-    }
-
     return $query;
   }
 
@@ -60,12 +54,6 @@ class ComstackPMAvailableUsersResource__1_0 extends \ComstackUsersResource__1_0 
     $query = parent::getQueryCount();
     $query->addTag('comstack_recipients');
 
-    // Check that the people this user is friends with has private messaging
-    // enabled.
-    if (variable_get('comstack_pm_preferences__enabled__provide', FALSE) && module_exists('user_preferences')) {
-      $query->addTag('comstack_pm_preferences__enabled');
-    }
-
     return $query->count();
   }
 
@@ -74,14 +62,7 @@ class ComstackPMAvailableUsersResource__1_0 extends \ComstackUsersResource__1_0 
    */
   protected function getQueryForAutocomplete() {
     $query = parent::getQueryForAutocomplete();
-
     $query->addTag('comstack_recipients');
-
-    // Check that the people this user is friends with has private messaging
-    // enabled.
-    if (variable_get('comstack_pm_preferences__enabled__provide', FALSE) && module_exists('user_preferences')) {
-      $query->addTag('comstack_pm_preferences__enabled');
-    }
 
     return $query;
   }

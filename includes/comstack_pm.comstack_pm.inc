@@ -34,37 +34,39 @@ function comstack_pm_query_comstack_pm_conversation_hide_deleted_alter(QueryAlte
  * will add a join and where condition. Rather that this were done in the
  * RESTful endpoint code but as it's and EntityFieldQuery you can't do joins.
  */
-function comstack_pm_query_comstack_pm_preferences__enabled_alter(QueryAlterableInterface $query) {
-  // Check we're working with a proper table, not count query.
-  $tables = $query->getTables();
-  if (!isset($tables['users'])) {
-    return;
-  }
+function comstack_pm_query_comstack_recipients_alter(QueryAlterableInterface $query) {
+  if (variable_get('comstack_pm_preferences__enabled__provide', FALSE) && module_exists('user_preferences')) {
+    // Check we're working with a proper table, not count query.
+    $tables = $query->getTables();
+    if (!isset($tables['users'])) {
+      return;
+    }
 
-  // Join to the preferences table.
-  $query->leftJoin('user_preferences', 'upr', 'users.uid = upr.uid');
+    // Join to the preferences table.
+    $query->leftJoin('user_preferences', 'upr', 'users.uid = upr.uid');
 
-  // If we're treating NULL as true then we need to do so or'in. This is a
-  // reduced version of...
-  // https://github.com/lohi-io/user_preferences/blob/7.x-1.x/views/handlers/user_preferences_handler_filter_boolean.inc
-  if (variable_get('comstack_pm_preferences__enabled__null_as_true', TRUE)) {
-    $where = db_and()
-      ->condition(db_or()
+    // If we're treating NULL as true then we need to do so or'in. This is a
+    // reduced version of...
+    // https://github.com/lohi-io/user_preferences/blob/7.x-1.x/views/handlers/user_preferences_handler_filter_boolean.inc
+    if (variable_get('comstack_pm_preferences__enabled__null_as_true', TRUE)) {
+      $where = db_and()
+        ->condition(db_or()
+          ->condition('upr.name', 'comstack_pm_enabled', '=')
+          ->isNull('upr.name')
+        )
+        ->condition(db_or()
+          ->condition('upr.value', '1', '=')
+          ->isNull('upr.value')
+        );
+    }
+    else {
+      $where = db_and()
         ->condition('upr.name', 'comstack_pm_enabled', '=')
-        ->isNull('upr.name')
-      )
-      ->condition(db_or()
-        ->condition('upr.value', '1', '=')
-        ->isNull('upr.value')
-      );
-  }
-  else {
-    $where = db_and()
-      ->condition('upr.name', 'comstack_pm_enabled', '=')
-      ->condition('upr.value', '1', '=');
-  }
+        ->condition('upr.value', '1', '=');
+    }
 
-  $query->condition($where);
+    $query->condition($where);
+  }
 }
 
 /**
@@ -194,6 +196,38 @@ function comstack_pm_message_update($message) {
 }
 
 /**
+ * Determine if a conversation exists between two users, if so return it.
+ */
+function comstack_pm_conversation_exist(array $users) {
+  if (count($users) > 2) {
+    throw new \ComstackInvalidParameterException(t("You can only check if a conversation exists between two people."));
+  }
+
+  $query = db_select('comstack_conversation_user', 'ccu1');
+  $query->join('comstack_conversation_user', 'ccu2', 'ccu1.conversation_id = ccu2.conversation_id');
+  $results = $query->fields('ccu1', array('conversation_id'))
+    ->condition('ccu1.uid', $users[0])
+    ->condition('ccu2.uid', $users[1])
+    ->condition('ccu1.deleted', 0)
+    ->condition('ccu2.deleted', 0)
+    ->execute();
+
+  if ($results->rowCount() > 0) {
+    foreach ($results->fetchAll() as $result) {
+      $conversation = comstack_conversation_load($result->conversation_id);
+
+      if ($conversation) {
+        return $conversation;
+      }
+
+      break;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
  * Create a conversation.
  *
  * @param $data
@@ -217,28 +251,13 @@ function comstack_pm_new_conversation($data) {
   // Prevent multiple one on one conversations if set to.
   if (!variable_get('comstack_pm_allow_separate_conversations', FALSE) && count($data['participants']) === 2) {
     // Check to see if a conversation exists.
-    $query = db_select('comstack_conversation_user', 'ccu1');
-    $query->join('comstack_conversation_user', 'ccu2', 'ccu1.conversation_id = ccu2.conversation_id');
-    $results = $query->fields('ccu1', array('conversation_id'))
-      ->condition('ccu1.uid', $data['participants'][0])
-      ->condition('ccu2.uid', $data['participants'][1])
-      ->condition('ccu1.deleted', 0)
-      ->condition('ccu2.deleted', 0)
-      ->execute();
+    $result = comstack_pm_conversation_exist($data['participants']);
 
-    if ($results->rowCount() > 0) {
-      foreach ($results->fetchAll() as $result) {
-        $conversation = comstack_conversation_load($result->conversation_id);
+    if ($result) {
+      $conversation = $result;
+      $conversation->reply($data['text'], $uid);
 
-        if ($conversation) {
-          $conversation->reply($data['text'], $uid);
-          $conversation = comstack_conversation_load($result->conversation_id, $uid, TRUE);
-
-          return $conversation;
-        }
-
-        break;
-      }
+      return comstack_conversation_load($result->conversation_id, $uid, TRUE);
     }
   }
 
