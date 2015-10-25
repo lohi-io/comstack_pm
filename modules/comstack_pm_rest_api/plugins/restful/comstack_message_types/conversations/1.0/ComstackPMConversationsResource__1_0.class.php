@@ -273,6 +273,21 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   }
 
   /**
+   * Check that the user isn't in read only mode, throw an exception if they
+   * are. This function will be called before a write operation is attempted.
+   *
+   * @throws \ComstackPMReadOnlyException
+   */
+  public function checkCanWrite() {
+    $account = $this->getAccount();
+
+    if (!user_preferences($account->uid, 'comstack_pm_enabled')) {
+      $this->setHttpHeaders('Status', 400);
+      throw new \RestfulBadRequestException(t("The data you're attempting to create a conversation with is either incomplete or has invalid values."));
+    }
+  }
+
+  /**
    * Overrides \RestfulEntityBase::createEntity().
    *
    * @return object
@@ -289,6 +304,9 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException(format_string('You do not have access to create a new @resource resource.', $params));
     }
+
+    // Check we're not in read only mode.
+    $this->checkCanWrite();
 
     $request_data = $this->getRequestData();
 
@@ -375,6 +393,9 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       }
     }
 
+    // Check we're not in read only mode.
+    $this->checkCanWrite();
+
     // Check that there's text.
     $request_data = $this->getRequestData();
 
@@ -454,6 +475,9 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       throw new RestfulForbiddenException("You don't have access to invite users to this conversation.");
     }
 
+    // Check we're not in read only mode.
+    $this->checkCanWrite();
+
     $conversation = $this->getConversation();
     $request_data = $this->getRequestData();
 
@@ -483,6 +507,9 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       $this->setHttpHeaders('Status', 403);
       throw new RestfulForbiddenException("You can't set conversation titles.");
     }
+
+    // Check we're not in read only mode.
+    $this->checkCanWrite();
 
     $conversation = $this->getConversation();
     $this->checkUpdateAccess($conversation);
