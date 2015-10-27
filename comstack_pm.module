@@ -93,7 +93,7 @@ function comstack_pm_user_preferences() {
   if (variable_get('comstack_pm_preferences__enabled__provide', FALSE)) {
     $preferences['comstack_pm_enabled'] = array(
       'title' => t('Comstack Private Messaging - Enabled'),
-      'default_value' => variable_get('comstack_pm_preferences__enabled__default', 0),
+      'default_value' => variable_get('comstack_pm_preferences__enabled__default', 1),
       'form_ids' => array('user_profile_form'),
       'form_item' => array(
         '#title' => t('Allow people to send me private messages'),
