@@ -38,8 +38,15 @@ class ComstackConversation extends Entity {
   }
 
   /**
-   * Kick of the actions!
+   * Kick off the actions!
    */
+
+  /**
+   * Set the current user id.
+   */
+  public function setCurrentUser($account) {
+    $this->current_uid = $account->uid;
+  }
 
   /**
    * Add a new reply/message to this conversation, and update the relevant meta
@@ -61,7 +68,20 @@ class ComstackConversation extends Entity {
     if (!$uid) {
       $uid = $this->current_uid;
     }
+    else {
+      $this->setCurrentUser(user_load($uid));
+    }
     $account = user_load($uid);
+
+    // Check that the current user is part of the conversation.
+    if (!$this->userIsAParticipant()) {
+      throw new \ComstackPMInactiveParticipant();
+    }
+
+    // Check that the conversation can be replied to.
+    if (!$this->checkForActiveParticipants()) {
+      throw new \ComstackPMNoOtherParticipants();
+    }
 
     // Create a new message.
     $message = message_create('cs_pm', array(), $account);
@@ -92,13 +112,11 @@ class ComstackConversation extends Entity {
       $this->save();
 
       // Update user specific data.
-      foreach ($this->getParticipants() as $participant_uid) {
-        if ($uid != $participant_uid) {
-          // Update this conversations unread count.
-          db_query('UPDATE {comstack_conversation_user} SET unread_count = unread_count + 1 WHERE conversation_id = :conversation_id AND uid = :uid', array(':conversation_id' => $this->conversation_id, ':uid' => $participant_uid));
+      foreach ($this->getParticipants(TRUE) as $participant_uid) {
+        // Update this conversations unread count.
+        db_query('UPDATE {comstack_conversation_user} SET unread_count = unread_count + 1 WHERE conversation_id = :conversation_id AND uid = :uid', array(':conversation_id' => $this->conversation_id, ':uid' => $participant_uid));
 
-          // Trigger notifications.
-        }
+        // Trigger notifications.
       }
     }
 
@@ -176,12 +194,15 @@ class ComstackConversation extends Entity {
    *
    * @return array
    */
-  public function getParticipants() {
+  public function getParticipants($omit_current = FALSE) {
     $participants = array();
 
     if ($this->wrapper->cs_pm_participants->value()) {
       foreach ($this->wrapper->cs_pm_participants->getIterator() as $delta => $user_wrapper) {
-        $participants[] = $user_wrapper->getIdentifier();
+        $id = $user_wrapper->getIdentifier();
+        if ($this->current_uid != $id) {
+          $participants[] = $id;
+        }
       }
     }
 
@@ -200,6 +221,27 @@ class ComstackConversation extends Entity {
     }
 
     return in_array($uid, $this->getParticipants());
+  }
+
+  /**
+   * Check that this conversation has other active participants.
+   *
+   * @return boolean
+   */
+  public function checkForActiveParticipants() {
+    $participants = $this->getParticipants(TRUE);
+    $unavailable = array();
+    foreach ($participants as $participant) {
+      try {
+        comstack_pm_validate_recipients(array($participant), $account->uid);
+      }
+      catch (\ComstackUnavailableUserException $e) {
+        $unavailable[] = $participant;
+        break;
+      }
+    }
+
+    return count($participants) > 0 && count($unavailable) < count($participants);
   }
 
   /**
@@ -223,7 +265,7 @@ class ComstackConversation extends Entity {
       $participants = $this->getParticipants();
 
       foreach ($participants as $k => $uid) {
-        if ($this->current_uid = $uid) {
+        if ($this->current_uid == $uid) {
           unset($participants[$k]);
 
           // When leaving a conversation, if we're keeping separate transcripts

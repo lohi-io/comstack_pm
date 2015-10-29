@@ -359,6 +359,8 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       throw new RestfulGoneException(t("We're having trouble loading that conversation, might want to tell someone about that."));
     }
 
+    $conversation->setCurrentUser($account);
+
     return $conversation;
   }
 
@@ -379,7 +381,11 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
    *
    * @return object
    *
-   * @throws \RestfulBadRequestException
+   * @throws \RestfulForbiddenException.
+   * @throws \ComstackUnavailableUserException.
+   * @throws \ComstackPMInactiveParticipant.
+   * @throws \ComstackPMNoOtherParticipants.
+   * @throws \RestfulBadRequestException.
    */
   public function reply() {
     $account = $this->getAccount();
@@ -395,6 +401,18 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
 
     // Check we're not in read only mode.
     $this->checkCanWrite();
+
+    // Check that at least one recipient is available.
+    if (!$conversation->userIsAParticipant()) {
+      $this->setHttpHeaders('Status', 400);
+      throw new \ComstackPMInactiveParticipant();
+    }
+
+    // Check that there are other active participants.
+    if (!$conversation->checkForActiveParticipants()) {
+      $this->setHttpHeaders('Status', 400);
+      throw new \ComstackPMNoOtherParticipants();
+    }
 
     // Check that there's text.
     $request_data = $this->getRequestData();

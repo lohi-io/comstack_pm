@@ -345,10 +345,6 @@ function comstack_pm_validate_recipients(array $ids, $uid = NULL) {
     }
 
     $users = comstack_pm_get_available_users($uid);
-    if (empty($users)) {
-      throw new \ComstackUnavailableUserException();
-    }
-
     $fail = FALSE;
 
     foreach ($ids as $id) {
