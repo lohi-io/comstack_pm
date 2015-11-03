@@ -12,6 +12,6 @@ dependencies[] = comstack
 files[] = includes/ComstackConversationController.php
 files[] = includes/ComstackConversation.php
 
-files[] = includes/exceptions/ComstackPMInactiveParticipant.php
-files[] = includes/exceptions/ComstackPMNoOtherParticipants.php
+files[] = includes/exceptions/ComstackPMInactiveParticipantException.php
+files[] = includes/exceptions/ComstackPMNoOtherParticipantsException.php
 files[] = includes/exceptions/ComstackPMReadOnlyException.php

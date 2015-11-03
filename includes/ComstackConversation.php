@@ -75,12 +75,12 @@ class ComstackConversation extends Entity {
 
     // Check that the current user is part of the conversation.
     if (!$this->userIsAParticipant()) {
-      throw new \ComstackPMInactiveParticipant();
+      throw new \ComstackPMInactiveParticipantException();
     }
 
     // Check that the conversation can be replied to.
     if (!$this->checkForActiveParticipants()) {
-      throw new \ComstackPMNoOtherParticipants();
+      throw new \ComstackPMNoOtherParticipantsException();
     }
 
     // Create a new message.
@@ -148,7 +148,6 @@ class ComstackConversation extends Entity {
    * @return \EntityFieldQuery
    */
   public function getMessagesQuery($sort = 'DESC') {// @todo
-    $uid = $this->current_uid;
     $account = $this->getAccount();
 
     // Build up a new query.
@@ -200,7 +199,7 @@ class ComstackConversation extends Entity {
     if ($this->wrapper->cs_pm_participants->value()) {
       foreach ($this->wrapper->cs_pm_participants->getIterator() as $delta => $user_wrapper) {
         $id = $user_wrapper->getIdentifier();
-        if ($this->current_uid != $id) {
+        if (!$omit_current || $omit_current && $this->current_uid != $id) {
           $participants[] = $id;
         }
       }
@@ -215,7 +214,11 @@ class ComstackConversation extends Entity {
    * @return boolean
    * @throws \ComstackInvalidParameterException
    */
-  public function userIsAParticipant($uid) {
+  public function userIsAParticipant($uid = NULL) {
+    if (!$uid) {
+      $uid = $this->current_uid;
+    }
+
     if (!ctype_digit((string) $uid)) {
       throw new \ComstackInvalidParameterException(t('When checking that a user is a participant in a conversation you must pass in an integer.'));
     }
@@ -230,10 +233,15 @@ class ComstackConversation extends Entity {
    */
   public function checkForActiveParticipants() {
     $participants = $this->getParticipants(TRUE);
+
+    if (empty($participants)) {
+      return FALSE;
+    }
+
     $unavailable = array();
     foreach ($participants as $participant) {
       try {
-        comstack_pm_validate_recipients(array($participant), $account->uid);
+        comstack_pm_validate_recipients(array($participant), $this->current_uid);
       }
       catch (\ComstackUnavailableUserException $e) {
         $unavailable[] = $participant;
@@ -394,6 +402,10 @@ class ComstackConversation extends Entity {
    */
   public function markAsRead() {
     entity_get_controller('comstack_conversation')->setConversationUnreadCount($this, 0);
+
+    // Fire a hook.
+    $current_user = user_load($this->current_uid);
+    module_invoke_all('comstack_conversation_mark_as_read', $this, $current_user);
   }
 
   /**
