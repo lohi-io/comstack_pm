@@ -198,17 +198,12 @@ function comstack_pm_message_update($message) {
 /**
  * Determine if a conversation exists between two users, if so return it.
  */
-function comstack_pm_conversation_exist(array $users) {
-  if (count($users) > 2) {
-    throw new \ComstackInvalidParameterException(t("You can only check if a conversation exists between two people."));
-  }
-
+function comstack_pm_conversation_exist($current_user, $other_user) {
   $query = db_select('comstack_conversation_user', 'ccu1');
   $query->join('comstack_conversation_user', 'ccu2', 'ccu1.conversation_id = ccu2.conversation_id');
   $results = $query->fields('ccu1', array('conversation_id'))
-    ->condition('ccu1.uid', $users[0])
-    ->condition('ccu2.uid', $users[1])
-    ->condition('ccu1.deleted', 0)
+    ->condition('ccu1.uid', $current_user)
+    ->condition('ccu2.uid', $other_user)
     ->condition('ccu2.deleted', 0)
     ->execute();
 
@@ -251,12 +246,25 @@ function comstack_pm_new_conversation($data) {
   // Prevent multiple one on one conversations if set to.
   if (!variable_get('comstack_pm_allow_separate_conversations', FALSE) && count($data['participants']) === 2) {
     // Check to see if a conversation exists.
-    $result = comstack_pm_conversation_exist($data['participants']);
+    foreach ($data['participants'] as $participant) {
+      if ($participant != $uid) {
+        $other_user = $participant;
+      }
+    }
+    $result = comstack_pm_conversation_exist($uid, $other_user);
 
     if ($result) {
       $conversation = $result;
+
+      // Check to see if the conversation has been deleted, if so re-join it.
+      if ($conversation->deleted) {
+        $conversation->join();
+      }
+
+      // Reply.
       $conversation->reply($data['text'], $uid);
 
+      // Return the resurrected conversation.
       return comstack_conversation_load($result->conversation_id, $uid, TRUE);
     }
   }

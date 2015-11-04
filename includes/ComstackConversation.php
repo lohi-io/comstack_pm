@@ -104,6 +104,7 @@ class ComstackConversation extends Entity {
     if ($message) {
       // Update the conversations meta information, fire notifications and
       // unread counts.
+      $invoke_reply_hook = $this->started != REQUEST_TIME;
 
       // Set this conversations "last updated by" and "updated" fields.
       $this->wrapper->cs_pm_last_updated_by->set($uid);
@@ -117,6 +118,10 @@ class ComstackConversation extends Entity {
         db_query('UPDATE {comstack_conversation_user} SET unread_count = unread_count + 1 WHERE conversation_id = :conversation_id AND uid = :uid', array(':conversation_id' => $this->conversation_id, ':uid' => $participant_uid));
 
         // Trigger notifications.
+      }
+
+      if ($invoke_reply_hook) {
+        module_invoke_all('comstack_conversation_reply', $this, $message, $account);
       }
     }
 
@@ -258,7 +263,10 @@ class ComstackConversation extends Entity {
   public function join() {
     if (!$this->userIsAParticipant($this->current_uid)) {
       $this->wrapper->cs_pm_participants[] = $this->current_uid;
-      $this->wrapper->cs_pm_historical_participants[] = $this->current_uid;
+
+      if (!in_array($this->current_uid, $this->wrapper->cs_pm_historical_participants->value())) {
+        $this->wrapper->cs_pm_historical_participants[] = $this->current_uid;
+      }
 
       // Save this conversation.
       $this->save();
@@ -276,12 +284,14 @@ class ComstackConversation extends Entity {
         if ($this->current_uid == $uid) {
           unset($participants[$k]);
 
-          // When leaving a conversation, if we're keeping separate transcripts
-          // and we're set to erase histories on leaving a conversation do it.
-          // This is an actual delete rather than marking as deleted because
-          // even if it were deleted from this users history, it will still
-          // remain in the {message} table. We do this so if it were to be
-          // reported we could still access the message.
+          /**
+           * When leaving a conversation, if we're keeping separate transcripts
+           * and we're set to erase histories on leaving a conversation do it.
+           * This is an actual delete rather than marking as deleted because
+           * even if it were deleted from this users history, it will still
+           * remain in the {message} table. We do this so if it were to be
+           * reported we could still access the message.
+           */
           if (variable_get('comstack_pm_record_separate_transcripts', FALSE) && variable_get('comstack_pm_on_leave_erase_history', TRUE)) {
             db_delete('comstack_conversation_message')
               ->condition('conversation_id', $this->conversation_id)
