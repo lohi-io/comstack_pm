@@ -24,7 +24,7 @@ function comstack_pm_entity_info() {
       'label' => 'title',
     ),
     'module' => 'comstack_pm',
-    'entity cache' => module_exists('entitycache'),
+    'entity cache' => FALSE,
     'metatags' => FALSE,
     'view modes' => array(
       'full' => array(
