@@ -311,7 +311,12 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
     $request_data = $this->getRequestData();
 
     // Validate the request has all the data we need.
-    if (empty($request_data['recipients']) || empty($request_data['text']) || isset($request_data['recipients']) && !is_array($request_data['recipients']) || isset($request_data['text']) && !is_string($request_data['text'])) {
+    if (
+      empty($request_data['recipients']) ||
+      isset($request_data['recipients']) && !is_array($request_data['recipients']) ||
+      !isset($request_data['text']) ||
+      isset($request_data['text']) && (!is_string($request_data['text']) || $request_data['text'] == '')
+    ) {
       $this->setHttpHeaders('Status', 400);
       throw new \RestfulBadRequestException(t("The data you're attempting to create a conversation with is either incomplete or has invalid values."));
     }
@@ -418,7 +423,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
     $request_data = $this->getRequestData();
 
     // Validate the request has all the data we need.
-    if (empty($request_data['text']) || isset($request_data['text']) && !is_string($request_data['text'])) {
+    if (!isset($request_data['text']) || isset($request_data['text']) && (!is_string($request_data['text']) || $request_data['text'] == '')) {
       $this->setHttpHeaders('Status', 400);
       throw new \RestfulBadRequestException("The text you're trying to create a reply with isn't valid, it empty?");
     }

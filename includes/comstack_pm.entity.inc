@@ -253,13 +253,13 @@ function comstack_conversation_load_multiple(array $conversation_ids = array(), 
     $uid = $user->uid;
   }
 
-  // Add the user id condition.
-  $conditions['uid'] = $uid;
-
   $controller = entity_get_controller('comstack_conversation');
   if ($reset) {
     $controller->resetCache();
   }
+
+  // Add the user id condition.
+  $conditions['uid'] = $uid;
 
   return $controller->load($conversation_ids, $conditions);
 }

@@ -57,7 +57,7 @@ class ComstackConversation extends Entity {
    */
   public function reply($text, $uid = NULL) {
     // Prevent empty or invalid values being passed in.
-    if (empty($text) || !is_string($text)) {
+    if (!is_string($text) || $text == '') {
       throw new \ComstackInvalidParameterException(t("The reply you're attempting to post is invalid, something's wrong. It's either empty or not text."));
     }
     if (!empty($uid) && !ctype_digit((string) $uid)) {
@@ -269,6 +269,7 @@ class ComstackConversation extends Entity {
       }
 
       // Save this conversation.
+      $this->deleted = 0;
       $this->save();
     }
   }

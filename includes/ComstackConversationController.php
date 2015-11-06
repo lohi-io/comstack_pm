@@ -145,6 +145,7 @@ class ComstackConversationController extends EntityAPIController {
       ->condition('conversation_id', $conversation->conversation_id)
       ->condition('uid', $conversation->uid)
       ->execute();
+    $this->resetCache(array($conversation->conversation_id));
   }
 
   /**
@@ -160,5 +161,6 @@ class ComstackConversationController extends EntityAPIController {
       ->condition('conversation_id', $conversation->conversation_id)
       ->condition('uid', $conversation->uid)
       ->execute();
+    $this->resetCache(array($conversation->conversation_id));
   }
 }
