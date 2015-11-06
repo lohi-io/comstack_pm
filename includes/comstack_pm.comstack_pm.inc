@@ -80,7 +80,7 @@ function comstack_pm_query_comstack_pm_separate_transcripts_alter(QueryAlterable
     // for {message}. This tag will still be applied as tags can apply to a
     // query and any subqueries within.
     $tables = $query->getTables();
-    if (!isset($tables['message'])) {
+    if (!isset($tables['message']) && !isset($tables['field_data_cs_pm_conversation0'])) {
       return;
     }
 
@@ -90,7 +90,14 @@ function comstack_pm_query_comstack_pm_separate_transcripts_alter(QueryAlterable
       $account = $user;
     }
 
-    $query->join('comstack_conversation_message', 'ccm', 'message.mid = ccm.mid');
+    // Work with what we've got.
+    if (isset($tables['message'])) {
+      $query->join('comstack_conversation_message', 'ccm', 'message.mid = ccm.mid');
+    }
+    elseif (isset($tables['field_data_cs_pm_conversation0'])) {
+      $query->join('comstack_conversation_message', 'ccm', 'field_data_cs_pm_conversation0.entity_id = ccm.mid');
+    }
+
     $query->condition('ccm.uid', $account->uid);
 
     if (!user_access('view deleted comstack messages')) {
