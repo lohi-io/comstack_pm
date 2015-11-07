@@ -302,7 +302,10 @@ class ComstackConversation extends Entity {
 
           // Remove the user from comstack_conversation_user.
           db_update('comstack_conversation_user')
-            ->fields(array('deleted' => 1))
+            ->fields(array(
+              'deleted' => 1,
+              'unread_count' => 0
+            ))
             ->condition('conversation_id', $this->conversation_id)
             ->condition('uid', $this->current_uid)
             ->execute();
