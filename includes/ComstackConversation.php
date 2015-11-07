@@ -196,6 +196,7 @@ class ComstackConversation extends Entity {
   /**
    * Get an array of participant user ids.
    *
+   * @todo think about blocked users :/
    * @return array
    */
   public function getParticipants($omit_current = FALSE) {
@@ -266,7 +267,7 @@ class ComstackConversation extends Entity {
     if (!$this->userIsAParticipant($target_user)) {
       $this->wrapper->cs_pm_participants[] = $target_user;
 
-      if (!in_array($target_user, $this->wrapper->cs_pm_historical_participants->value())) {
+      if (!in_array($target_user, $this->wrapper->cs_pm_historical_participants->value(array('identifier' => TRUE)))) {
         $this->wrapper->cs_pm_historical_participants[] = $target_user;
       }
 
