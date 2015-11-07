@@ -117,9 +117,6 @@ class ComstackConversationController extends EntityAPIController {
       $fields['conversation_id'] = $conversation->conversation_id;
       $fields['uid'] = $uid;
 
-      // For users who didn't create this message, set the unread count to 1.
-      $fields['unread_count'] = $uid != $user->uid ? 1 : 0;
-
       db_insert('comstack_conversation_user')
         ->fields($fields)
         ->execute();
