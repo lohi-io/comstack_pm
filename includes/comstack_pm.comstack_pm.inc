@@ -208,21 +208,25 @@ function comstack_pm_message_update($message) {
 function comstack_pm_conversation_exist($current_user, $other_user) {
   $query = db_select('comstack_conversation_user', 'ccu1');
   $query->join('comstack_conversation_user', 'ccu2', 'ccu1.conversation_id = ccu2.conversation_id');
-  $results = $query->fields('ccu1', array('conversation_id'))
+  $results = $query->fields('ccu1', array('conversation_id', 'deleted'))
+    ->fields('ccu2', array('deleted'))
     ->condition('ccu1.uid', $current_user)
     ->condition('ccu2.uid', $other_user)
-    ->condition('ccu2.deleted', 0)
     ->execute();
 
   if ($results->rowCount() > 0) {
     foreach ($results->fetchAll() as $result) {
-      $conversation = comstack_conversation_load($result->conversation_id);
+      // As long as both participants haven't deleted the conversation it's
+      // viable.
+      if ($result->deleted == 0 || $result->ccu2_deleted == 0) {
+        $conversation = comstack_conversation_load($result->conversation_id, $current_user);
 
-      if ($conversation) {
-        return $conversation;
+        if ($conversation) {
+          return $conversation;
+        }
+
+        break;
       }
-
-      break;
     }
   }
 
@@ -264,8 +268,13 @@ function comstack_pm_new_conversation($data) {
       $conversation = $result;
 
       // Check to see if the conversation has been deleted, if so re-join it.
+      // We need to check it's not the other person who's deleted it.
       if ($conversation->deleted) {
         $conversation->join();
+      }
+      else {
+        // Other person needs to come back in.
+        $conversation->join($other_user);
       }
 
       // Reply.

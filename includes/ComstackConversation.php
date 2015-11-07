@@ -260,16 +260,32 @@ class ComstackConversation extends Entity {
   /**
    * Join this conversation.
    */
-  public function join() {
-    if (!$this->userIsAParticipant($this->current_uid)) {
-      $this->wrapper->cs_pm_participants[] = $this->current_uid;
+  public function join($user_id = NULL) {
+    $target_user = $user_id ? $user_id : $this->current_uid;
 
-      if (!in_array($this->current_uid, $this->wrapper->cs_pm_historical_participants->value())) {
-        $this->wrapper->cs_pm_historical_participants[] = $this->current_uid;
+    if (!$this->userIsAParticipant($target_user)) {
+      $this->wrapper->cs_pm_participants[] = $target_user;
+
+      if (!in_array($target_user, $this->wrapper->cs_pm_historical_participants->value())) {
+        $this->wrapper->cs_pm_historical_participants[] = $target_user;
+      }
+
+      // Make sure this conversation isn't marked as deleted for the user.
+      if ($target_user == $this->current_uid) {
+        $this->deleted = 0;
+      }
+      else {
+        // We'll be updating the other users conversation data.
+        db_update('comstack_conversation_user')
+          ->fields(array(
+            'deleted' => 0,
+          ))
+          ->condition('conversation_id', $this->conversation_id)
+          ->condition('uid', $target_user)
+          ->execute();
       }
 
       // Save this conversation.
-      $this->deleted = 0;
       $this->save();
     }
   }
