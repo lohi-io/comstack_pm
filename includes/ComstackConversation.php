@@ -55,7 +55,7 @@ class ComstackConversation extends Entity {
    * @return boolean
    * @throws \ComstackInvalidParameterException
    */
-  public function reply($text, $uid = NULL) {
+  public function reply($text, $uid = NULL, $timestamp = NULL) {
     // Prevent empty or invalid values being passed in.
     if (!is_string($text) || $text == '') {
       throw new \ComstackInvalidParameterException(t("The reply you're attempting to post is invalid, something's wrong. It's either empty or not text."));
@@ -93,7 +93,8 @@ class ComstackConversation extends Entity {
       'value' => $text,
       'format' => variable_get('comstack_pm_input_format', 'cs_pm'),
     ));
-    $message_wrapper->timestamp->set(REQUEST_TIME);
+    $timestamp = $timestamp ? $timestamp : REQUEST_TIME;
+    $message_wrapper->timestamp->set($timestamp);
 
     // Set a flag.
     $message->is_reply = TRUE;
@@ -104,11 +105,11 @@ class ComstackConversation extends Entity {
     if ($message) {
       // Update the conversations meta information, fire notifications and
       // unread counts.
-      $invoke_reply_hook = $this->started != REQUEST_TIME;
+      $invoke_reply_hook = $this->started != $timestamp;
 
       // Set this conversations "last updated by" and "updated" fields.
       $this->wrapper->cs_pm_last_updated_by->set($uid);
-      $this->wrapper->updated->set(REQUEST_TIME);
+      $this->wrapper->updated->set($timestamp);
       $this->wrapper->cs_pm_last_message->set($message->mid);
       $this->save();
 

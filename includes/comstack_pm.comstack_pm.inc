@@ -242,6 +242,7 @@ function comstack_pm_conversation_exist($current_user, $other_user) {
  *   - title (optional) A string to title the conversation with.
  *   - text (required) The text of the first message in the conversation.
  *   - uid (optional) The ID of the user who started this conversation.
+ *   - created (optional) A timestamp for when the conversation was started.
  *
  * @return boolean
  */
@@ -289,8 +290,9 @@ function comstack_pm_new_conversation($data) {
 
   // Wrap the entity and start setting data.
   $conversation->uid = $uid;
-  $conversation->started = REQUEST_TIME;
-  $conversation->updated = REQUEST_TIME;
+  $timestamp = isset($data['created']) ? $data['created'] : REQUEST_TIME;
+  $conversation->started = $timestamp;
+  $conversation->updated = $timestamp;
   if (!empty($data['title'])) {
     $conversation->title = $data['title'];
   }
@@ -305,7 +307,7 @@ function comstack_pm_new_conversation($data) {
   $conversation->save();
 
   // Create the first message.
-  $conversation->reply($data['text'], $uid);
+  $conversation->reply($data['text'], $uid, $timestamp);
 
   return $conversation;
 }
