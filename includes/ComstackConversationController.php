@@ -102,6 +102,7 @@ class ComstackConversationController extends EntityAPIController {
       'starred' => isset($conversation->starred) ? $conversation->starred : 0,
       'pinned' => isset($conversation->pinned) ? $conversation->pinned : 0,
       'archived' => isset($conversation->archived) ? $conversation->archived : 0,
+      'deleted' => isset($conversation->deleted) ? $conversation->deleted : 0,
     );
   }
 

@@ -273,10 +273,8 @@ class ComstackConversation extends Entity {
       }
 
       // Make sure this conversation isn't marked as deleted for the user.
-      if ($target_user == $this->current_uid) {
-        $this->deleted = 0;
-      }
-      else {
+      $this->deleted = 0;
+      if ($target_user != $this->current_uid) {
         // We'll be updating the other users conversation data.
         db_update('comstack_conversation_user')
           ->fields(array(
@@ -289,6 +287,7 @@ class ComstackConversation extends Entity {
 
       // Save this conversation.
       $this->save();
+      $this->saveConversationUserData();
     }
   }
 

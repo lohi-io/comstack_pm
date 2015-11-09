@@ -267,13 +267,14 @@ function comstack_pm_new_conversation($data) {
 
     if ($result) {
       $conversation = $result;
+      $conversation->setCurrentUser(user_load($uid));
 
       // Check to see if the conversation has been deleted, if so re-join it.
       // We need to check it's not the other person who's deleted it.
-      if ($conversation->deleted) {
+      if (!$conversation->userIsAParticipant()) {
         $conversation->join();
       }
-      else {
+      if (!$conversation->userIsAParticipant($other_user)) {
         // Other person needs to come back in.
         $conversation->join($other_user);
       }
