@@ -78,9 +78,22 @@ class ComstackConversation extends Entity {
       throw new \ComstackPMInactiveParticipantException();
     }
 
-    // Check that the conversation can be replied to.
+    /**
+     * Check for other active participants, or if there are two historical
+     * participants then see if we can resurrect the conversation for the other
+     * person. If not then throw an exception.
+     */
     if (!$this->checkForActiveParticipants()) {
-      throw new \ComstackPMNoOtherParticipantsException();
+      $historical_participants = $this->getHistoricalParticipants(TRUE);
+
+      // Resurrect the conversation for this person.
+      if (count($historical_participants) === 1) {
+        $historical_participant = reset($historical_participants);
+        $this->join($historical_participant);
+      }
+      else {
+        throw new \ComstackPMNoOtherParticipantsException();
+      }
     }
 
     // Create a new message.
@@ -195,16 +208,16 @@ class ComstackConversation extends Entity {
   }
 
   /**
-   * Get an array of participant user ids.
+   * Get participants from a field.
    *
    * @todo think about blocked users :/
    * @return array
    */
-  public function getParticipants($omit_current = FALSE) {
+  protected function getParticipantsFromField($field = 'cs_pm_participants', $omit_current = FALSE) {
     $participants = array();
 
-    if ($this->wrapper->cs_pm_participants->value()) {
-      foreach ($this->wrapper->cs_pm_participants->getIterator() as $delta => $user_wrapper) {
+    if ($this->wrapper->{$field}->value()) {
+      foreach ($this->wrapper->{$field}->getIterator() as $delta => $user_wrapper) {
         $id = $user_wrapper->getIdentifier();
         if (!$omit_current || $omit_current && $this->current_uid != $id) {
           $participants[] = $id;
@@ -213,6 +226,24 @@ class ComstackConversation extends Entity {
     }
 
     return $participants;
+  }
+
+  /**
+   * Get an array of participant user ids.
+   *
+   * @return array
+   */
+  public function getParticipants($omit_current = FALSE) {
+    return $this->getParticipantsFromField('cs_pm_participants', $omit_current);
+  }
+
+  /**
+   * Get an array of historical participant user ids.
+   *
+   * @return array
+   */
+  public function getHistoricalParticipants($omit_current = FALSE) {
+    return $this->getParticipantsFromField('cs_pm_historical_participants', $omit_current);
   }
 
   /**

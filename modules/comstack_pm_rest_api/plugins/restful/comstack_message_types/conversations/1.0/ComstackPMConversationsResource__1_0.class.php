@@ -413,12 +413,6 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       throw new \ComstackPMInactiveParticipant();
     }
 
-    // Check that there are other active participants.
-    if (!$conversation->checkForActiveParticipants()) {
-      $this->setHttpHeaders('Status', 400);
-      throw new \ComstackPMNoOtherParticipants();
-    }
-
     // Check that there's text.
     $request_data = $this->getRequestData();
 
@@ -428,7 +422,13 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
       throw new \RestfulBadRequestException("The text you're trying to create a reply with isn't valid, it empty?");
     }
 
-    $message = $conversation->reply($request_data['text']);
+    try {
+      $message = $conversation->reply($request_data['text']);
+    }
+    catch (ComstackPMNoOtherParticipantsException $e) {
+      $this->setHttpHeaders('Status', 400);
+      throw new ComstackPMNoOtherParticipantsException();
+    }
 
     // Load the message handler and render the message.
     $handler = restful_get_restful_handler('cs-pm/messages');
