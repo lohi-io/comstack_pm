@@ -410,7 +410,7 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
     // Check that at least one recipient is available.
     if (!$conversation->userIsAParticipant()) {
       $this->setHttpHeaders('Status', 400);
-      throw new \ComstackPMInactiveParticipant();
+      throw new ComstackPMInactiveParticipantException();
     }
 
     // Check that there's text.
