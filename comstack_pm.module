@@ -22,9 +22,15 @@ include_once __DIR__ . '/includes/comstack_pm.forms.inc';
  */
 function comstack_pm_permission() {
   $permissions = array(
+    'administer comstack_pm settings' => array(
+      'title' => t('Administer Communications Stack Private Messaging settings'),
+      'description' => t('Allows a user to force read only mode on to users of Private messaging.'),
+      'restrict access' => TRUE,
+    ),
     'bypass comstack_pm access checks' => array(
       'title' => t('Bypass conversation &amp; message access checks'),
       'description' => t('Allows a user to perform any operations against conversations and messages, with exception of view deleted conversations &amp; messages.'),
+      'restrict access' => TRUE,
     ),
     'view deleted comstack conversations' => array(
       'title' => t('View conversations which have been marked as deleted'),
@@ -82,6 +88,23 @@ function comstack_pm_permission() {
   );
 
   return $permissions;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function comstack_pm_menu() {
+  $items = array();
+  $includes_dir = drupal_get_path('module', 'comstack_pm') . '/includes';
+
+  $items['admin/structure/comstack/settings/private-messaging'] = array(
+    'title' => 'Private Messaging',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('comstack_pm_admin_settings_form'),
+    'access arguments' => array('administer comstack_pm settings'),
+  );
+
+  return $items;
 }
 
 /**

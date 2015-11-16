@@ -36,6 +36,21 @@ class ComstackPMMessagesResource__1_0 extends \ComstackRestfulEntityBase {
   }
 
   /**
+   * Check that the user isn't in read only mode, throw an exception if they
+   * are. This function will be called before a write operation is attempted.
+   *
+   * @throws \ComstackPMReadOnlyException
+   */
+  public function checkCanWrite() {
+    $account = $this->getAccount();
+
+    if (variable_get('comstack_pm_killswitch__enabled', FALSE) || !user_preferences($account->uid, 'comstack_pm_enabled')) {
+      $this->setHttpHeaders('Status', 403);
+      throw new ComstackPMReadOnlyException();
+    }
+  }
+
+  /**
    * Overrides \RestfulEntityBase::getQueryForList().
    *
    * Only expose messages which haven't been deleted.
@@ -155,6 +170,9 @@ class ComstackPMMessagesResource__1_0 extends \ComstackRestfulEntityBase {
    * Only allow the "text" property to be modified.
    */
   public function patchEntity($entity_id) {
+    // Check we're not in read only mode.
+    $this->checkCanWrite();
+
     // Loop through the exposed properties and remove all except "text".
     $request = $this->getRequest();
     foreach ($this->getPublicFields() as $public_field_name => $info) {

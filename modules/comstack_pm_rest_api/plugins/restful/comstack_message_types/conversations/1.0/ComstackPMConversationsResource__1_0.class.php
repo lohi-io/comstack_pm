@@ -281,9 +281,9 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   public function checkCanWrite() {
     $account = $this->getAccount();
 
-    if (!user_preferences($account->uid, 'comstack_pm_enabled')) {
-      $this->setHttpHeaders('Status', 400);
-      throw new \RestfulBadRequestException(t("The data you're attempting to create a conversation with is either incomplete or has invalid values."));
+    if (variable_get('comstack_pm_killswitch__enabled', FALSE) || !user_preferences($account->uid, 'comstack_pm_enabled')) {
+      $this->setHttpHeaders('Status', 403);
+      throw new ComstackPMReadOnlyException();
     }
   }
 

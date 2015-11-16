@@ -31,7 +31,8 @@ class ComstackPMCurrentUserResource__1_0 extends \ComstackUsersResource__1_0 {
    */
   public function getUser() {
     $account = $this->getAccount();
-    $user_pm_enabled = user_preferences($account->uid, 'comstack_pm_enabled');
+    $forced_read_only = (bool) variable_get('comstack_pm_killswitch__enabled', FALSE);
+    $user_pm_enabled = $forced_read_only ? FALSE : user_preferences($account->uid, 'comstack_pm_enabled');
 
     $data = array(
       'user' => $this->viewEntity($account->uid),
@@ -60,6 +61,7 @@ class ComstackPMCurrentUserResource__1_0 extends \ComstackUsersResource__1_0 {
       ),
       'preferences' => array(
         'read_only_mode' => !$user_pm_enabled,
+        'forced_read_only' => $forced_read_only,
       ),
     );
 
