@@ -247,7 +247,7 @@ function comstack_pm_conversation_exist($current_user, $other_user) {
  * @return boolean
  */
 function comstack_pm_new_conversation($data) {
-  if (empty($data['participants']) || !is_array($data['participants']) || empty($data['text']) || !is_string($data['text'])) {
+  if (empty($data['participants']) || !is_array($data['participants']) || !isset($data['text']) || isset($data['text']) && (!is_string($data['text']) || $data['text'] == '')) {
     throw new \ComstackInvalidParameterException(t('Attempted to create a new conversation with either incomplete or incorrect data.'));
   }
 
