@@ -248,18 +248,17 @@ function comstack_conversation_load($conversation_id, $uid = NULL, $reset = FALS
  * Load a series of conversations.
  */
 function comstack_conversation_load_multiple(array $conversation_ids = array(), $uid = NULL, array $conditions = array(), $reset = FALSE) {
-  if (!$uid) {
-    global $user;
-    $uid = $user->uid;
-  }
-
   $controller = entity_get_controller('comstack_conversation');
   if ($reset) {
     $controller->resetCache();
   }
 
-  // Add the user id condition.
-  $conditions['uid'] = $uid;
+  /**
+   * Add the user id condition if present.
+   */
+  if ($uid) {
+    $conditions['uid'] = $uid;
+  }
 
   return $controller->load($conversation_ids, $conditions);
 }

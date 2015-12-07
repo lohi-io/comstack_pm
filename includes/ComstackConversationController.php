@@ -18,20 +18,25 @@ class ComstackConversationController extends EntityAPIController {
    * Get extra data when building a query to get Conversations.
    */
   protected function buildQuery($ids, $conditions = array(), $revision_id = FALSE) {
-    global $user;
-    $uid = NULL;
-
-    // Alter the query conditions to apply UID to the joined table
-    $uid = isset($conditions['uid']) ? $conditions['uid'] : $user->uid;
+    /**
+     * Alter the query conditions to apply UID to the joined table if present.
+     */
+    $uid = isset($conditions['uid']) ? $conditions['uid'] : NULL;
     unset($conditions['uid']);
 
     $query = parent::buildQuery($ids, $conditions, $revision_id);
 
-    // Get extra data unique to the current user when loading a Conversation.
-    $query->join('comstack_conversation_user', 'ccu', 'base.conversation_id = ccu.conversation_id');
-    $query->condition('ccu.uid', $uid);
-    // @todo Maybe check if this condition exists and alter the query? This stuff will prevent anyone from loading any conversation they're not part of... :/
-    $query->fields('ccu', array('uid', 'unread_count', 'delivered', 'muted', 'forwarded', 'starred', 'pinned', 'archived', 'deleted'));
+    /**
+     * Get extra data specific to each participants point of view if a uid is
+     * present. This will be data like how many unread message they have in the
+     * conversation and so on.
+     */
+    if ($uid) {
+      $query->join('comstack_conversation_user', 'ccu', 'base.conversation_id = ccu.conversation_id');
+      $query->condition('ccu.uid', $uid);
+      // @todo Maybe check if this condition exists and alter the query? This stuff will prevent anyone from loading any conversation they're not part of... :/
+      $query->fields('ccu', array('uid', 'unread_count', 'delivered', 'muted', 'forwarded', 'starred', 'pinned', 'archived', 'deleted'));
+    }
 
     return $query;
   }

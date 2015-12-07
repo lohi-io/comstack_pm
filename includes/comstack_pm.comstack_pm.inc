@@ -429,5 +429,5 @@ function comstack_pm_load_conversations($account = NULL, $limit = 10) {
   $result = $query->execute();
   $conversation_ids = isset($result['comstack_conversation']) ? array_keys($result['comstack_conversation']) : array();
 
-  return !empty($conversation_ids) ? entity_load('comstack_conversation', $conversation_ids) : array();
+  return !empty($conversation_ids) ? comstack_conversation_load_multiple($conversation_ids, $account->uid) : array();
 }
