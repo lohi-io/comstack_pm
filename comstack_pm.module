@@ -129,3 +129,13 @@ function comstack_pm_user_preferences() {
 
   return $preferences;
 }
+
+/**
+* Implements hook_views_api().
+*/
+function comstack_pm_views_api() {
+  return array(
+    'api' => 3,
+    'path' => drupal_get_path('module', 'comstack_pm') . '/views',
+  );
+}

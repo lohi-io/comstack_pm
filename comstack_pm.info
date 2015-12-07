@@ -15,3 +15,5 @@ files[] = includes/ComstackConversation.php
 files[] = includes/exceptions/ComstackPMInactiveParticipantException.php
 files[] = includes/exceptions/ComstackPMNoOtherParticipantsException.php
 files[] = includes/exceptions/ComstackPMReadOnlyException.php
+
+files[] = views/handlers/comstack_pm_handler_field_entity_ref_labels.inc
