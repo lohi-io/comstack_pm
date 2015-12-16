@@ -76,6 +76,24 @@ class ComstackPMConversationsResource__1_0 extends \ComstackRestfulEntityBase {
   }
 
   /**
+   * Overrides \ComstackRestfulEntityBase::loadEntities().
+   *
+   * Use the comstack_conversation_load functions.
+   */
+  public function loadEntities($ids) {
+    $account = $this->getAccount();
+
+    if (is_array($ids)) {
+      $return = comstack_conversation_load_multiple($ids, $account->uid);
+    }
+    elseif (is_numeric($ids)) {
+      $return = comstack_conversation_load($ids, $account->uid);
+    }
+
+    return $return ? $return : NULL;
+  }
+
+  /**
    * Overrides \RestfulEntityBase::getQueryForList().
    *
    * Only expose conversations which haven't been deleted.
