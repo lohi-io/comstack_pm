@@ -139,3 +139,101 @@ function comstack_pm_views_api() {
     'path' => drupal_get_path('module', 'comstack_pm') . '/views',
   );
 }
+
+/**
+ * Implements hook_user_cancel().
+ */
+function comstack_pm_user_cancel($edit, $account, $method) {
+  switch ($method) {
+    /**
+     * Remove a user and unpublish their content, we mark the private messaging
+     * content as deleted in this case.
+     */
+    case 'user_cancel_block_unpublish':
+      db_update('comstack_conversation_user')
+        ->fields(array(
+          'deleted' => 1,
+        ))
+        ->condition('uid', $account->uid)
+        ->execute();
+      db_update('message')
+        ->fields(array(
+          'deleted' => 1,
+        ))
+        ->condition('type', 'cs_pm')
+        ->condition('uid', $account->uid)
+        ->execute();
+      db_update('comstack_conversation_message')
+        ->fields(array(
+          'deleted' => 1,
+        ))
+        ->condition('uid', $account->uid)
+        ->execute();
+      break;
+
+    /**
+     * Remove a user and re-assign all of their content to the anonymous user
+     * (UID 0).
+     */
+    case 'user_cancel_reassign':
+      /**
+       * Update any conversations.
+       */
+      db_update('comstack_conversation_user')
+        ->fields(array(
+          'uid' => 0,
+        ))
+        ->condition('uid', $account->uid)
+        ->execute();
+
+      /**
+       * And any messages relating to private messaging.
+       */
+      db_update('message')
+        ->fields(array(
+          'uid' => 0,
+        ))
+        ->condition('type', 'cs_pm')
+        ->condition('uid', $account->uid)
+        ->execute();
+      db_update('comstack_conversation_message')
+        ->fields(array(
+          'uid' => 0,
+        ))
+        ->condition('uid', $account->uid)
+        ->execute();
+
+      /**
+       * Worth mentioning that any entity references will be dereferenced by
+       * entityreference.
+       */
+
+      break;
+  }
+}
+
+/**
+ * Implements hook_user_delete().
+ */
+function comstack_pm_user_delete($account) {
+  db_delete('comstack_conversation_user')
+    ->condition('uid', $account->uid)
+    ->execute();
+
+  db_delete('comstack_conversation_message')
+    ->condition('uid', $account->uid)
+    ->execute();
+
+  /**
+   * Deletion of message entities by that user will be removed by the message
+   * module, but we still mark them as deleted to prevent them appearing in
+   * case message has been configured to not delete em.
+   */
+  db_update('message')
+    ->fields(array(
+      'deleted' => 1,
+    ))
+    ->condition('type', 'cs_pm')
+    ->condition('uid', $account->uid)
+    ->execute();
+}
