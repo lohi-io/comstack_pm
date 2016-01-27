@@ -216,6 +216,25 @@ function comstack_pm_user_cancel($edit, $account, $method) {
  * Implements hook_user_delete().
  */
 function comstack_pm_user_delete($account) {
+  /**
+   * Grab a list of conversations that this user started.
+   */
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'comstack_conversation')
+    ->fieldCondition('cs_pm_started_by', 'target_id', $account->uid)
+    ->addMetaData('account', $account);
+  $conversations_by_user_query = $query->execute();
+  $conversations_by_user = isset($conversations_by_user_query['comstack_conversation']) ? array_keys($conversations_by_user_query['comstack_conversation']) : array();
+
+  if (!empty($conversations_by_user)) {
+    db_delete('comstack_conversation_user')
+      ->condition('conversation_id', $conversations_by_user, 'IN')
+      ->execute();
+  }
+
+  /**
+   * Delete all other user related data.
+   */
   db_delete('comstack_conversation_user')
     ->condition('uid', $account->uid)
     ->execute();
@@ -225,15 +244,16 @@ function comstack_pm_user_delete($account) {
     ->execute();
 
   /**
-   * Deletion of message entities by that user will be removed by the message
-   * module, but we still mark them as deleted to prevent them appearing in
-   * case message has been configured to not delete em.
+   * Get a list of message IDs to delete by the user and do so.
    */
-  db_update('message')
-    ->fields(array(
-      'deleted' => 1,
-    ))
-    ->condition('type', 'cs_pm')
-    ->condition('uid', $account->uid)
-    ->execute();
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'message')
+    ->propertyCondition('uid', $account->uid)
+    ->addMetaData('account', $account);
+  $messages_by_user_query = $query->execute();
+  $messages_by_user = isset($messages_by_user_query['message']) ? array_keys($messages_by_user_query['message']) : array();
+
+  if (!empty($messages_by_user)) {
+    message_delete_multiple($messages_by_user);
+  }
 }
