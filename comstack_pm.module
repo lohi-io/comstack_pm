@@ -8,6 +8,8 @@
 // All logic relating to how this module specifically operates will go in here.
 include_once __DIR__ . '/includes/comstack_pm.comstack_pm.inc';
 // Other stuffs.
+// Actions.
+include_once __DIR__ . '/includes/comstack_pm.actions.inc';
 // Devel.
 include_once __DIR__ . '/includes/comstack_pm.devel.inc';
 // Drush rebuild commands.
@@ -230,6 +232,11 @@ function comstack_pm_user_delete($account) {
     db_delete('comstack_conversation_user')
       ->condition('conversation_id', $conversations_by_user, 'IN')
       ->execute();
+
+    /**
+     * Allow other modules to react to conversations being deleted.
+     */
+    module_invoke_all('comstack_pm_conversations_marked_deleted', $conversations_by_user);
   }
 
   /**
@@ -256,4 +263,20 @@ function comstack_pm_user_delete($account) {
   if (!empty($messages_by_user)) {
     message_delete_multiple($messages_by_user);
   }
+}
+
+/**
+ * Implements hook_action_info().
+ */
+function comstack_pm_action_info() {
+  return array(
+    'comstack_pm_permanently_delete_conversation' => array(
+      'type' => 'comstack_conversation',
+      'label' => t('Delete conversation'),
+      'configurable' => FALSE,
+      'vbo_configurable' => FALSE,
+      'behavior' => array('deletes_property'),
+      'triggers' => array('any'),
+    ),
+  );
 }

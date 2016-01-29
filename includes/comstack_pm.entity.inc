@@ -264,6 +264,95 @@ function comstack_conversation_load_multiple(array $conversation_ids = array(), 
 }
 
 /**
+ * Build an EntityFieldQuery object for getting a list of conversations.
+ */
+function comstack_pm_conversations_query($account) {
+  if (!$account) {
+    global $user;
+    $account = user_load($user->uid);
+  }
+
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'comstack_conversation')
+    ->fieldCondition('cs_pm_participants', 'target_id', $account->uid)
+    ->addTag('comstack_conversations')
+    ->addMetaData('account', $account);
+
+  if (!user_access('view deleted comstack conversations', $account)) {
+    $query->addTag('comstack_pm_conversation_hide_deleted');
+  }
+
+  return $query;
+}
+
+/**
+ * Load a users conversations.
+ */
+function comstack_pm_load_conversations($account = NULL, $limit = 10) {
+  if (!$account) {
+    global $user;
+    $account = user_load($user->uid);
+  }
+
+  $query = comstack_pm_conversations_query($account);
+  $query->range(0, $limit);
+  $result = $query->execute();
+  $conversation_ids = isset($result['comstack_conversation']) ? array_keys($result['comstack_conversation']) : array();
+
+  return !empty($conversation_ids) ? comstack_conversation_load_multiple($conversation_ids, $account->uid) : array();
+}
+
+/**
+ * Delete a conversation for good.
+ */
+function comstack_pm_permanently_delete_conversation($conversation, array $context = array()) {
+  if (empty($conversation)) {
+    return;
+  }
+
+  if (is_numeric($conversation)) {
+    $conversation = comstack_conversation_load($conversation);
+
+    if (!$conversation) {
+      return;
+    }
+  }
+
+  $id = $conversation->conversation_id;
+
+  // Delete the main entity record.
+  db_delete('comstack_conversation')
+    ->condition('conversation_id', $id)
+    ->execute();
+
+  // Delete the link between a conversation and user.
+  db_delete('comstack_conversation_user')
+    ->condition('conversation_id', $id)
+    ->execute();
+
+  // Delete conversation message storage.
+  db_delete('comstack_conversation_message')
+    ->condition('conversation_id', $id)
+    ->execute();
+
+  // Delete the messages within.
+  $query = new EntityFieldQuery();
+  $query->entityCondition('entity_type', 'message')
+    ->fieldCondition('cs_pm_conversation', 'target_id', $id);
+  $messages_query = $query->execute();
+  $messages = isset($messages_query['message']) ? array_keys($messages_query['message']) : array();
+
+  if (!empty($messages)) {
+    message_delete_multiple($messages);
+  }
+
+  /**
+   * Kick off a hook.
+   */
+  module_invoke_all('comstack_pm_conversations_permanently_deleted', array($id));
+}
+
+/**
  * Access callback for the cs_pm bundle of the message entity.
  */
 function _comstack_message_access__cs_pm($op, $entity, $account, $entity_type) {
