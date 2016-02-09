@@ -233,10 +233,12 @@ function comstack_pm_user_delete($account) {
       ->condition('conversation_id', $conversations_by_user, 'IN')
       ->execute();
 
+    entity_delete_multiple('comstack_conversation', $conversations_by_user);
+
     /**
      * Allow other modules to react to conversations being deleted.
      */
-    module_invoke_all('comstack_pm_conversations_marked_deleted', $conversations_by_user);
+    module_invoke_all('comstack_pm_conversations_permanently_deleted', $conversations_by_user);
   }
 
   /**
